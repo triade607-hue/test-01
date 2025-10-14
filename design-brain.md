@@ -6,16 +6,16 @@
 
 #### Primary Color (Blue)
 ```css
-primary-50:  #E6F2FF
-primary-100: #CCE5FF
-primary-200: #99CBFF
-primary-300: #66B0FF
-primary-400: #3396FF
-primary-500: #0082FF  /* Primary brand color */
-primary-600: #0068CC
-primary-700: #004E99
-primary-800: #003466
-primary-900: #001A33
+primary-50:  #E6F4FA
+primary-100: #CCE9F5
+primary-200: #99D3EB
+primary-300: #66BDE1
+primary-400: #339AD7
+primary-500: #0077B6  /* Primary brand color */
+primary-600: #005F92
+primary-700: #00476E
+primary-800: #002F49
+primary-900: #001825
 ```
 
 #### Neutral Colors (Grays)
@@ -36,9 +36,37 @@ gray-900: #111827  /* Primary text */
 ```css
 success:  #10B981  /* Green */
 warning:  #F59E0B  /* Orange/Yellow */
-error:    #EF4444  /* Red */
+error:    #D80027  /* Red */
 info:     #3B82F6  /* Blue */
 ```
+
+#### Special Gradients
+```css
+/* Badge Acheteur/Vendeur (Sidebar) */
+badge-gradient: linear-gradient(90deg, #FDC830 0%, #F37335 100%);
+
+/* Classe Tailwind custom */
+.badge-gradient {
+  background: linear-gradient(90deg, #FDC830 0%, #F37335 100%);
+  color: white;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+}
+```
+
+```html
+<!-- Badge Acheteur/Vendeur avec gradient -->
+<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold text-white bg-gradient-to-r from-[#FDC830] to-[#F37335]">
+  Acheteur Premium
+</span>
+
+<!-- Ou avec classe custom si configurée dans Tailwind -->
+<span class="badge-gradient text-xs">
+  Vendeur Vérifié
+</span>
+```
+
 
 #### Background Colors
 ```css
@@ -102,14 +130,14 @@ shadow-xl:   0 20px 25px rgba(0,0,0,0.1) /* Large modals */
 ### Visual Philosophy
 - **Clean Functionality**: Uncluttered interface with clear information hierarchy
 - **Strong Contrast**: Dark text (gray-900) on light backgrounds for maximum readability
-- **Blue Accent**: Primary-500 blue guides primary actions and brand identity
+- **Blue Accent**: Primary-500 (#0077B6) blue guides primary actions and brand identity
 - **Subtle Interactions**: Refined hover states with shadow and transform effects
 - **Typographic Hierarchy**: Font weights and sizes create visual depth
 
 ### UX Conventions
 1. **Primary Button** = Main action (submit, create) → Blue primary-500
 2. **Secondary Button** = Alternative action (cancel) → White with gray border
-3. **Danger Button** = Destructive action (delete) → Red error
+3. **Danger Button** = Destructive action (delete) → Red error (#D80027)
 4. **Active Navigation** = Blue background with white text
 5. **Hover States** = Subtle shadow increase + slight transform
 6. **Status Indicators** = Color-coded badges (green=success, yellow=pending, red=error, orange=warning)

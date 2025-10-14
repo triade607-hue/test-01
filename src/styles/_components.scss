@@ -45,3 +45,12 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+.text-gradient-badge {
+  background: linear-gradient(90deg, #FDC830 0%, #F37335 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 600;
+  font-size: 0.75rem;
+}
