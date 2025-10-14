@@ -1,0 +1,9 @@
+// Utilitaires CSS personnalisés
+
+.container {
+  @apply mx-auto px-4 max-w-7xl;
+}
+
+.text-balance {
+  text-wrap: balance;
+}
