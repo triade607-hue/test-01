@@ -8,41 +8,32 @@ import { RouterModule } from '@angular/router';
   standalone: true,
   imports: [CommonModule, RouterModule],
   template: `
-    <div class="bg-gray-950 border-t border-white/10">
-      <div class="container mx-auto px-4">
+    <div class="bg-primary-600">
+      <div class="container mx-auto px-4 py-4">
         <div
-          class="flex flex-col md:flex-row items-center justify-between py-4 gap-4 text-xs text-gray-400"
+          class="flex flex-col md:flex-row items-center justify-between gap-4 text-white"
         >
-          <!-- Left - Legal Links -->
+          <!-- Legal Links (Left) -->
           <div
-            class="flex flex-wrap items-center justify-center md:justify-start gap-4"
+            class="flex flex-wrap items-center justify-center md:justify-start gap-4 text-sm"
           >
-            <a routerLink="/cgu" class="hover:text-white transition-colors">
+            <a routerLink="/cgu" class="hover:underline transition-all">
               Conditions Générales d'Utilisation
             </a>
-            <span class="hidden md:inline text-gray-600">•</span>
-            <a routerLink="/privacy" class="hover:text-white transition-colors">
-              Politique de Confidentialité
-            </a>
-            <span class="hidden md:inline text-gray-600">•</span>
-            <a routerLink="/cookies" class="hover:text-white transition-colors">
-              Gestion des Cookies
-            </a>
-            <span class="hidden md:inline text-gray-600">•</span>
-            <a routerLink="/legal" class="hover:text-white transition-colors">
-              Mentions Légales
+            <a routerLink="/cookies" class="hover:underline transition-all">
+              Cookies
             </a>
           </div>
 
-          <!-- Right - Copyright -->
-          <div class="text-center md:text-right">
+          <!-- Copyright (Right) -->
+          <div class="text-sm text-center md:text-right">
             <p>
-              Copyright © {{ currentYear }}, Produit par
+              Copyright © Jan. {{ currentYear }}, Produced
               <a
                 href="https://millenium-mediart.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="text-primary-400 hover:text-primary-300 transition-colors font-medium"
+                class="font-semibold hover:underline"
               >
                 Millenium Médi'art
               </a>
@@ -51,7 +42,7 @@ import { RouterModule } from '@angular/router';
                 href="https://millenium-tech.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="text-primary-400 hover:text-primary-300 transition-colors font-medium"
+                class="font-semibold hover:underline"
               >
                 Millenium Tech Solutions
               </a>

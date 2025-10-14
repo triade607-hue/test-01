@@ -1,1 +1,99 @@
-<p>home works!</p>
+<!-- src/app/features/public/pages/home/home.component.html -->
+
+<!-- Hero Banner Carousel -->
+<app-hero-banner></app-hero-banner>
+
+<!-- Category Icons -->
+<app-category-icons></app-category-icons>
+
+<!-- Main Content -->
+<main class="bg-gray-50 py-8">
+  <div class="container mx-auto px-4">
+    <!-- Sections de produits -->
+    <section
+      *ngFor="let section of sections; let isLast = last"
+      [class.mb-12]="!isLast"
+    >
+      <!-- Section Header -->
+      <div class="flex items-center justify-between mb-6">
+        <div>
+          <h2 class="text-xl font-bold text-gray-900">{{ section.title }}</h2>
+          <p *ngIf="section.subtitle" class="text-sm text-gray-600 mt-1">
+            {{ section.subtitle }}
+          </p>
+        </div>
+        <a
+          [routerLink]="section.link"
+          class="text-sm font-medium text-primary-500 hover:underline flex items-center gap-1 group"
+        >
+          TOUT VOIR
+          <svg
+            class="w-4 h-4 group-hover:translate-x-1 transition-transform"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 5l7 7-7 7"
+            />
+          </svg>
+        </a>
+      </div>
+
+      <!-- Products Grid -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <app-product-card
+          *ngFor="let product of section.products"
+          [product]="product"
+          [showVendor]="true"
+          (favoriteToggled)="onFavoriteToggled($event)"
+        ></app-product-card>
+      </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="mt-16 mb-8">
+      <div
+        class="relative rounded-lg overflow-hidden min-h-[400px] bg-cover bg-center"
+        style="background-image: url('assets/images/home/newsletter-bg.png')"
+      >
+        <!-- Contenu -->
+        <div
+          class="relative z-10 container mx-auto px-4 py-12 md:py-16 h-full flex items-center"
+        >
+          <div class="max-w-xl">
+            <p class="text-sm text-black mb-2">
+              Découvrir l'univers d'Occaverse
+            </p>
+
+            <h2 class="text-3xl md:text-4xl font-bold text-black mb-4">
+              INSCRIVEZ-VOUS À NOTRE<br />NEWSLETTER
+            </h2>
+
+            <p class="text-black mb-8 text-lg">
+              Ne manquez aucunes réductions ou bonnes affaires. Soyez toujours
+              au courant sur nos actualités.
+            </p>
+
+            <form class="flex flex-col sm:flex-row gap-3">
+              <input
+                type="email"
+                placeholder="Votre adresse email"
+                class="flex-1 px-6 py-4 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500 border border-gray-300"
+              />
+              <button
+                type="submit"
+                class="px-8 py-4 bg-primary-500 text-white rounded-lg font-semibold hover:bg-primary-600 transition-colors whitespace-nowrap"
+              >
+                S'inscrire
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>

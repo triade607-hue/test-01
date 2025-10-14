@@ -97,7 +97,7 @@ export interface Product {
           </div>
           <div class="flex items-center gap-1 min-w-0">
             <span class="text-xs text-gray-600 truncate">
-              @{{ product.vendor.name }}
+              {{ '@' + product.vendor.name }}
             </span>
             <svg
               *ngIf="product.vendor.isVerified"
