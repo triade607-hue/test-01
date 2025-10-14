@@ -1,13 +1,24 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { Router, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
-  standalone: true,
-  imports: [RouterOutlet],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
-  title = 'occaverse-web';
+export class AppComponent implements OnInit {
+  title = 'OCCAVERSE';
+
+  constructor(private router: Router) {}
+
+  ngOnInit(): void {
+    // Track route changes for analytics
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe((event: any) => {
+        // Add your analytics tracking here
+        console.log('Navigation to:', event.url);
+      });
+  }
 }
