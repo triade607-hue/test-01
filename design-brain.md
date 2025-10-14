@@ -1,4 +1,4 @@
-# 🧬 Design Brain – OCCAVERSE Marketplace
+# 🧬 Design Brain – X Marketplace
 
 ## 🎨 1. Visual Identity
 
@@ -1611,7 +1611,7 @@ CheckoutSummary/
     </div>
 
     <div class="flex items-center justify-between text-sm">
-      <span class="text-gray-600">Frais d'Occaverse :</span>
+      <span class="text-gray-600">Frais d'X :</span>
       <span class="font-medium text-gray-900">{{ fees }}€</span>
     </div>
 
@@ -1962,7 +1962,7 @@ CheckoutSummary/
           ></app-cart-item>
         </div>
 
-        <!-- Section récompenses OCCAVERSE -->
+        <!-- Section récompenses X -->
         <div class="p-4 bg-white rounded border border-gray-200">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-3">
@@ -1974,7 +1974,7 @@ CheckoutSummary/
                   Dénomination du produit allant sur deux lignes mais pas plus...
                 </p>
                 <p class="text-xs text-orange-600 font-medium">
-                  Récompense OCCAVERSE
+                  Récompense X
                 </p>
               </div>
             </div>
@@ -1984,12 +1984,12 @@ CheckoutSummary/
           </div>
         </div>
 
-        <!-- Section OCCAVERSE -->
+        <!-- Section X -->
         <div class="flex items-center gap-3 p-4 bg-white rounded border border-gray-200">
           <div class="w-12 h-12 bg-primary-500 rounded-full flex items-center justify-center">
             <span class="text-white font-bold text-lg">OC</span>
           </div>
-          <p class="text-sm font-medium text-gray-900">OCCAVERSE</p>
+          <p class="text-sm font-medium text-gray-900">X</p>
         </div>
       </div>
 
@@ -2088,7 +2088,7 @@ CheckoutSummary/
               <span class="font-medium">752,97€</span>
             </div>
             <div class="flex justify-between text-sm">
-              <span class="text-gray-600">Frais d'Occaverse :</span>
+              <span class="text-gray-600">Frais d'X :</span>
               <span class="font-medium">75,297€</span>
             </div>
             <div class="flex justify-between text-sm">
@@ -2147,7 +2147,7 @@ CheckoutSummary/
     <div class="bg-red-50 border border-red-200 rounded p-4 mb-6">
       <p class="text-sm text-red-700">
         <strong>Attention.</strong> Configurez vos livraisons. Si une commande nécessite un contrôle de conformité,
-        choisissez également un mode de livraison vers OCCAVERSE.
+        choisissez également un mode de livraison vers X.
       </p>
     </div>
 
@@ -2783,7 +2783,7 @@ Ce design brain est **complet et prêt pour l'utilisation par une IA**. Il conti
 
 **Version**: 2.0
 **Last Update**: Janvier 2025
-**Project**: OCCAVERSE Marketplace
+**Project**: X Marketplace
 **Framework**: Angular 17+ (Standalone Components)
 **Styling**: Tailwind CSS 3.4
 **Icons**: Lucide Angular
