@@ -8,6 +8,7 @@ import {
   Product,
   ProductCardComponent,
 } from '../../../../shared/components/product-card/product-card.component';
+import { ProductCardHorizontalComponent } from '../../../../shared/components/product-card-horizontal/product-card-horizontal.component';
 
 interface ProductSection {
   id: string;
@@ -24,8 +25,9 @@ interface ProductSection {
     CommonModule,
     RouterModule,
     HeroBannerComponent,
+    CategoryIconsComponent,
     ProductCardComponent,
-    CategoryIconsComponent
+    ProductCardHorizontalComponent
   ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
@@ -59,16 +61,16 @@ export class HomeComponent implements OnInit {
       id: 'produits-lot',
       title: 'Produits en lot',
       link: '/search?filter=lots',
-      products: this.generateMockProducts(4, { badge: 'En lot' }),
+      products: this.generateMockProducts(4),
     });
 
-    // Section Produits recherchés
+    // Section Produits recherchés (layout horizontal différent)
     this.sections.push({
       id: 'produits-recherches',
       title: 'Produits recherchés',
       subtitle: 'Les plus populaires du moment',
       link: '/search?filter=trending',
-      products: this.generateMockProducts(4, { badge: 'Populaire' }),
+      products: this.generateMockProducts(4),
     });
 
     // Section Autres produits
@@ -76,7 +78,7 @@ export class HomeComponent implements OnInit {
       id: 'autres-produits',
       title: 'Autres produits',
       link: '/search',
-      products: this.generateMockProducts(8),
+      products: this.generateMockProducts(12),
     });
   }
 

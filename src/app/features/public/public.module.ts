@@ -5,6 +5,7 @@ import { SharedModule } from '../../shared/shared.module';
 import { HeroBannerComponent } from './components/hero-banner/hero-banner.component';
 import { HomeComponent } from './pages/home/home.component';
 import { CategoryIconsComponent } from './components/category-icons/category-icons.component';
+import { ProductCardHorizontalComponent } from '../../shared/components/product-card-horizontal/product-card-horizontal.component';
 
 
 @NgModule({
@@ -14,7 +15,8 @@ import { CategoryIconsComponent } from './components/category-icons/category-ico
     SharedModule,
     HomeComponent,
     HeroBannerComponent,
-    CategoryIconsComponent
+    CategoryIconsComponent,
+    ProductCardHorizontalComponent
   ]
 })
 export class PublicModule { }
