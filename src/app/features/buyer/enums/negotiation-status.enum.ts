@@ -1,7 +1,0 @@
-export enum NegotiationStatus {
-  PENDING = 'PENDING',
-  COUNTER_OFFER = 'COUNTER_OFFER',
-  ACCEPTED = 'ACCEPTED',
-  REJECTED = 'REJECTED',
-  EXPIRED = 'EXPIRED'
-}

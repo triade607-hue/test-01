@@ -1,9 +1,0 @@
-export enum ProductStatus {
-  DRAFT = 'DRAFT',
-  ACTIVE = 'ACTIVE',
-  PAUSED = 'PAUSED',
-  SOLD = 'SOLD',
-  ARCHIVED = 'ARCHIVED',
-  UNDER_REVIEW = 'UNDER_REVIEW',
-  REJECTED = 'REJECTED'
-}
