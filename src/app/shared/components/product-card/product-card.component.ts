@@ -155,40 +155,6 @@ export interface Product {
             <span class="text-lg font-bold text-primary-500">
               {{ product.price }}{{ product.currency }}
             </span>
-            <svg
-              class="w-4 h-4 text-primary-500"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-          </div>
-
-          <!-- Rating -->
-          <div *ngIf="product.rating" class="flex items-center gap-1">
-            <div class="flex items-center">
-              <svg
-                *ngFor="let star of [1, 2, 3, 4, 5]"
-                class="w-3 h-3"
-                [class.text-warning]="star <= (product.rating || 0)"
-                [class.text-gray-300]="star > (product.rating || 0)"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
-                />
-              </svg>
-            </div>
-            <span class="text-xs text-gray-600" *ngIf="product.reviewCount">
-              ({{ product.reviewCount }})
-            </span>
           </div>
         </div>
       </div>

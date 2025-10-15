@@ -46,11 +46,9 @@ interface Category {
             class="flex items-center gap-6 h-12 overflow-x-auto scrollbar-hide scroll-smooth"
             style="scrollbar-width: none; -ms-overflow-style: none;"
           >
-            <!-- Bouton TOUS -->
-            <a
-              routerLink="/categories"
-              routerLinkActive="active"
-              [routerLinkActiveOptions]="{ exact: true }"
+            <!-- Bouton TOUS - Ouvre le Sidebar -->
+            <button
+              (click)="openCategorySidebar()"
               class="category-link flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-gray-700 hover:text-primary-500 hover:bg-gray-50 rounded whitespace-nowrap transition-colors"
             >
               <svg
@@ -67,7 +65,7 @@ interface Category {
                 />
               </svg>
               <span>TOUS</span>
-            </a>
+            </button>
 
             <!-- Catégories -->
             <a
@@ -144,8 +142,6 @@ export class CategoryCarouselComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.checkScroll();
-
-    // Écouter le resize de la fenêtre
     window.addEventListener('resize', () => this.checkScroll());
   }
 
@@ -167,21 +163,19 @@ export class CategoryCarouselComponent implements AfterViewInit {
 
   scrollLeft(): void {
     if (!this.categoryContainer) return;
-
     const container = this.categoryContainer.nativeElement;
-    container.scrollBy({
-      left: -300,
-      behavior: 'smooth',
-    });
+    container.scrollBy({ left: -300, behavior: 'smooth' });
   }
 
   scrollRight(): void {
     if (!this.categoryContainer) return;
-
     const container = this.categoryContainer.nativeElement;
-    container.scrollBy({
-      left: 300,
-      behavior: 'smooth',
-    });
+    container.scrollBy({ left: 300, behavior: 'smooth' });
+  }
+
+  openCategorySidebar(): void {
+    // Émettre un événement pour ouvrir le sidebar
+    // Cet événement sera capté par le Header parent
+    window.dispatchEvent(new CustomEvent('openCategorySidebar'));
   }
 }
