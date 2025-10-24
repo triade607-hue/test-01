@@ -8,8 +8,7 @@ interface Country {
   name: string;
   flag: string;
   dialCode: string;
-  phoneLength: number; // Longueur du numéro sans l'indicatif
-  placeholder: string;
+  phoneLength: number;
 }
 
 @Component({
@@ -20,413 +19,374 @@ interface Country {
     <div
       class="fixed inset-0 z-50 overflow-y-auto bg-black/50 flex items-center justify-center p-4"
     >
-      <!-- Modal Container avec hauteur fixe -->
       <div
         class="bg-white rounded-lg max-w-md w-full max-h-[90vh] flex flex-col relative"
       >
-        <!-- Header - Fixe -->
-        <div class="flex-shrink-0 p-8 pb-4 border-b border-gray-200">
-          <!-- Close Button -->
-          <button
-            (click)="close()"
-            class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 z-10"
+        <button
+          (click)="close()"
+          class="absolute top-4 right-4 z-10 text-gray-400 hover:text-gray-600"
+        >
+          <svg
+            class="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
           >
-            <svg
-              class="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
 
-          <!-- Title -->
+        <div class="p-8 pb-4">
           <h2 class="text-2xl font-bold text-primary-500 mb-2">Inscription</h2>
-          <p class="text-gray-500 text-sm">
-            Créez votre compte et accédez à des milliers d'offres.
+          <p class="text-gray-500 mb-6">
+            Ravis de vous revoir ! Connectez-vous et accédez aux nouvelles
+            offres.
           </p>
         </div>
 
-        <!-- Content - Scrollable -->
-        <div class="flex-1 overflow-y-auto px-8 py-6">
-          <!-- Form -->
-          <form (ngSubmit)="register()" class="space-y-4">
-            <!-- Nom -->
-            <div>
+        <div class="flex-1 overflow-y-auto px-8">
+          <form>
+            <div class="mb-4">
               <label class="block text-sm font-medium text-gray-900 mb-2">
                 Nom <span class="text-red-500">*</span>
               </label>
               <input
                 type="text"
-                [(ngModel)]="formData.lastName"
+                [(ngModel)]="lastName"
                 name="lastName"
-                placeholder="Votre nom"
-                required
+                (blur)="validateLastName()"
+                placeholder="mon nom"
+                maxlength="50"
                 class="w-full px-4 py-3 bg-gray-100 border-0 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-                [class.ring-2]="hasAttemptedSubmit && !formData.lastName.trim()"
-                [class.ring-red-500]="
-                  hasAttemptedSubmit && !formData.lastName.trim()
-                "
               />
-              <p
-                *ngIf="hasAttemptedSubmit && !formData.lastName.trim()"
-                class="text-xs text-red-500 mt-1"
-              >
-                Le nom est requis
+              <p *ngIf="lastNameError" class="text-xs text-red-500 mt-1">
+                {{ lastNameError }}
               </p>
             </div>
 
-            <!-- Prénom -->
-            <div>
+            <div class="mb-4">
               <label class="block text-sm font-medium text-gray-900 mb-2">
                 Prénom <span class="text-red-500">*</span>
               </label>
               <input
                 type="text"
-                [(ngModel)]="formData.firstName"
+                [(ngModel)]="firstName"
                 name="firstName"
-                placeholder="Votre prénom"
-                required
+                (blur)="validateFirstName()"
+                placeholder="mon prénom"
+                maxlength="50"
                 class="w-full px-4 py-3 bg-gray-100 border-0 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-                [class.ring-2]="
-                  hasAttemptedSubmit && !formData.firstName.trim()
-                "
-                [class.ring-red-500]="
-                  hasAttemptedSubmit && !formData.firstName.trim()
-                "
               />
-              <p
-                *ngIf="hasAttemptedSubmit && !formData.firstName.trim()"
-                class="text-xs text-red-500 mt-1"
-              >
-                Le prénom est requis
+              <p *ngIf="firstNameError" class="text-xs text-red-500 mt-1">
+                {{ firstNameError }}
               </p>
             </div>
 
-            <!-- Nom d'utilisateur -->
-            <div>
+            <div class="mb-4">
               <label class="block text-sm font-medium text-gray-900 mb-2">
-                Nom d'utilisateur <span class="text-red-500">*</span>
+                Pseudo <span class="text-red-500">*</span>
               </label>
               <input
                 type="text"
-                [(ngModel)]="formData.username"
+                [(ngModel)]="username"
                 name="username"
-                placeholder="@username"
-                required
+                (blur)="validateUsername()"
+                placeholder="pseudo47"
+                maxlength="30"
                 class="w-full px-4 py-3 bg-gray-100 border-0 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-                [class.ring-2]="hasAttemptedSubmit && !formData.username.trim()"
-                [class.ring-red-500]="
-                  hasAttemptedSubmit && !formData.username.trim()
-                "
               />
-              <p
-                *ngIf="hasAttemptedSubmit && !formData.username.trim()"
-                class="text-xs text-red-500 mt-1"
-              >
-                Le nom d'utilisateur est requis
+              <p *ngIf="usernameError" class="text-xs text-red-500 mt-1">
+                {{ usernameError }}
               </p>
             </div>
 
-            <!-- Email -->
-            <div>
+            <div class="mb-4">
               <label class="block text-sm font-medium text-gray-900 mb-2">
                 Adresse mail <span class="text-red-500">*</span>
               </label>
               <input
                 type="email"
-                [(ngModel)]="formData.email"
+                [(ngModel)]="email"
                 name="email"
+                (blur)="validateEmail()"
                 placeholder="monadresse@gmail.com"
-                required
+                maxlength="100"
                 class="w-full px-4 py-3 bg-gray-100 border-0 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-                [class.ring-2]="hasAttemptedSubmit && !isEmailValid()"
-                [class.ring-red-500]="hasAttemptedSubmit && !isEmailValid()"
               />
-              <p
-                *ngIf="hasAttemptedSubmit && !isEmailValid()"
-                class="text-xs text-red-500 mt-1"
-              >
-                Veuillez entrer une adresse email valide
+              <p *ngIf="emailError" class="text-xs text-red-500 mt-1">
+                {{ emailError }}
               </p>
             </div>
 
-            <!-- Téléphone avec indicatif -->
-            <div>
+            <div class="mb-4">
               <label class="block text-sm font-medium text-gray-900 mb-2">
                 Numéro de téléphone <span class="text-red-500">*</span>
               </label>
               <div class="flex gap-2">
-                <!-- Dropdown indicatif pays -->
-                <div class="relative">
-                  <button
-                    type="button"
-                    (click)="toggleCountryDropdown()"
-                    class="flex items-center gap-2 px-3 py-3 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 h-full"
-                  >
-                    <span class="text-xl">{{ selectedCountry.flag }}</span>
-                    <span class="text-sm font-medium text-gray-700">{{
-                      selectedCountry.dialCode
-                    }}</span>
-                    <svg
-                      class="w-4 h-4 text-gray-500"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M19 9l-7 7-7-7"
-                      />
-                    </svg>
-                  </button>
-
-                  <!-- Country Dropdown -->
-                  <div
-                    *ngIf="showCountryDropdown"
-                    class="absolute top-full left-0 mt-1 w-72 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-60 overflow-y-auto"
-                  >
-                    <button
-                      *ngFor="let country of countries"
-                      type="button"
-                      (click)="selectCountry(country)"
-                      class="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-50 transition-colors text-left"
-                      [class.bg-primary-50]="
-                        country.code === selectedCountry.code
-                      "
-                    >
-                      <span class="text-xl">{{ country.flag }}</span>
-                      <span class="flex-1 text-sm text-gray-900">{{
-                        country.name
-                      }}</span>
-                      <span class="text-sm font-medium text-gray-600">{{
-                        country.dialCode
-                      }}</span>
-                    </button>
-                  </div>
-                </div>
-
-                <!-- Numéro de téléphone -->
+                <select
+                  [(ngModel)]="selectedCountry"
+                  name="country"
+                  class="w-24 px-2 py-3 bg-gray-100 border-0 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                >
+                  <option *ngFor="let country of countries" [ngValue]="country">
+                    {{ country.flag }} {{ country.dialCode }}
+                  </option>
+                </select>
                 <input
                   type="tel"
-                  [(ngModel)]="formData.phone"
+                  [(ngModel)]="phone"
                   name="phone"
-                  [placeholder]="selectedCountry.placeholder"
-                  required
-                  [maxlength]="
-                    selectedCountry.phoneLength +
-                    Math.floor(selectedCountry.phoneLength / 2)
-                  "
+                  (input)="sanitizePhone()"
+                  (blur)="validatePhone()"
+                  placeholder="010 000 0000"
+                  [maxlength]="selectedCountry.phoneLength + 2"
                   class="flex-1 px-4 py-3 bg-gray-100 border-0 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-                  [class.ring-2]="formData.phone && !isPhoneValid()"
-                  [class.ring-red-500]="formData.phone && !isPhoneValid()"
                 />
               </div>
-              <p
-                *ngIf="formData.phone && !isPhoneValid()"
-                class="text-xs text-red-500 mt-1"
-              >
-                Le numéro doit contenir
-                {{ selectedCountry.phoneLength }} chiffres
+              <p *ngIf="phoneError" class="text-xs text-red-500 mt-1">
+                {{ phoneError }}
               </p>
             </div>
 
-            <!-- Mot de passe -->
-            <div>
+            <div class="mb-4">
               <label class="block text-sm font-medium text-gray-900 mb-2">
                 Mot de passe <span class="text-red-500">*</span>
               </label>
-              <input
-                type="password"
-                [(ngModel)]="formData.password"
-                name="password"
-                placeholder="••••••••••••••••••••••"
-                required
-                minlength="8"
-                class="w-full px-4 py-3 bg-gray-100 border-0 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-              />
-            </div>
-
-            <!-- Confirmer mot de passe -->
-            <div>
-              <label class="block text-sm font-medium text-gray-900 mb-2">
-                Confirmer le mot de passe <span class="text-red-500">*</span>
-              </label>
-              <input
-                type="password"
-                [(ngModel)]="formData.confirmPassword"
-                name="confirmPassword"
-                placeholder="••••••••••••••••••••••"
-                required
-                class="w-full px-4 py-3 bg-gray-100 border-0 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-                [class.ring-2]="
-                  formData.confirmPassword &&
-                  formData.password !== formData.confirmPassword
-                "
-                [class.ring-red-500]="
-                  formData.confirmPassword &&
-                  formData.password !== formData.confirmPassword
-                "
-              />
-              <p
-                *ngIf="
-                  formData.confirmPassword &&
-                  formData.password !== formData.confirmPassword
-                "
-                class="text-xs text-red-500 mt-1"
-              >
-                Les mots de passe ne correspondent pas
+              <div class="relative">
+                <input
+                  [type]="showPassword ? 'text' : 'password'"
+                  [(ngModel)]="password"
+                  name="password"
+                  (input)="validatePassword()"
+                  placeholder="••••••••••••••••••••••"
+                  maxlength="50"
+                  class="w-full px-4 py-3 pr-12 bg-gray-100 border-0 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                />
+                <button
+                  type="button"
+                  (click)="togglePassword()"
+                  class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                >
+                  <svg
+                    *ngIf="!showPassword"
+                    class="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                    />
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                    />
+                  </svg>
+                  <svg
+                    *ngIf="showPassword"
+                    class="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"
+                    />
+                  </svg>
+                </button>
+              </div>
+              <p *ngIf="passwordError" class="text-xs text-red-500 mt-1">
+                {{ passwordError }}
               </p>
             </div>
 
-            <!-- Devise -->
-            <div>
+            <div class="mb-4">
               <label class="block text-sm font-medium text-gray-900 mb-2">
-                Devise préférée <span class="text-red-500">*</span>
+                Confirmer mot de passe <span class="text-red-500">*</span>
               </label>
+              <div class="relative">
+                <input
+                  [type]="showConfirmPassword ? 'text' : 'password'"
+                  [(ngModel)]="confirmPassword"
+                  name="confirmPassword"
+                  (input)="validateConfirmPassword()"
+                  placeholder="••••••••••••••••••••••"
+                  maxlength="50"
+                  class="w-full px-4 py-3 pr-12 bg-gray-100 border-0 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                />
+                <button
+                  type="button"
+                  (click)="toggleConfirmPassword()"
+                  class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                >
+                  <svg
+                    *ngIf="!showConfirmPassword"
+                    class="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                    />
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                    />
+                  </svg>
+                  <svg
+                    *ngIf="showConfirmPassword"
+                    class="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"
+                    />
+                  </svg>
+                </button>
+              </div>
+              <p *ngIf="confirmPasswordError" class="text-xs text-red-500 mt-1">
+                {{ confirmPasswordError }}
+              </p>
+            </div>
+
+            <div class="mb-4">
+              <label class="block text-sm font-medium text-gray-900 mb-2"
+                >Devise</label
+              >
               <select
-                [(ngModel)]="formData.currency"
+                [(ngModel)]="currency"
                 name="currency"
-                required
                 class="w-full px-4 py-3 bg-gray-100 border-0 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
               >
-                <option value="EUR">EUR - Euro (€)</option>
-                <option value="USD">USD - Dollar ($)</option>
-                <option value="GBP">GBP - Livre (£)</option>
-                <option value="CAD">CAD - Dollar Canadien ($CAD)</option>
-                <option value="XOF">XOF - Franc CFA (FCFA)</option>
+                <option value="EUR">EUR</option>
+                <option value="USD">USD</option>
+                <option value="GBP">GBP</option>
+                <option value="CAD">CAD</option>
               </select>
             </div>
 
-            <!-- Checkboxes -->
-            <div class="space-y-3 pt-2">
-              <!-- Age confirmation -->
-              <div class="flex items-start">
+            <div class="space-y-3 mb-6">
+              <label class="flex items-start gap-2">
                 <input
                   type="checkbox"
-                  [(ngModel)]="formData.ageConfirmation"
+                  [(ngModel)]="ageConfirmation"
                   name="ageConfirmation"
-                  id="ageConfirmation"
-                  required
+                  (change)="validateAgeConfirmation()"
                   class="w-4 h-4 mt-0.5 text-primary-500 border-gray-300 rounded focus:ring-primary-500"
                 />
-                <label for="ageConfirmation" class="ml-2 text-sm text-gray-700">
-                  Je confirme avoir au moins 18 ans
-                  <span class="text-red-500">*</span>
-                </label>
-              </div>
+                <span class="text-xs text-gray-700">
+                  En cochant cette case je confirme être âgé(e) de
+                  <span class="font-semibold">18 ans</span> ou plus.
+                </span>
+              </label>
+              <p *ngIf="ageConfirmationError" class="text-xs text-red-500">
+                {{ ageConfirmationError }}
+              </p>
 
-              <!-- Terms -->
-              <div class="flex items-start">
+              <label class="flex items-start gap-2">
                 <input
                   type="checkbox"
-                  [(ngModel)]="formData.termsAccepted"
+                  [(ngModel)]="termsAccepted"
                   name="termsAccepted"
-                  id="termsAccepted"
-                  required
+                  (change)="validateTermsAccepted()"
                   class="w-4 h-4 mt-0.5 text-primary-500 border-gray-300 rounded focus:ring-primary-500"
                 />
-                <label for="termsAccepted" class="ml-2 text-sm text-gray-700">
-                  J'accepte les
+                <span class="text-xs text-gray-700">
+                  En poursuivant votre inscription, vous acceptez les
                   <a
-                    href="/terms"
+                    href="/cgu"
                     target="_blank"
-                    class="text-primary-500 hover:underline"
+                    class="text-primary-500 underline"
+                    >Conditions Générales</a
                   >
-                    conditions générales d'utilisation
-                  </a>
-                  <span class="text-red-500">*</span>
-                </label>
-              </div>
+                  et la
+                  <a
+                    href="/privacy"
+                    target="_blank"
+                    class="text-primary-500 underline"
+                    >Politique de Protection de Données</a
+                  >
+                  d'OCCAVERSE
+                </span>
+              </label>
+              <p *ngIf="termsAcceptedError" class="text-xs text-red-500">
+                {{ termsAcceptedError }}
+              </p>
 
-              <!-- Partner terms -->
-              <div class="flex items-start">
+              <label class="flex items-start gap-2">
                 <input
                   type="checkbox"
-                  [(ngModel)]="formData.partnerTermsAccepted"
+                  [(ngModel)]="partnerTermsAccepted"
                   name="partnerTermsAccepted"
-                  id="partnerTermsAccepted"
-                  required
+                  (change)="validatePartnerTermsAccepted()"
                   class="w-4 h-4 mt-0.5 text-primary-500 border-gray-300 rounded focus:ring-primary-500"
                 />
-                <label
-                  for="partnerTermsAccepted"
-                  class="ml-2 text-sm text-gray-700"
-                >
-                  J'accepte les
-                  <a
-                    href="/partner-terms"
+                <span class="text-xs text-gray-700">
+                  Acceptez les conditions générales de nos partenaires de
+                  livraison Colissimo (<a
+                    href="#"
                     target="_blank"
-                    class="text-primary-500 hover:underline"
+                    class="text-primary-500 underline"
+                    >CGV</a
+                  >,
+                  <a href="#" target="_blank" class="text-primary-500 underline"
+                    >CSV</a
                   >
-                    conditions générales de nos partenaires
-                  </a>
-                  <span class="text-red-500">*</span>
-                </label>
-              </div>
+                  et
+                  <a href="#" target="_blank" class="text-primary-500 underline"
+                    >CPV</a
+                  >) et Mondial Relay (<a
+                    href="#"
+                    target="_blank"
+                    class="text-primary-500 underline"
+                    >CGV</a
+                  >)
+                </span>
+              </label>
+              <p *ngIf="partnerTermsAcceptedError" class="text-xs text-red-500">
+                {{ partnerTermsAcceptedError }}
+              </p>
             </div>
           </form>
         </div>
 
-        <!-- Footer - Fixe -->
-        <div class="flex-shrink-0 p-8 pt-4 border-t border-gray-200 space-y-4">
-          <!-- Validation Summary (si formulaire incomplet) -->
-          <!-- <div
-            *ngIf="!isFormValid() && hasAttemptedSubmit"
-            class="p-3 bg-red-50 border border-red-200 rounded-lg"
-          >
-            <p class="text-sm font-medium text-red-800 mb-2">
-              Veuillez compléter les champs suivants :
-            </p>
-            <ul class="text-xs text-red-600 space-y-1">
-              <li *ngIf="!formData.lastName.trim()">• Nom</li>
-              <li *ngIf="!formData.firstName.trim()">• Prénom</li>
-              <li *ngIf="!formData.username.trim()">• Nom d'utilisateur</li>
-              <li *ngIf="!isEmailValid()">• Adresse email valide</li>
-              <li *ngIf="!isPhoneValid()">
-                • Numéro de téléphone valide ({{
-                  selectedCountry.phoneLength
-                }}
-                chiffres)
-              </li>
-              <li *ngIf="!isPasswordValid()">
-                • Mot de passe (minimum 8 caractères)
-              </li>
-              <li *ngIf="formData.password !== formData.confirmPassword">
-                • Les mots de passe doivent correspondre
-              </li>
-              <li *ngIf="!formData.ageConfirmation">
-                • Confirmation d'âge (18+)
-              </li>
-              <li *ngIf="!formData.termsAccepted">• Acceptation des CGU</li>
-              <li *ngIf="!formData.partnerTermsAccepted">
-                • Acceptation des conditions partenaires
-              </li>
-            </ul>
-          </div> -->
-
-          <!-- Submit Button -->
+        <div class="p-8 pt-4 border-t border-gray-200 space-y-4">
           <button
             (click)="register()"
+            [disabled]="!isFormValid()"
             class="w-full py-3 bg-primary-500 text-white rounded-lg font-semibold hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             Continuer
           </button>
 
-          <!-- Login Link -->
           <div class="text-center">
             <p class="text-sm text-gray-600">
               Vous possédez déjà un compte?
               <button
-                type="button"
                 (click)="switchToLogin()"
                 class="text-primary-500 font-semibold hover:underline ml-1"
               >
@@ -438,188 +398,201 @@ interface Country {
       </div>
     </div>
   `,
-  styles: [
-    `
-      /* Custom scrollbar pour le contenu */
-      .overflow-y-auto::-webkit-scrollbar {
-        width: 6px;
-      }
-
-      .overflow-y-auto::-webkit-scrollbar-track {
-        background: #f1f1f1;
-        border-radius: 10px;
-      }
-
-      .overflow-y-auto::-webkit-scrollbar-thumb {
-        background: #cbd5e0;
-        border-radius: 10px;
-      }
-
-      .overflow-y-auto::-webkit-scrollbar-thumb:hover {
-        background: #a0aec0;
-      }
-    `,
-  ],
+  styles: [],
 })
 export class RegisterModalComponent {
   @Output() closed = new EventEmitter<void>();
   @Output() switchToLoginModal = new EventEmitter<void>();
   @Output() registerSuccess = new EventEmitter<any>();
-  Math = Math; // Make Math available in template
 
-  showCountryDropdown = false;
-  hasAttemptedSubmit = false;
+  lastName = '';
+  firstName = '';
+  username = '';
+  email = '';
+  phone = '';
+  password = '';
+  confirmPassword = '';
+  currency = 'EUR';
+  ageConfirmation = false;
+  termsAccepted = false;
+  partnerTermsAccepted = false;
+  showPassword = false;
+  showConfirmPassword = false;
+
+  lastNameError = '';
+  firstNameError = '';
+  usernameError = '';
+  emailError = '';
+  phoneError = '';
+  passwordError = '';
+  confirmPasswordError = '';
+  ageConfirmationError = '';
+  termsAcceptedError = '';
+  partnerTermsAcceptedError = '';
 
   countries: Country[] = [
-    {
-      code: 'BJ',
-      name: 'Bénin',
-      flag: '🇧🇯',
-      dialCode: '+229',
-      phoneLength: 8,
-      placeholder: 'XX XX XX XX',
-    },
+    { code: 'BJ', name: 'Bénin', flag: '🇧🇯', dialCode: '+229', phoneLength: 8 },
     {
       code: 'FR',
       name: 'France',
       flag: '🇫🇷',
       dialCode: '+33',
-      phoneLength: 9,
-      placeholder: 'X XX XX XX XX',
-    },
-    {
-      code: 'CI',
-      name: "Côte d'Ivoire",
-      flag: '🇨🇮',
-      dialCode: '+225',
       phoneLength: 10,
-      placeholder: 'XX XX XX XX XX',
     },
-    {
-      code: 'SN',
-      name: 'Sénégal',
-      flag: '🇸🇳',
-      dialCode: '+221',
-      phoneLength: 9,
-      placeholder: 'XX XXX XX XX',
-    },
-    {
-      code: 'TG',
-      name: 'Togo',
-      flag: '🇹🇬',
-      dialCode: '+228',
-      phoneLength: 8,
-      placeholder: 'XX XX XX XX',
-    },
-    {
-      code: 'BF',
-      name: 'Burkina Faso',
-      flag: '🇧🇫',
-      dialCode: '+226',
-      phoneLength: 8,
-      placeholder: 'XX XX XX XX',
-    },
-    {
-      code: 'ML',
-      name: 'Mali',
-      flag: '🇲🇱',
-      dialCode: '+223',
-      phoneLength: 8,
-      placeholder: 'XX XX XX XX',
-    },
-    {
-      code: 'NE',
-      name: 'Niger',
-      flag: '🇳🇪',
-      dialCode: '+227',
-      phoneLength: 8,
-      placeholder: 'XX XX XX XX',
-    },
-    {
-      code: 'CM',
-      name: 'Cameroun',
-      flag: '🇨🇲',
-      dialCode: '+237',
-      phoneLength: 9,
-      placeholder: 'X XX XX XX XX',
-    },
-    {
-      code: 'GA',
-      name: 'Gabon',
-      flag: '🇬🇦',
-      dialCode: '+241',
-      phoneLength: 7,
-      placeholder: 'XX XX XXX',
-    },
-    {
-      code: 'CD',
-      name: 'RD Congo',
-      flag: '🇨🇩',
-      dialCode: '+243',
-      phoneLength: 9,
-      placeholder: 'XX XXX XXXX',
-    },
-    {
-      code: 'CG',
-      name: 'Congo',
-      flag: '🇨🇬',
-      dialCode: '+242',
-      phoneLength: 9,
-      placeholder: 'XX XXX XXXX',
-    },
-    {
-      code: 'US',
-      name: 'États-Unis',
-      flag: '🇺🇸',
-      dialCode: '+1',
-      phoneLength: 10,
-      placeholder: 'XXX XXX XXXX',
-    },
-    {
-      code: 'GB',
-      name: 'Royaume-Uni',
-      flag: '🇬🇧',
-      dialCode: '+44',
-      phoneLength: 10,
-      placeholder: 'XXXX XXXXXX',
-    },
-    {
-      code: 'CA',
-      name: 'Canada',
-      flag: '🇨🇦',
-      dialCode: '+1',
-      phoneLength: 10,
-      placeholder: 'XXX XXX XXXX',
-    },
+    { code: 'US', name: 'USA', flag: '🇺🇸', dialCode: '+1', phoneLength: 10 },
+    { code: 'CA', name: 'Canada', flag: '🇨🇦', dialCode: '+1', phoneLength: 10 },
   ];
 
-  selectedCountry: Country = this.countries[0]; // Bénin par défaut
+  selectedCountry: Country = this.countries[0];
 
-  formData = {
-    lastName: '',
-    firstName: '',
-    username: '',
-    email: '',
-    countryCode: this.selectedCountry.dialCode,
-    phone: '',
-    password: '',
-    confirmPassword: '',
-    currency: 'EUR',
-    ageConfirmation: false,
-    termsAccepted: false,
-    partnerTermsAccepted: false,
-  };
-
-  toggleCountryDropdown(): void {
-    this.showCountryDropdown = !this.showCountryDropdown;
+  validateLastName(): void {
+    this.lastNameError = '';
+    if (!this.lastName.trim()) {
+      this.lastNameError = 'Le nom est requis';
+    } else if (this.lastName.trim().length < 2) {
+      this.lastNameError = 'Minimum 2 caractères';
+    }
   }
 
-  selectCountry(country: Country): void {
-    this.selectedCountry = country;
-    this.formData.countryCode = country.dialCode;
-    this.showCountryDropdown = false;
-    // Réinitialiser le numéro de téléphone lors du changement de pays
-    this.formData.phone = '';
+  validateFirstName(): void {
+    this.firstNameError = '';
+    if (!this.firstName.trim()) {
+      this.firstNameError = 'Le prénom est requis';
+    } else if (this.firstName.trim().length < 2) {
+      this.firstNameError = 'Minimum 2 caractères';
+    }
+  }
+
+  validateUsername(): void {
+    this.usernameError = '';
+    if (!this.username.trim()) {
+      this.usernameError = 'Le pseudo est requis';
+    } else if (this.username.trim().length < 3) {
+      this.usernameError = 'Minimum 3 caractères';
+    } else if (!/^[a-zA-Z0-9_]+$/.test(this.username)) {
+      this.usernameError = 'Lettres, chiffres et underscore uniquement';
+    }
+  }
+
+  validateEmail(): void {
+    this.emailError = '';
+    if (!this.email.trim()) {
+      this.emailError = "L'adresse email est requise";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.email)) {
+      this.emailError = 'Adresse email invalide';
+    }
+  }
+
+  sanitizePhone(): void {
+    this.phone = this.phone.replace(/[^\d\s]/g, '');
+  }
+
+  validatePhone(): void {
+    this.phoneError = '';
+    const digits = this.phone.replace(/\s/g, '');
+    if (!digits) {
+      this.phoneError = 'Le numéro de téléphone est requis';
+    } else if (digits.length !== this.selectedCountry.phoneLength) {
+      this.phoneError = `${this.selectedCountry.phoneLength} chiffres requis`;
+    }
+  }
+
+  validatePassword(): void {
+    this.passwordError = '';
+    if (!this.password) {
+      this.passwordError = 'Le mot de passe est requis';
+    } else if (this.password.length < 8) {
+      this.passwordError = 'Minimum 8 caractères';
+    } else if (!/[A-Z]/.test(this.password)) {
+      this.passwordError = 'Au moins une majuscule requise';
+    } else if (!/[0-9]/.test(this.password)) {
+      this.passwordError = 'Au moins un chiffre requis';
+    }
+
+    if (this.confirmPassword) this.validateConfirmPassword();
+  }
+
+  validateConfirmPassword(): void {
+    this.confirmPasswordError = '';
+    if (!this.confirmPassword) {
+      this.confirmPasswordError = 'La confirmation est requise';
+    } else if (this.password !== this.confirmPassword) {
+      this.confirmPasswordError = 'Les mots de passe ne correspondent pas';
+    }
+  }
+
+  validateAgeConfirmation(): void {
+    this.ageConfirmationError = '';
+    if (!this.ageConfirmation) {
+      this.ageConfirmationError = 'Vous devez avoir 18 ans ou plus';
+    }
+  }
+
+  validateTermsAccepted(): void {
+    this.termsAcceptedError = '';
+    if (!this.termsAccepted) {
+      this.termsAcceptedError = 'Vous devez accepter les conditions';
+    }
+  }
+
+  validatePartnerTermsAccepted(): void {
+    this.partnerTermsAcceptedError = '';
+    if (!this.partnerTermsAccepted) {
+      this.partnerTermsAcceptedError =
+        'Vous devez accepter les conditions partenaires';
+    }
+  }
+
+  togglePassword(): void {
+    this.showPassword = !this.showPassword;
+  }
+
+  toggleConfirmPassword(): void {
+    this.showConfirmPassword = !this.showConfirmPassword;
+  }
+
+  isFormValid(): boolean {
+    const phoneDigits = this.phone.replace(/\s/g, '');
+    return (
+      this.lastName.trim().length >= 2 &&
+      this.firstName.trim().length >= 2 &&
+      this.username.trim().length >= 3 &&
+      /^[a-zA-Z0-9_]+$/.test(this.username) &&
+      /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.email) &&
+      phoneDigits.length === this.selectedCountry.phoneLength &&
+      this.password.length >= 8 &&
+      /[A-Z]/.test(this.password) &&
+      /[0-9]/.test(this.password) &&
+      this.password === this.confirmPassword &&
+      this.ageConfirmation &&
+      this.termsAccepted &&
+      this.partnerTermsAccepted
+    );
+  }
+
+  register(): void {
+    this.validateLastName();
+    this.validateFirstName();
+    this.validateUsername();
+    this.validateEmail();
+    this.validatePhone();
+    this.validatePassword();
+    this.validateConfirmPassword();
+    this.validateAgeConfirmation();
+    this.validateTermsAccepted();
+    this.validatePartnerTermsAccepted();
+
+    if (!this.isFormValid()) return;
+
+    // TEST: Valeurs acceptées ci-dessus
+    this.registerSuccess.emit({
+      lastName: this.lastName,
+      firstName: this.firstName,
+      username: this.username,
+      email: this.email,
+      phone: this.selectedCountry.dialCode + this.phone.replace(/\s/g, ''),
+      currency: this.currency,
+    });
   }
 
   close(): void {
@@ -628,63 +601,5 @@ export class RegisterModalComponent {
 
   switchToLogin(): void {
     this.switchToLoginModal.emit();
-  }
-
-  isPhoneValid(): boolean {
-    if (!this.formData.phone) return false;
-    // Enlever tous les espaces et caractères non numériques
-    const digitsOnly = this.formData.phone.replace(/\D/g, '');
-    return digitsOnly.length === this.selectedCountry.phoneLength;
-  }
-
-  isEmailValid(): boolean {
-    if (!this.formData.email) return false;
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(this.formData.email);
-  }
-
-  isPasswordValid(): boolean {
-    return this.formData.password.length >= 8;
-  }
-
-  isFormValid(): boolean {
-    return (
-      this.formData.lastName.trim() !== '' &&
-      this.formData.firstName.trim() !== '' &&
-      this.formData.username.trim() !== '' &&
-      this.isEmailValid() &&
-      this.isPhoneValid() &&
-      this.isPasswordValid() &&
-      this.formData.confirmPassword !== '' &&
-      this.formData.password === this.formData.confirmPassword &&
-      this.formData.ageConfirmation &&
-      this.formData.termsAccepted &&
-      this.formData.partnerTermsAccepted
-    );
-  }
-
-  register(): void {
-    this.hasAttemptedSubmit = true;
-
-    if (!this.isFormValid()) {
-      console.log('Form invalid, showing errors');
-      return;
-    }
-
-    const fullPhone = `${
-      this.formData.countryCode
-    }${this.formData.phone.replace(/\D/g, '')}`;
-
-    // TODO: Implémenter l'inscription réelle
-    console.log('Register:', {
-      ...this.formData,
-      fullPhone,
-    });
-
-    // Rediriger vers la sélection de catégories
-    this.registerSuccess.emit({
-      ...this.formData,
-      fullPhone,
-    });
   }
 }

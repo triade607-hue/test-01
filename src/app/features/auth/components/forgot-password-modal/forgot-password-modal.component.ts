@@ -12,7 +12,6 @@ import { FormsModule } from '@angular/forms';
       class="fixed inset-0 z-50 overflow-y-auto bg-black/50 flex items-center justify-center p-4"
     >
       <div class="bg-white rounded-lg max-w-md w-full p-8 relative">
-        <!-- Close Button -->
         <button
           (click)="close()"
           class="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
@@ -32,18 +31,14 @@ import { FormsModule } from '@angular/forms';
           </svg>
         </button>
 
-        <!-- Title -->
         <h2 class="text-2xl font-bold text-primary-500 mb-2">
-          Mot de passe oublié ?
+          Mot de passe oublié
         </h2>
         <p class="text-gray-500 mb-8">
-          Entrez votre adresse e-mail et nous vous enverrons un code de
-          vérification pour réinitialiser votre mot de passe.
+          Entrez votre adresse email pour recevoir un code de réinitialisation.
         </p>
 
-        <!-- Form -->
-        <form (ngSubmit)="sendResetCode()">
-          <!-- Email -->
+        <form (ngSubmit)="sendCode()">
           <div class="mb-6">
             <label class="block text-sm font-medium text-gray-900 mb-2">
               Adresse mail <span class="text-red-500">*</span>
@@ -52,29 +47,33 @@ import { FormsModule } from '@angular/forms';
               type="email"
               [(ngModel)]="email"
               name="email"
+              (blur)="validateEmail()"
               placeholder="monadresse@gmail.com"
-              required
+              maxlength="100"
               class="w-full px-4 py-3 bg-gray-100 border-0 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
             />
+            <p *ngIf="emailError" class="text-xs text-red-500 mt-1">
+              {{ emailError }}
+            </p>
           </div>
 
-          <!-- Submit Button -->
           <button
             type="submit"
-            [disabled]="!email"
-            class="w-full py-3 bg-primary-500 text-white rounded-lg font-semibold hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors mb-4"
+            [disabled]="!isFormValid() || isLoading"
+            class="w-full py-3 bg-primary-500 text-white rounded-lg font-semibold hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
-            Envoyer le code
+            {{ isLoading ? 'Envoi en cours...' : 'Envoyer le code' }}
           </button>
 
-          <!-- Back to Login -->
-          <button
-            type="button"
-            (click)="backToLogin()"
-            class="w-full py-3 border-2 border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition-colors"
-          >
-            Retour à la connexion
-          </button>
+          <div class="text-center mt-4">
+            <button
+              type="button"
+              (click)="backToLogin()"
+              class="text-sm text-primary-500 hover:underline"
+            >
+              Retour à la connexion
+            </button>
+          </div>
         </form>
       </div>
     </div>
@@ -83,10 +82,40 @@ import { FormsModule } from '@angular/forms';
 })
 export class ForgotPasswordModalComponent {
   @Output() closed = new EventEmitter<void>();
-  @Output() codeSent = new EventEmitter<string>();
   @Output() backToLoginModal = new EventEmitter<void>();
+  @Output() codeSent = new EventEmitter<string>();
 
   email = '';
+  emailError = '';
+  isLoading = false;
+
+  validateEmail(): void {
+    this.emailError = '';
+    if (!this.email.trim()) {
+      this.emailError = "L'adresse email est requise";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.email)) {
+      this.emailError = 'Adresse email invalide';
+    }
+  }
+
+  isFormValid(): boolean {
+    return (
+      this.email.trim() !== '' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.email)
+    );
+  }
+
+  sendCode(): void {
+    this.validateEmail();
+    if (!this.isFormValid()) return;
+
+    this.isLoading = true;
+
+    // TEST: Accepte n'importe quel email valide
+    setTimeout(() => {
+      this.isLoading = false;
+      this.codeSent.emit(this.email);
+    }, 1500);
+  }
 
   close(): void {
     this.closed.emit();
@@ -94,15 +123,5 @@ export class ForgotPasswordModalComponent {
 
   backToLogin(): void {
     this.backToLoginModal.emit();
-  }
-
-  sendResetCode(): void {
-    if (!this.email) return;
-
-    // TODO: Appel API pour envoyer le code
-    console.log('Sending reset code to:', this.email);
-
-    // Émettre l'événement avec l'email pour passer à la vérification OTP
-    this.codeSent.emit(this.email);
   }
 }

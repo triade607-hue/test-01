@@ -1,4 +1,4 @@
-// src/app/features/auth/components/category-selection-modal/category-selection-modal.component.ts
+// src/app/features/auth/components/category-selection/category-selection.component.ts
 import { Component, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -18,11 +18,13 @@ interface Category {
     <div
       class="fixed inset-0 z-50 overflow-y-auto bg-black/50 flex items-center justify-center p-4"
     >
-      <div class="bg-white rounded-lg max-w-4xl w-full p-8 relative">
+      <div
+        class="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] flex flex-col relative"
+      >
         <!-- Close Button -->
         <button
           (click)="close()"
-          class="absolute top-4 right-4 text-error hover:text-error/80 transition-colors"
+          class="absolute top-4 right-4 z-10 text-error hover:text-error/80 transition-colors"
         >
           <svg
             class="w-6 h-6"
@@ -39,109 +41,113 @@ interface Category {
           </svg>
         </button>
 
-        <!-- Title -->
-        <h2 class="text-2xl font-bold text-primary-500 mb-2">Inscription</h2>
-        <p class="text-gray-500 mb-6">
-          Aidez-nous à mieux vous servir. Veuillez sélectionner cinq
-          <span class="font-medium">(05)</span> catégories d'articles qui vous
-          intéressent.
-        </p>
-
-        <!-- Search Bar -->
-        <div class="relative mb-6">
-          <input
-            type="text"
-            [(ngModel)]="searchQuery"
-            (input)="filterCategories()"
-            placeholder="rechercher une catégorie d'article"
-            class="w-full px-4 py-3 pr-12 bg-gray-100 border-0 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-          />
-          <svg
-            class="absolute right-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-            />
-          </svg>
-        </div>
-
-        <!-- Categories Grid -->
-        <div class="grid grid-cols-2 gap-4 mb-6 max-h-96 overflow-y-auto">
-          <button
-            *ngFor="let category of filteredCategories"
-            (click)="toggleCategory(category)"
-            [class.ring-2]="category.selected"
-            [class.ring-primary-500]="category.selected"
-            class="relative aspect-video rounded-lg overflow-hidden hover:opacity-90 transition-all"
-          >
-            <img
-              [src]="category.image"
-              [alt]="category.name"
-              class="w-full h-full object-cover"
-            />
-            <div
-              class="absolute inset-0 bg-black/30 flex items-center justify-center"
-            >
-              <span class="text-white text-lg font-semibold">
-                {{ category.name }}
-              </span>
-            </div>
-            <!-- Checkmark -->
-            <div
-              *ngIf="category.selected"
-              class="absolute top-2 right-2 w-6 h-6 bg-primary-500 rounded-full flex items-center justify-center"
-            >
-              <svg
-                class="w-4 h-4 text-white"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M5 13l4 4L19 7"
-                />
-              </svg>
-            </div>
-          </button>
-        </div>
-
-        <!-- Selection Counter -->
-        <p class="text-sm text-gray-600 text-center mb-6">
-          {{ getSelectedCount() }} / 5 catégories sélectionnées
-        </p>
-
-        <!-- Submit Button -->
-        <button
-          (click)="submit()"
-          [disabled]="getSelectedCount() !== 5"
-          class="w-full py-3 bg-primary-500 text-white rounded-lg font-semibold hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-        >
-          S'inscrire
-        </button>
-
-        <!-- Divider -->
-        <div class="my-6 border-t border-gray-200"></div>
-
-        <!-- Login Link -->
-        <div class="text-center">
-          <p class="text-sm text-gray-600">
-            Vous possédez déjà un compte?
-            <button
-              (click)="switchToLogin()"
-              class="text-primary-500 font-semibold hover:underline ml-1"
-            >
-              Connectez-vous
-            </button>
+        <!-- Header - Fixed -->
+        <div class="flex-shrink-0 p-8 pb-4">
+          <h2 class="text-2xl font-bold text-primary-500 mb-2">Inscription</h2>
+          <p class="text-gray-500 mb-6">
+            Aidez-nous à mieux vous servir. Veuillez sélectionner cinq
+            <span class="font-medium">(05)</span> catégories d'articles qui vous
+            intéressent.
           </p>
+
+          <!-- Search Bar -->
+          <div class="relative">
+            <input
+              type="text"
+              [(ngModel)]="searchQuery"
+              (input)="filterCategories()"
+              placeholder="rechercher une catégorie d'article"
+              class="w-full px-4 py-3 pr-12 bg-gray-100 border-0 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+            />
+            <svg
+              class="absolute right-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
+            </svg>
+          </div>
+        </div>
+
+        <!-- Categories Grid - Scrollable -->
+        <div class="flex-1 overflow-y-auto px-8">
+          <div class="grid grid-cols-2 gap-4 pb-4">
+            <button
+              *ngFor="let category of filteredCategories"
+              (click)="toggleCategory(category)"
+              [class.ring-2]="category.selected"
+              [class.ring-primary-500]="category.selected"
+              class="relative aspect-video rounded-lg overflow-hidden hover:opacity-90 transition-all"
+            >
+              <img
+                [src]="category.image"
+                [alt]="category.name"
+                class="w-full h-full object-cover"
+              />
+              <div
+                class="absolute inset-0 bg-black/30 flex items-center justify-center"
+              >
+                <span class="text-white text-lg font-semibold">
+                  {{ category.name }}
+                </span>
+              </div>
+              <!-- Checkmark -->
+              <div
+                *ngIf="category.selected"
+                class="absolute top-2 right-2 w-6 h-6 bg-primary-500 rounded-full flex items-center justify-center"
+              >
+                <svg
+                  class="w-4 h-4 text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Footer - Fixed -->
+        <div class="flex-shrink-0 p-8 pt-4 border-t border-gray-200 space-y-4">
+          <!-- Selection Counter -->
+          <p class="text-sm text-gray-600 text-center">
+            {{ getSelectedCount() }} / 5 catégories sélectionnées
+          </p>
+
+          <!-- Submit Button -->
+          <button
+            (click)="submit()"
+            [disabled]="getSelectedCount() !== 5"
+            class="w-full py-3 bg-primary-500 text-white rounded-lg font-semibold hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          >
+            S'inscrire
+          </button>
+
+          <!-- Login Link -->
+          <div class="text-center">
+            <p class="text-sm text-gray-600">
+              Vous possédez déjà un compte?
+              <button
+                (click)="switchToLogin()"
+                class="text-primary-500 font-semibold hover:underline ml-1"
+              >
+                Connectez-vous
+              </button>
+            </p>
+          </div>
         </div>
       </div>
     </div>
@@ -250,6 +256,5 @@ export class CategorySelectionModalComponent {
       .map((c) => c.id);
 
     this.categoriesSelected.emit(selectedIds);
-    this.close();
   }
 }

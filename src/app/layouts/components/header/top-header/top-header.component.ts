@@ -447,19 +447,17 @@ export class TopHeaderComponent {
     console.log('OTP verified for context:', this.otpContext);
 
     if (this.otpContext === 'login') {
-      // Après login + OTP -> Connecté
+      // Connexion réussie
       this.isAuthenticated = true;
       this.closeModal();
       alert('Connexion réussie !');
-      // TODO: Rediriger vers dashboard
     } else if (this.otpContext === 'register') {
-      // Après register + catégories + OTP -> Connecté
-      this.isAuthenticated = true;
+      // Après inscription → Retour au login
       this.closeModal();
-      alert('Inscription terminée ! Bienvenue sur Occaverse.');
-      // TODO: Rediriger vers dashboard
+      alert('Inscription validée ! Veuillez vous connecter.');
+      this.openModal('login');
     } else if (this.otpContext === 'forgot-password') {
-      // Après mot de passe oublié + OTP -> Nouveau mot de passe
+      // Mot de passe oublié → Nouveau mot de passe
       this.openModal('new-password');
     }
   }
@@ -488,7 +486,7 @@ export class TopHeaderComponent {
 
   onCategoriesSelected(categoryIds: number[]): void {
     console.log('Categories selected:', categoryIds);
-    // Après la sélection des catégories -> Vérification OTP
+    // Après catégories → OTP
     this.otpContext = 'register';
     this.openModal('otp');
   }
