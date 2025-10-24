@@ -2,6 +2,12 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { LoginModalComponent } from '../../../../features/auth/components/login-modal/login-modal.component';
+import { RegisterModalComponent } from '../../../../features/auth/components/register-modal/register-modal.component';
+import { OtpModalComponent } from '../../../../features/auth/components/otp-modal/otp-modal.component';
+import { ForgotPasswordModalComponent } from '../../../../features/auth/components/forgot-password-modal/forgot-password-modal.component';
+import { NewPasswordModalComponent } from '../../../../features/auth/components/new-password-modal/new-password-modal.component';
+import { CategorySelectionModalComponent } from '../../../../features/auth/components/category-selection/category-selection.component';
 
 interface Language {
   code: string;
@@ -15,10 +21,29 @@ interface Currency {
   name: string;
 }
 
+type ModalType =
+  | 'login'
+  | 'register'
+  | 'otp'
+  | 'forgot-password'
+  | 'new-password'
+  | 'category-selection'
+  | null;
+type OtpContextType = 'register' | 'forgot-password' | 'login';
+
 @Component({
   selector: 'app-top-header',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [
+    CommonModule,
+    RouterModule,
+    LoginModalComponent,
+    RegisterModalComponent,
+    OtpModalComponent,
+    ForgotPasswordModalComponent,
+    NewPasswordModalComponent,
+    CategorySelectionModalComponent,
+  ],
   template: `
     <div class="bg-white h-12">
       <div class="container mx-auto px-4">
@@ -51,6 +76,7 @@ interface Currency {
           <div class="flex items-center gap-4">
             <!-- Vendre un bien -->
             <a
+              *ngIf="isAuthenticated"
               routerLink="/seller/products/new"
               class="flex items-center gap-1.5 text-xs text-gray-700 hover:text-primary-500 font-medium transition-colors"
             >
@@ -90,7 +116,9 @@ interface Currency {
                     d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
                   />
                 </svg>
-                <span class="hidden md:inline">Mon compte</span>
+                <span class="hidden md:inline">{{
+                  isAuthenticated ? 'Mon compte' : 'Compte'
+                }}</span>
                 <svg
                   class="w-3 h-3"
                   fill="none"
@@ -106,13 +134,13 @@ interface Currency {
                 </svg>
               </button>
 
-              <!-- User Dropdown Menu -->
+              <!-- User Dropdown Menu - Authenticated -->
               <div
-                *ngIf="showUserMenu"
+                *ngIf="showUserMenu && isAuthenticated"
                 class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded shadow-lg z-50"
               >
                 <a
-                  routerLink="/buyer/profile"
+                  routerLink="/buyer/dashboard"
                   class="block px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-50 first:rounded-t"
                   (click)="showUserMenu = false"
                 >
@@ -124,6 +152,13 @@ interface Currency {
                   (click)="showUserMenu = false"
                 >
                   Espace Vendeur
+                </a>
+                <a
+                  routerLink="/buyer/orders"
+                  class="block px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-50"
+                  (click)="showUserMenu = false"
+                >
+                  Mes commandes
                 </a>
                 <a
                   routerLink="/settings"
@@ -138,6 +173,25 @@ interface Currency {
                   class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 last:rounded-b"
                 >
                   Déconnexion
+                </button>
+              </div>
+
+              <!-- User Dropdown Menu - NOT Authenticated -->
+              <div
+                *ngIf="showUserMenu && !isAuthenticated"
+                class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded shadow-lg z-50"
+              >
+                <button
+                  (click)="openModal('login')"
+                  class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 first:rounded-t"
+                >
+                  Se connecter
+                </button>
+                <button
+                  (click)="openModal('register')"
+                  class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 last:rounded-b"
+                >
+                  S'inscrire
                 </button>
               </div>
             </div>
@@ -253,6 +307,52 @@ interface Currency {
         </div>
       </div>
     </div>
+
+    <!-- Modals -->
+    <app-login-modal
+      *ngIf="activeModal === 'login'"
+      (closed)="closeModal()"
+      (switchToRegisterModal)="openModal('register')"
+      (forgotPasswordClicked)="openModal('forgot-password')"
+      (loginSuccess)="onLoginSuccess($event)"
+    ></app-login-modal>
+
+    <app-register-modal
+      *ngIf="activeModal === 'register'"
+      (closed)="closeModal()"
+      (switchToLoginModal)="openModal('login')"
+      (registerSuccess)="onRegisterSuccess($event)"
+    ></app-register-modal>
+
+    <app-otp-modal
+      *ngIf="activeModal === 'otp'"
+      [email]="currentEmail"
+      [context]="otpContext"
+      (closed)="closeModal()"
+      (verified)="onOtpVerified()"
+      (codeResendRequested)="onResendCode()"
+    ></app-otp-modal>
+
+    <app-forgot-password-modal
+      *ngIf="activeModal === 'forgot-password'"
+      (closed)="closeModal()"
+      (backToLoginModal)="openModal('login')"
+      (codeSent)="onForgotPasswordCodeSent($event)"
+    ></app-forgot-password-modal>
+
+    <app-new-password-modal
+      *ngIf="activeModal === 'new-password'"
+      [email]="currentEmail"
+      (closed)="closeModal()"
+      (passwordReset)="onPasswordReset()"
+    ></app-new-password-modal>
+
+    <app-category-selection-modal
+      *ngIf="activeModal === 'category-selection'"
+      (closed)="closeModal()"
+      (switchToLoginModal)="openModal('login')"
+      (categoriesSelected)="onCategoriesSelected($event)"
+    ></app-category-selection-modal>
   `,
   styles: [],
 })
@@ -260,6 +360,12 @@ export class TopHeaderComponent {
   showLanguageDropdown = false;
   showCurrencyDropdown = false;
   showUserMenu = false;
+
+  // Auth state
+  isAuthenticated = false; // TODO: Connecter au AuthService
+  activeModal: ModalType = null;
+  currentEmail = '';
+  otpContext: 'register' | 'forgot-password' | 'login' = 'register';
 
   languages: Language[] = [
     { code: 'FR', name: 'Français', flag: '🇫🇷' },
@@ -308,8 +414,88 @@ export class TopHeaderComponent {
     console.log('Devise sélectionnée:', currency.name);
   }
 
+  // Modal management
+  openModal(modal: ModalType): void {
+    this.activeModal = modal;
+    this.showUserMenu = false;
+    this.showLanguageDropdown = false;
+    this.showCurrencyDropdown = false;
+  }
+
+  closeModal(): void {
+    this.activeModal = null;
+    this.currentEmail = '';
+  }
+
+  // Auth flow handlers
+  onLoginSuccess(data: any): void {
+    console.log('Login submitted:', data);
+    this.currentEmail = data.email;
+    this.otpContext = 'login';
+    // Toujours passer par OTP pour la connexion
+    this.openModal('otp');
+  }
+
+  onRegisterSuccess(data: any): void {
+    console.log('Register success:', data);
+    this.currentEmail = data.email;
+    // D'abord la sélection des catégories
+    this.openModal('category-selection');
+  }
+
+  onOtpVerified(): void {
+    console.log('OTP verified for context:', this.otpContext);
+
+    if (this.otpContext === 'login') {
+      // Après login + OTP -> Connecté
+      this.isAuthenticated = true;
+      this.closeModal();
+      alert('Connexion réussie !');
+      // TODO: Rediriger vers dashboard
+    } else if (this.otpContext === 'register') {
+      // Après register + catégories + OTP -> Connecté
+      this.isAuthenticated = true;
+      this.closeModal();
+      alert('Inscription terminée ! Bienvenue sur Occaverse.');
+      // TODO: Rediriger vers dashboard
+    } else if (this.otpContext === 'forgot-password') {
+      // Après mot de passe oublié + OTP -> Nouveau mot de passe
+      this.openModal('new-password');
+    }
+  }
+
+  onResendCode(): void {
+    console.log('Resending OTP to:', this.currentEmail);
+    // TODO: Appel API pour renvoyer le code
+    alert('Un nouveau code a été envoyé à votre adresse e-mail.');
+  }
+
+  onForgotPasswordCodeSent(email: string): void {
+    console.log('Reset code sent to:', email);
+    this.currentEmail = email;
+    this.otpContext = 'forgot-password';
+    this.openModal('otp');
+  }
+
+  onPasswordReset(): void {
+    console.log('Password reset successfully');
+    // Afficher message de succès puis rediriger vers login
+    alert(
+      'Mot de passe réinitialisé avec succès ! Vous pouvez maintenant vous connecter.'
+    );
+    this.openModal('login');
+  }
+
+  onCategoriesSelected(categoryIds: number[]): void {
+    console.log('Categories selected:', categoryIds);
+    // Après la sélection des catégories -> Vérification OTP
+    this.otpContext = 'register';
+    this.openModal('otp');
+  }
+
   logout(): void {
     console.log('Déconnexion');
+    this.isAuthenticated = false;
     this.showUserMenu = false;
     // TODO: Implémenter la déconnexion avec AuthService
   }

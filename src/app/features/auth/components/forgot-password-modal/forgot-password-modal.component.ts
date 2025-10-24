@@ -37,12 +37,12 @@ import { FormsModule } from '@angular/forms';
           Mot de passe oublié ?
         </h2>
         <p class="text-gray-500 mb-8">
-          Entrez votre adresse email et nous vous enverrons un lien pour
-          réinitialiser votre mot de passe.
+          Entrez votre adresse e-mail et nous vous enverrons un code de
+          vérification pour réinitialiser votre mot de passe.
         </p>
 
         <!-- Form -->
-        <form (ngSubmit)="sendResetLink()">
+        <form (ngSubmit)="sendResetCode()">
           <!-- Email -->
           <div class="mb-6">
             <label class="block text-sm font-medium text-gray-900 mb-2">
@@ -62,21 +62,19 @@ import { FormsModule } from '@angular/forms';
           <button
             type="submit"
             [disabled]="!email"
-            class="w-full py-3 bg-primary-500 text-white rounded-lg font-semibold hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            class="w-full py-3 bg-primary-500 text-white rounded-lg font-semibold hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors mb-4"
           >
-            Envoyer le lien de réinitialisation
+            Envoyer le code
           </button>
 
           <!-- Back to Login -->
-          <div class="text-center mt-4">
-            <button
-              type="button"
-              (click)="switchToLogin()"
-              class="text-sm text-primary-500 hover:underline"
-            >
-              Retour à la connexion
-            </button>
-          </div>
+          <button
+            type="button"
+            (click)="backToLogin()"
+            class="w-full py-3 border-2 border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition-colors"
+          >
+            Retour à la connexion
+          </button>
         </form>
       </div>
     </div>
@@ -85,8 +83,8 @@ import { FormsModule } from '@angular/forms';
 })
 export class ForgotPasswordModalComponent {
   @Output() closed = new EventEmitter<void>();
-  @Output() switchToLoginModal = new EventEmitter<void>();
-  @Output() resetLinkSent = new EventEmitter<string>();
+  @Output() codeSent = new EventEmitter<string>();
+  @Output() backToLoginModal = new EventEmitter<void>();
 
   email = '';
 
@@ -94,18 +92,17 @@ export class ForgotPasswordModalComponent {
     this.closed.emit();
   }
 
-  switchToLogin(): void {
-    this.switchToLoginModal.emit();
+  backToLogin(): void {
+    this.backToLoginModal.emit();
   }
 
-  sendResetLink(): void {
+  sendResetCode(): void {
     if (!this.email) return;
 
-    // TODO: Implémenter l'envoi du lien de réinitialisation
-    console.log('Send reset link to:', this.email);
+    // TODO: Appel API pour envoyer le code
+    console.log('Sending reset code to:', this.email);
 
-    // Simuler succès
-    this.resetLinkSent.emit(this.email);
-    this.close();
+    // Émettre l'événement avec l'email pour passer à la vérification OTP
+    this.codeSent.emit(this.email);
   }
 }

@@ -2,12 +2,11 @@
 import { Component, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-login-modal',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule],
   template: `
     <div
       class="fixed inset-0 z-50 overflow-y-auto bg-black/50 flex items-center justify-center p-4"
@@ -96,12 +95,13 @@ import { RouterModule } from '@angular/router';
 
           <!-- Forgot Password -->
           <div class="text-center mt-4">
-            <a
-              routerLink="/auth/forgot-password"
+            <button
+              type="button"
+              (click)="forgotPassword()"
               class="text-sm text-primary-500 hover:underline"
             >
               Mot de passe oublié ?
-            </a>
+            </button>
           </div>
         </form>
 
@@ -128,6 +128,7 @@ import { RouterModule } from '@angular/router';
 export class LoginModalComponent {
   @Output() closed = new EventEmitter<void>();
   @Output() switchToRegisterModal = new EventEmitter<void>();
+  @Output() forgotPasswordClicked = new EventEmitter<void>();
   @Output() loginSuccess = new EventEmitter<any>();
 
   email = '';
@@ -142,6 +143,10 @@ export class LoginModalComponent {
     this.switchToRegisterModal.emit();
   }
 
+  forgotPassword(): void {
+    this.forgotPasswordClicked.emit();
+  }
+
   login(): void {
     if (!this.email || !this.password) return;
 
@@ -154,6 +159,5 @@ export class LoginModalComponent {
 
     // Simuler succès
     this.loginSuccess.emit({ email: this.email });
-    this.close();
   }
 }
