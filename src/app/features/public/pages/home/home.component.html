@@ -51,8 +51,9 @@
         <app-product-card
           *ngFor="let product of section.products"
           [product]="product"
-          [showVendor]="true"
-          (favoriteToggled)="onFavoriteToggled($event)"
+          [showFavoriteButton]="true"
+          [isFavorite]="product.isFavorite || false"
+          (favoriteToggle)="onFavoriteToggled($event)"
         ></app-product-card>
       </div>
 
@@ -98,7 +99,7 @@
                 type="submit"
                 class="px-8 py-4 bg-primary-500 text-white rounded-lg font-semibold hover:bg-primary-600 transition-colors whitespace-nowrap"
               >
-                S'inscrire
+                S'abonner
               </button>
             </form>
           </div>

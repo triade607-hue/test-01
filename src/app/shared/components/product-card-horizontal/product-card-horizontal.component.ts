@@ -41,10 +41,10 @@ import { Product } from '../product-card/product-card.component';
         <!-- Vendor -->
         <div class="flex items-center gap-1 mb-3">
           <span class="text-sm text-gray-700">
-            {{ '@' + product.vendor?.name }}
+            {{ '@' + product.vendor.name }}
           </span>
           <svg
-            *ngIf="product.vendor?.isVerified"
+            *ngIf="product.vendor.isVerified"
             width="19"
             height="19"
             viewBox="0 0 19 19"
