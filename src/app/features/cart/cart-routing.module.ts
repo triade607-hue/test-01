@@ -1,13 +1,17 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { NotificationsListComponent } from './pages/notifications-list/notifications-list.component';
+import { CartListComponent } from './pages/cart-list/cart-list.component';
+import { CheckoutComponent } from './pages/checkout/checkout.component';
 import { UserLayoutComponent } from '../../layouts/user-layout/user-layout.component';
 
 const routes: Routes = [
   {
     path: '',
     component: UserLayoutComponent,
-    children: [{ path: '', component: NotificationsListComponent }],
+    children: [
+      { path: '', component: CartListComponent },
+      { path: 'checkout', component: CheckoutComponent },
+    ],
   },
 ];
 
@@ -15,4 +19,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class NotificationsRoutingModule {}
+export class CartRoutingModule {}
