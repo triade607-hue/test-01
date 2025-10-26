@@ -1,0 +1,341 @@
+<div class="min-h-screen bg-gray-50">
+  <!-- Breadcrumb -->
+  <div class="container mx-auto px-4 py-4">
+    <app-breadcrumb [items]="breadcrumbItems"></app-breadcrumb>
+  </div>
+
+  <!-- Main Content -->
+  <div class="container mx-auto px-4 pb-4">
+    <div class="bg-white rounded border border-gray-200 overflow-hidden h-[calc(100vh-180px)]">
+      <div class="flex h-full">
+        <!-- ==================== LISTE DES CONVERSATIONS ==================== -->
+        <!-- Desktop: Toujours visible | Mobile: Visible si showChatOnMobile = false -->
+        <aside
+          class="w-full md:w-96 border-r border-gray-200 flex flex-col"
+          [class.hidden]="showChatOnMobile"
+          [class.md:flex]="true"
+        >
+          <!-- Header avec recherche -->
+          <div class="p-4 border-b border-gray-200 flex-shrink-0">
+            <div class="relative">
+              <svg
+                class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
+              </svg>
+              <input
+                type="text"
+                [(ngModel)]="searchQuery"
+                (input)="filterConversations()"
+                placeholder="rechercher une conversation..."
+                class="w-full pl-10 pr-10 py-2.5 bg-gray-50 border border-gray-200 rounded text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              />
+              <button
+                *ngIf="searchQuery"
+                (click)="clearSearch()"
+                class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              >
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                  <path
+                    fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Liste des conversations -->
+          <div class="flex-1 overflow-y-auto">
+            <button
+              *ngFor="let conversation of filteredConversations"
+              (click)="selectConversation(conversation)"
+              [class.bg-primary-500]="activeConversation?.id === conversation.id"
+              [class.text-white]="activeConversation?.id === conversation.id"
+              class="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors text-left border-b border-gray-100"
+              [class.hover:bg-primary-600]="activeConversation?.id === conversation.id"
+            >
+              <!-- Avatar avec statut -->
+              <div class="relative flex-shrink-0">
+                <img
+                  [src]="conversation.user.avatar"
+                  [alt]="conversation.user.name"
+                  class="w-12 h-12 rounded-full object-cover"
+                />
+                <span
+                  *ngIf="conversation.user.isOnline"
+                  class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"
+                ></span>
+              </div>
+
+              <!-- Contenu -->
+              <div class="flex-1 min-w-0">
+                <div class="flex items-start justify-between gap-2">
+                  <div class="flex-1 min-w-0">
+                    <h3
+                      class="text-sm font-medium truncate"
+                      [class.text-gray-900]="activeConversation?.id !== conversation.id"
+                    >
+                      {{ conversation.user.name }}
+                    </h3>
+                    <p
+                      class="text-sm truncate"
+                      [class.text-gray-500]="activeConversation?.id !== conversation.id"
+                      [class.text-white]="activeConversation?.id === conversation.id"
+                      [class.opacity-80]="activeConversation?.id === conversation.id"
+                    >
+                      {{ conversation.lastMessage }}
+                    </p>
+                  </div>
+                  <div class="flex flex-col items-end gap-1 flex-shrink-0">
+                    <span
+                      class="text-xs font-medium"
+                      [class.text-primary-500]="activeConversation?.id !== conversation.id"
+                      [class.text-white]="activeConversation?.id === conversation.id"
+                    >
+                      {{ formatTime(conversation.timestamp) }}
+                    </span>
+                    <span
+                      *ngIf="conversation.unreadCount > 0 && activeConversation?.id !== conversation.id"
+                      class="inline-flex items-center justify-center w-5 h-5 text-xs font-semibold text-white bg-primary-500 rounded-full"
+                    >
+                      {{ conversation.unreadCount }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </button>
+          </div>
+
+          <!-- Empty State -->
+          <div
+            *ngIf="filteredConversations.length === 0"
+            class="flex-1 flex items-center justify-center p-8"
+          >
+            <div class="text-center">
+              <svg
+                class="w-16 h-16 text-gray-300 mx-auto mb-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                />
+              </svg>
+              <p class="text-sm text-gray-500 font-medium">Aucune conversation</p>
+            </div>
+          </div>
+        </aside>
+
+        <!-- ==================== ZONE DE CHAT ==================== -->
+        <!-- Desktop: Toujours visible | Mobile: Visible si showChatOnMobile = true -->
+        <div
+          class="flex-1 flex flex-col"
+          [class.hidden]="!showChatOnMobile && !activeConversation"
+          [class.md:flex]="true"
+        >
+          <!-- Conversation active -->
+          <ng-container *ngIf="activeConversation">
+            <!-- Header -->
+            <div class="px-4 py-3 border-b border-gray-200 flex items-center justify-between flex-shrink-0">
+              <div class="flex items-center gap-3">
+                <!-- Bouton retour (Mobile only) -->
+                <button
+                  (click)="backToList()"
+                  class="md:hidden text-gray-600 hover:text-gray-900 p-1"
+                >
+                  <svg
+                    class="w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M15 19l-7-7 7-7"
+                    />
+                  </svg>
+                </button>
+
+                <!-- Avatar et info -->
+                <div class="relative flex-shrink-0">
+                  <img
+                    [src]="activeConversation.user.avatar"
+                    [alt]="activeConversation.user.name"
+                    class="w-10 h-10 rounded-full object-cover"
+                  />
+                  <span
+                    *ngIf="activeConversation.user.isOnline"
+                    class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"
+                  ></span>
+                </div>
+                <div>
+                  <h2 class="text-sm font-semibold text-gray-900">
+                    {{ activeConversation.user.name }}
+                  </h2>
+                  <p class="text-xs text-gray-500">
+                    {{ activeConversation.user.lastActive }}
+                  </p>
+                </div>
+              </div>
+
+              <!-- Actions -->
+              <div class="flex items-center gap-2">
+                <button
+                  class="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-full transition-colors"
+                  title="Sécurité"
+                >
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                    />
+                  </svg>
+                </button>
+                <button
+                  class="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-full transition-colors"
+                  title="Plus d'options"
+                >
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Product Card (si présent) -->
+            <div
+              *ngIf="activeConversation.product"
+              class="px-4 py-3 bg-gray-50 border-b border-gray-200 flex-shrink-0"
+            >
+              <div class="flex items-center gap-3 bg-white rounded-lg p-3 border border-gray-200">
+                <img
+                  [src]="activeConversation.product.image"
+                  [alt]="activeConversation.product.title"
+                  class="w-14 h-14 rounded object-cover flex-shrink-0"
+                />
+                <div class="flex-1 min-w-0">
+                  <h3 class="text-sm font-medium text-gray-900 truncate">
+                    {{ activeConversation.product.title }}
+                  </h3>
+                  <p class="text-lg font-bold text-primary-500">
+                    {{ activeConversation.product.price }}{{ activeConversation.product.currency }}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Messages Container (scroll) -->
+            <div
+              #messagesContainer
+              class="flex-1 overflow-y-auto p-4 space-y-4"
+            >
+              <div
+                *ngFor="let message of activeConversation.messages"
+                class="flex"
+                [class.justify-end]="message.isSent"
+                [class.justify-start]="!message.isSent"
+              >
+                <div class="max-w-[75%] md:max-w-[60%]">
+                  <!-- Bulle de message -->
+                  <div
+                    class="rounded-lg px-4 py-2.5"
+                    [class.bg-primary-500]="message.isSent"
+                    [class.text-white]="message.isSent"
+                    [class.bg-gray-200]="!message.isSent"
+                    [class.text-gray-900]="!message.isSent"
+                  >
+                    <p class="text-sm leading-relaxed whitespace-pre-wrap">
+                      {{ message.content }}
+                    </p>
+                  </div>
+                  <!-- Timestamp -->
+                  <p
+                    class="text-xs text-gray-500 mt-1"
+                    [class.text-right]="message.isSent"
+                    [class.text-left]="!message.isSent"
+                  >
+                    {{ formatMessageTime(message.timestamp) }}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Input Zone (Fixe en bas) -->
+            <div class="px-4 py-3 border-t border-gray-200 flex-shrink-0 bg-white">
+              <form (submit)="sendMessage($event)" class="flex items-center gap-3">
+                <input
+                  type="text"
+                  [(ngModel)]="newMessage"
+                  name="message"
+                  placeholder="entrer votre message..."
+                  class="flex-1 px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                />
+                <button
+                  type="submit"
+                  [disabled]="!newMessage.trim()"
+                  class="px-6 py-2.5 bg-primary-500 text-white rounded-lg font-medium text-sm hover:bg-primary-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                >
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
+                    />
+                  </svg>
+                  <span class="hidden sm:inline">Envoyer</span>
+                </button>
+              </form>
+            </div>
+          </ng-container>
+
+          <!-- Empty State (aucune conversation sélectionnée) -->
+          <div
+            *ngIf="!activeConversation"
+            class="hidden md:flex flex-1 items-center justify-center p-12"
+          >
+            <div class="text-center">
+              <svg
+                class="w-24 h-24 text-gray-300 mx-auto mb-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                />
+              </svg>
+              <p class="text-gray-500">Sélectionnez une conversation</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

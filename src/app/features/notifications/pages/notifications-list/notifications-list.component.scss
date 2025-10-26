@@ -1,0 +1,22 @@
+// Styles spécifiques pour la page notifications-list
+// Utilise principalement Tailwind CSS
+
+// Animations smooth pour les transitions
+.notification-item {
+  transition: all 0.2s ease;
+}
+
+// Style personnalisé pour les badges de compteur
+.filter-badge {
+  min-width: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// État hover pour les filtres
+.filter-button {
+  &:hover:not(.active) {
+    background-color: rgba(0, 0, 0, 0.02);
+  }
+}

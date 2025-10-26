@@ -1,0 +1,154 @@
+<div class="min-h-screen bg-gray-50">
+  <!-- Breadcrumb -->
+  <div class="container mx-auto px-4 py-4">
+    <app-breadcrumb [items]="breadcrumbItems"></app-breadcrumb>
+  </div>
+
+  <!-- Main Content -->
+  <div class="container mx-auto px-4 pb-8">
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+      <!-- Sidebar Filters -->
+      <aside class="lg:col-span-1">
+        <div class="bg-white rounded border border-gray-200 overflow-hidden">
+          <button
+            *ngFor="let filter of filters"
+            (click)="selectFilter(filter.value)"
+            [class.bg-primary-500]="activeFilter === filter.value"
+            [class.text-white]="activeFilter === filter.value"
+            [class.text-gray-700]="activeFilter !== filter.value"
+            class="w-full flex items-center justify-between px-4 py-3 text-sm font-medium transition-colors border-b border-gray-200 last:border-b-0 hover:bg-gray-50"
+            [class.hover:bg-primary-600]="activeFilter === filter.value"
+          >
+            <span>{{ filter.label }}</span>
+            <span
+              class="px-2.5 py-0.5 rounded-full text-xs font-semibold min-w-[28px] text-center"
+              [class.bg-white]="activeFilter === filter.value"
+              [class.text-primary-500]="activeFilter === filter.value"
+              [class.bg-primary-500]="activeFilter !== filter.value"
+              [class.text-white]="activeFilter !== filter.value"
+            >
+              {{ filter.count }}
+            </span>
+          </button>
+        </div>
+      </aside>
+
+      <!-- Notifications List -->
+      <div class="lg:col-span-3">
+        <div class="bg-white rounded border border-gray-200">
+          <!-- Header -->
+          <div class="border-b border-gray-200 px-4 py-3">
+            <h2 class="text-xl font-semibold text-primary-500">
+              {{ getActiveFilterLabel() }}
+            </h2>
+          </div>
+
+          <!-- Notifications Items -->
+          <div class="divide-y divide-gray-100">
+            <div
+              *ngFor="let notification of filteredNotifications"
+              (click)="markAsRead(notification.id)"
+              class="flex items-start gap-3 px-4 py-3 hover:bg-gray-50 transition-colors cursor-pointer group"
+              [class.bg-blue-50]="!notification.read"
+            >
+              <!-- Point bleu "non lu" (décoratif) -->
+              <div class="flex items-center pt-1">
+                <div
+                  *ngIf="!notification.read"
+                  class="w-2 h-2 bg-primary-500 rounded-full"
+                ></div>
+                <div
+                  *ngIf="notification.read"
+                  class="w-2 h-2"
+                ></div>
+              </div>
+
+              <!-- Icône catégorie -->
+              <div [ngClass]="getIconContainerClass(notification.type)">
+                <svg
+                  class="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    [attr.d]="getIconPath(notification.type)"
+                  />
+                </svg>
+              </div>
+
+              <!-- Content -->
+              <div class="flex-1 min-w-0">
+                <div class="flex items-start justify-between gap-2">
+                  <div class="flex-1">
+                    <!-- Titre -->
+                    <p class="text-sm font-medium text-gray-900 text-left">
+                      {{ notification.title }}
+                    </p>
+                    <!-- Description -->
+                    <p class="text-sm text-gray-600 text-left line-clamp-2 mt-0.5">
+                      {{ notification.description }}
+                    </p>
+                    <!-- Heure -->
+                    <p class="text-xs text-gray-500 mt-1 text-left">
+                      {{ formatTimestamp(notification.timestamp) }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Action button -->
+              <div class="flex-shrink-0 flex items-center">
+                <button
+                  *ngIf="notification.actionLabel && notification.actionLink"
+                  (click)="navigateToAction(notification.actionLink, notification.id); $event.stopPropagation()"
+                  class="text-sm font-medium transition-colors"
+                  [class.text-primary-500]="notification.actionLabel !== 'Non accordé'"
+                  [class.hover:text-primary-600]="notification.actionLabel !== 'Non accordé'"
+                  [class.text-red-600]="notification.actionLabel === 'Non accordé'"
+                >
+                  {{ notification.actionLabel }}
+                </button>
+                <span
+                  *ngIf="notification.actionLabel === 'Non accordé'"
+                  class="text-sm font-medium text-red-600"
+                >
+                  {{ notification.actionLabel }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Empty State -->
+          <div
+            *ngIf="filteredNotifications.length === 0"
+            class="p-12 text-center"
+          >
+            <svg
+              class="w-16 h-16 text-gray-300 mx-auto mb-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+              />
+            </svg>
+            <p class="text-sm text-gray-500 font-medium">
+              Aucune notification
+            </p>
+            <p class="text-xs text-gray-400 mt-1">
+              Vous n'avez pas de notifications pour le moment
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

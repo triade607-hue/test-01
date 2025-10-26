@@ -1,9 +1,22 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ElementRef,
+  AfterViewChecked,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { BreadcrumbComponent, BreadcrumbItem } from '../../../../shared/components/breadcrumb/breadcrumb.component';
 
+interface Message {
+  id: string;
+  senderId: string;
+  content: string;
+  timestamp: Date;
+  isSent: boolean;
+}
 
 interface Conversation {
   id: string;
@@ -11,43 +24,57 @@ interface Conversation {
     name: string;
     avatar: string;
     isOnline: boolean;
+    lastActive?: string;
   };
   lastMessage: string;
   timestamp: Date;
   unreadCount: number;
   product?: {
+    id: string;
     title: string;
     image: string;
     price: number;
     currency: string;
   };
+  messages: Message[];
 }
 
 @Component({
-  selector: 'app-conversations-list',
+  selector: 'app-messaging',
   standalone: true,
   imports: [CommonModule, RouterModule, FormsModule, BreadcrumbComponent],
-  templateUrl: './conversations-list.component.html',
-  styleUrls: ['./conversations-list.component.scss'],
+  templateUrl: './messaging.component.html',
+  styleUrls: ['./messaging.component.scss'],
 })
-export class ConversationsListComponent implements OnInit {
+export class MessagingComponent implements OnInit, AfterViewChecked {
+  @ViewChild('messagesContainer') messagesContainer!: ElementRef;
+
   conversations: Conversation[] = [];
   filteredConversations: Conversation[] = [];
+  activeConversation: Conversation | null = null;
   searchQuery = '';
+  newMessage = '';
+  showChatOnMobile = false; // Pour gérer l'affichage mobile
+  private shouldScrollToBottom = false;
 
   breadcrumbItems: BreadcrumbItem[] = [
     { label: 'Accueil', url: '/' },
     { label: 'Messagerie', isActive: true },
   ];
 
-  constructor(private router: Router) {}
-
   ngOnInit(): void {
     this.loadConversations();
   }
 
+  ngAfterViewChecked(): void {
+    if (this.shouldScrollToBottom) {
+      this.scrollToBottom();
+      this.shouldScrollToBottom = false;
+    }
+  }
+
   loadConversations(): void {
-    // Mock data - À remplacer par MessagingService
+    // Mock data
     this.conversations = [
       {
         id: '1',
@@ -55,17 +82,37 @@ export class ConversationsListComponent implements OnInit {
           name: 'James Gorden',
           avatar: 'https://i.pravatar.cc/150?img=12',
           isOnline: true,
+          lastActive: 'Last active 1 hour ago',
         },
         lastMessage: 'Last message of someone...',
         timestamp: new Date(Date.now() - 3600000),
         unreadCount: 1,
         product: {
+          id: 'p1',
           title: 'Nom du produit',
           image:
             'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=100&h=100&fit=crop',
           price: 1500,
           currency: '$CAD',
         },
+        messages: [
+          {
+            id: '1',
+            senderId: 'other',
+            content:
+              "Ici se présente le message emi par tous ceux qui m'enverront des messages pour discuter",
+            timestamp: new Date(Date.now() - 3600000),
+            isSent: false,
+          },
+          {
+            id: '2',
+            senderId: 'me',
+            content:
+              "Ici se présente la suite du message que j'ai écrit pour répondre à ceux qui m'ont écrit",
+            timestamp: new Date(Date.now() - 1800000),
+            isSent: true,
+          },
+        ],
       },
       {
         id: '2',
@@ -73,17 +120,28 @@ export class ConversationsListComponent implements OnInit {
           name: 'Sarah Connor',
           avatar: 'https://i.pravatar.cc/150?img=5',
           isOnline: false,
+          lastActive: 'Last active 3 hours ago',
         },
         lastMessage: 'Last message of someone...',
         timestamp: new Date(Date.now() - 7200000),
         unreadCount: 1,
         product: {
+          id: 'p2',
           title: 'MacBook Pro M3',
           image:
             'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=100&h=100&fit=crop',
           price: 2500,
           currency: '$CAD',
         },
+        messages: [
+          {
+            id: '1',
+            senderId: 'other',
+            content: 'Bonjour, le produit est-il toujours disponible ?',
+            timestamp: new Date(Date.now() - 7200000),
+            isSent: false,
+          },
+        ],
       },
       {
         id: '3',
@@ -91,17 +149,12 @@ export class ConversationsListComponent implements OnInit {
           name: 'John Doe',
           avatar: 'https://i.pravatar.cc/150?img=8',
           isOnline: true,
+          lastActive: 'En ligne',
         },
         lastMessage: 'Last message of someone...',
         timestamp: new Date(Date.now() - 86400000),
         unreadCount: 1,
-        product: {
-          title: 'iPhone 15 Pro',
-          image:
-            'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=100&h=100&fit=crop',
-          price: 1800,
-          currency: '$CAD',
-        },
+        messages: [],
       },
       {
         id: '4',
@@ -109,10 +162,12 @@ export class ConversationsListComponent implements OnInit {
           name: 'Emma Wilson',
           avatar: 'https://i.pravatar.cc/150?img=10',
           isOnline: false,
+          lastActive: 'Last active 2 days ago',
         },
         lastMessage: 'Last message of someone...',
         timestamp: new Date(Date.now() - 172800000),
         unreadCount: 1,
+        messages: [],
       },
       {
         id: '5',
@@ -120,10 +175,12 @@ export class ConversationsListComponent implements OnInit {
           name: 'Michael Brown',
           avatar: 'https://i.pravatar.cc/150?img=15',
           isOnline: true,
+          lastActive: 'En ligne',
         },
         lastMessage: 'Last message of someone...',
         timestamp: new Date(Date.now() - 259200000),
         unreadCount: 1,
+        messages: [],
       },
     ];
     this.filteredConversations = [...this.conversations];
@@ -146,8 +203,51 @@ export class ConversationsListComponent implements OnInit {
   }
 
   selectConversation(conversation: Conversation): void {
-    // Navigation vers la page de détail
-    this.router.navigate(['/messages', conversation.id]);
+    this.activeConversation = conversation;
+    this.showChatOnMobile = true;
+    this.shouldScrollToBottom = true;
+
+    // Marquer comme lu
+    conversation.unreadCount = 0;
+  }
+
+  backToList(): void {
+    this.showChatOnMobile = false;
+    this.activeConversation = null;
+  }
+
+  sendMessage(event?: Event): void {
+    if (event) {
+      event.preventDefault();
+    }
+
+    if (!this.newMessage.trim() || !this.activeConversation) return;
+
+    const message: Message = {
+      id: Date.now().toString(),
+      senderId: 'me',
+      content: this.newMessage,
+      timestamp: new Date(),
+      isSent: true,
+    };
+
+    this.activeConversation.messages.push(message);
+    this.activeConversation.lastMessage = this.newMessage;
+    this.activeConversation.timestamp = new Date();
+
+    this.newMessage = '';
+    this.shouldScrollToBottom = true;
+
+    // TODO: Envoyer via MessagingService
+  }
+
+  scrollToBottom(): void {
+    try {
+      if (this.messagesContainer) {
+        this.messagesContainer.nativeElement.scrollTop =
+          this.messagesContainer.nativeElement.scrollHeight;
+      }
+    } catch (err) {}
   }
 
   formatTime(date: Date): string {
@@ -168,6 +268,13 @@ export class ConversationsListComponent implements OnInit {
     return date.toLocaleDateString('fr-FR', {
       day: '2-digit',
       month: '2-digit',
+    });
+  }
+
+  formatMessageTime(date: Date): string {
+    return date.toLocaleTimeString('fr-FR', {
+      hour: '2-digit',
+      minute: '2-digit',
     });
   }
 }

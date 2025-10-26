@@ -7,7 +7,12 @@ const routes: Routes = [
   {
     path: '',
     component: UserLayoutComponent,
-    children: [{ path: '', component: NotificationsListComponent }],
+    children: [
+      {
+        path: '',
+        component: NotificationsListComponent,
+      },
+    ],
   },
 ];
 
