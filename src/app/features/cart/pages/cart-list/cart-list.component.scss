@@ -1,0 +1,41 @@
+// Styles pour cart-list
+
+:host {
+  display: block;
+}
+
+// Responsive grid pour les produits suggérés
+.suggested-products-grid {
+  display: grid;
+  gap: 1rem;
+
+  // Mobile: 2 colonnes
+  grid-template-columns: repeat(2, 1fr);
+
+  // Tablet: 3 colonnes
+  @media (min-width: 640px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  // Desktop: 4 colonnes
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+// Animation pour les cartes produits
+.product-card {
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+}
+
+// Sticky summary sur desktop
+@media (min-width: 1024px) {
+  .cart-summary-wrapper {
+    position: sticky;
+    top: 1rem;
+  }
+}

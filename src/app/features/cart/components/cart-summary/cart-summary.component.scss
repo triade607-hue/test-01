@@ -1,0 +1,10 @@
+:host {
+  display: block;
+}
+
+@media (min-width: 1024px) {
+  :host {
+    position: sticky;
+    top: 1rem;
+  }
+}
