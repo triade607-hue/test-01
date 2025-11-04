@@ -1,0 +1,217 @@
+<div class="min-h-screen bg-gray-50">
+  <div class="max-w-7xl mx-auto px-4 py-6">
+    <!-- Breadcrumb -->
+    <app-breadcrumb [items]="breadcrumbItems"></app-breadcrumb>
+
+    <!-- Alerte -->
+    <div class="mt-6">
+      <app-delivery-alert></app-delivery-alert>
+    </div>
+
+    <!-- Layout principal -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
+
+      <!-- Colonne gauche: Articles et configurations -->
+      <div class="lg:col-span-2 space-y-4">
+
+        <!-- Accordéons Vendeurs -->
+        <div *ngFor="let config of vendorConfigs" class="bg-white rounded-lg border border-gray-100 shadow-sm overflow-hidden">
+
+          <!-- Header clickable -->
+          <button
+            type="button"
+            (click)="config.isExpanded = !config.isExpanded"
+            class="w-full flex items-center justify-between gap-4 p-4 hover:bg-gray-50/50 transition-colors text-left"
+          >
+            <div class="flex items-center gap-3 flex-1 min-w-0">
+              <!-- Avatar vendeur -->
+              <div class="w-12 h-12 rounded-full bg-gradient-to-br from-orange-400 to-orange-500 flex items-center justify-center shrink-0 shadow-sm">
+                <span class="text-white font-semibold text-base">{{ getVendorInitials(config.vendor) }}</span>
+              </div>
+
+              <div class="flex-1 min-w-0">
+                <!-- Nom + Drapeau -->
+                <div class="flex items-center gap-2 mb-1">
+                  <span class="text-sm font-semibold text-gray-900">{{ config.vendor.vendorName }}</span>
+                  <span class="text-base">🇨🇦</span>
+                </div>
+
+                <!-- Prix actuel -->
+                <div class="text-sm text-gray-600">
+                  {{ config.vendor.articlePrice | currency:'EUR' }}
+                </div>
+              </div>
+            </div>
+
+            <!-- Bloc prix total + toggle -->
+            <div class="flex items-center gap-3 shrink-0">
+              <div class="text-right">
+                <!-- Prix total -->
+                <div class="text-base font-semibold text-primary-500">
+                  {{ config.vendor.totalPrice | currency:'EUR' }}
+                </div>
+                <!-- Frais de livraison -->
+                <button
+                  type="button"
+                  (click)="onDeliveryFeesClick($event)"
+                  class="text-xs text-primary-500 hover:text-primary-600 transition-colors"
+                >
+                  Frais de livraison
+                </button>
+              </div>
+
+              <!-- Toggle -->
+              <svg
+                class="w-5 h-5 text-gray-400 transition-transform duration-200"
+                [class.rotate-180]="config.isExpanded"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+          </button>
+
+          <!-- Contenu expandable -->
+          <div *ngIf="config.isExpanded" class="border-t border-gray-100">
+            <div class="p-6 bg-gray-50/30 space-y-8">
+
+              <!-- PRODUIT SANS contrôle de conformité -->
+              <div *ngIf="config.hasWithoutConformity" class="space-y-6">
+                <h4 class="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                  Produit sans contrôle de conformité
+                </h4>
+
+                <!-- Adresse -->
+                <div>
+                  <label class="block text-sm font-medium text-gray-900 mb-2">
+                    Adresse de livraison
+                  </label>
+                  <app-address-selector
+                    [addresses]="addresses"
+                    [(ngModel)]="config.selectedAddress"
+                    (addAddress)="onAddAddress()"
+                  ></app-address-selector>
+                </div>
+
+                <!-- Méthode -->
+                <div>
+                  <label class="block text-sm font-medium text-gray-900 mb-2">
+                    Méthode de livraison
+                  </label>
+                  <app-delivery-method-selector
+                    [methods]="deliveryMethods"
+                    [(ngModel)]="config.selectedMethod"
+                    (methodSelected)="onMethodSelected(config, $event)"
+                  ></app-delivery-method-selector>
+                </div>
+
+                <!-- Option (si méthode sélectionnée) -->
+                <div *ngIf="config.selectedMethod">
+                  <label class="block text-sm font-medium text-gray-900 mb-2">
+                    Option de livraison
+                  </label>
+                  <app-delivery-option-selector
+                    [options]="deliveryOptions"
+                    [(ngModel)]="config.selectedOption"
+                    (optionSelected)="onOptionSelected($event)"
+                  ></app-delivery-option-selector>
+                </div>
+              </div>
+
+              <!-- Séparateur entre les deux types -->
+              <div *ngIf="config.hasWithoutConformity && config.hasWithConformity" class="border-t border-gray-200"></div>
+
+              <!-- PRODUIT AVEC contrôle de conformité -->
+              <div *ngIf="config.hasWithConformity" class="space-y-6">
+                <h4 class="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                  Produit avec contrôle de conformité
+                </h4>
+
+                <!-- Adresse unique pour la livraison -->
+                <div>
+                  <label class="block text-sm font-medium text-gray-900 mb-2">
+                    Adresse de livraison
+                  </label>
+                  <app-address-selector
+                    [addresses]="addresses"
+                    [(ngModel)]="config.toOccaverseAddress"
+                    (addAddress)="onAddAddress()"
+                  ></app-address-selector>
+                </div>
+
+                <!-- Livraison vers OCCAVERSE -->
+                <div>
+                  <label class="block text-sm font-medium text-gray-900 mb-2">
+                    Livraison vers Occaverse
+                  </label>
+                  <app-delivery-method-selector
+                    [methods]="deliveryMethods"
+                    [(ngModel)]="config.toOccaverseMethod"
+                    (methodSelected)="onMethodSelected(config, $event)"
+                  ></app-delivery-method-selector>
+                </div>
+
+                <!-- Option Occaverse (si méthode sélectionnée) -->
+                <div *ngIf="config.toOccaverseMethod">
+                  <label class="block text-sm font-medium text-gray-900 mb-2">
+                    Option de livraison vers Occaverse
+                  </label>
+                  <app-delivery-option-selector
+                    [options]="deliveryOptions"
+                    [(ngModel)]="config.toOccaverseOption"
+                    (optionSelected)="onOptionSelected($event)"
+                  ></app-delivery-option-selector>
+                </div>
+
+                <!-- Livraison vers VOUS -->
+                <div>
+                  <label class="block text-sm font-medium text-gray-900 mb-2">
+                    Livraison vers vous
+                  </label>
+                  <app-delivery-method-selector
+                    [methods]="deliveryMethods"
+                    [(ngModel)]="config.toUserMethod"
+                    (methodSelected)="onMethodSelected(config, $event)"
+                  ></app-delivery-method-selector>
+                </div>
+
+                <!-- Option vers Vous (si méthode sélectionnée) -->
+                <div *ngIf="config.toUserMethod">
+                  <label class="block text-sm font-medium text-gray-900 mb-2">
+                    Option de livraison vers vous
+                  </label>
+                  <app-delivery-option-selector
+                    [options]="deliveryOptions"
+                    [(ngModel)]="config.toUserOption"
+                    (optionSelected)="onOptionSelected($event)"
+                  ></app-delivery-option-selector>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Colonne droite: Récapitulatif -->
+      <div class="lg:col-span-1">
+        <app-order-summary
+          [summary]="orderSummary"
+          [disabled]="!selectedPaymentMethod"
+          (payment)="onPayment()"
+        >
+          <div slot="payment-selector">
+            <app-payment-method-selector
+              [methods]="paymentMethods"
+              [(ngModel)]="selectedPaymentMethod"
+            ></app-payment-method-selector>
+          </div>
+        </app-order-summary>
+      </div>
+
+    </div>
+  </div>
+</div>

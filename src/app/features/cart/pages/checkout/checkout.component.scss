@@ -1,0 +1,62 @@
+/* Animations pour les transitions */
+select {
+  transition: all 0.2s ease-in-out;
+}
+
+select:focus {
+  box-shadow: 0 0 0 3px rgba(0, 119, 182, 0.1);
+}
+
+button:disabled {
+  opacity: 0.5;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .sticky {
+    position: static;
+  }
+}
+
+/* Custom scrollbar pour les selects longs */
+select::-webkit-scrollbar {
+  width: 8px;
+}
+
+select::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+select::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+select::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Animation pour le bouton Mondial Relay */
+button.bg-pink-500 {
+  position: relative;
+  overflow: hidden;
+}
+
+button.bg-pink-500::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  transform: translate(-50%, -50%);
+  transition: width 0.3s, height 0.3s;
+}
+
+button.bg-pink-500:hover::before {
+  width: 300px;
+  height: 300px;
+}
