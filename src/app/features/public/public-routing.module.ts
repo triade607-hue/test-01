@@ -13,6 +13,7 @@ const routes: Routes = [
     children: [
       { path: '', component: HomeComponent },
       { path: 'product/:id', component: ProductDetailComponent },
+      { path: 'product/:id:/:type', component: ProductDetailComponent },
       { path: 'search', component: SearchResultsComponent },
       { path: 'component-showcase', component: ComponentShowcaseComponent },
     ],
