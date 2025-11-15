@@ -337,6 +337,19 @@ interface Product {
         </button>
       </div>
 
+      <!-- Description (visible sur desktop, masquée sur mobile) -->
+      <div class="hidden lg:block">
+        <h3 class="font-semibold text-gray-900 mb-2">Description</h3>
+        <p class="text-sm text-gray-700 leading-relaxed">
+          {{ product.description }}
+        </p>
+        <button
+          class="text-sm text-primary-500 font-medium hover:underline mt-2"
+        >
+          lire plus
+        </button>
+      </div>
+
       <!-- Description (visible sur mobile après les boutons, masquée sur desktop) -->
       <div class="lg:hidden">
         <h3 class="font-semibold text-gray-900 mb-2">Description</h3>
@@ -349,12 +362,42 @@ interface Product {
           lire plus
         </button>
       </div>
+
+      <!-- Composition du lot (si isLot) -->
+      <div *ngIf="product.isLot && lotProducts && lotProducts.length > 0">
+        <h3 class="font-semibold text-gray-900 mb-4">Composition du lot</h3>
+        <div class="grid grid-cols-2 gap-4">
+          <div
+            *ngFor="let item of lotProducts"
+            class="border border-gray-200 rounded overflow-hidden group hover:shadow-md transition-shadow"
+          >
+            <img
+              [src]="item.image"
+              [alt]="item.title"
+              class="w-full h-32 object-cover"
+            />
+            <div class="p-3">
+              <p class="text-sm text-gray-700 line-clamp-2">{{ item.title }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   `,
-  styles: [],
+  styles: [
+    `
+      .line-clamp-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+    `,
+  ],
 })
 export class ProductInfoComponent {
   @Input() product!: Product;
+  @Input() lotProducts: { image: string; title: string }[] = [];
 
   selectedColor: { name: string; value: string } | null = null;
   selectedSize = '';

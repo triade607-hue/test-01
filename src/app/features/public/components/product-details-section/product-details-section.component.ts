@@ -219,30 +219,6 @@ interface LotProduct {
               </div>
             </div>
           </div>
-
-          <!-- Composition du lot (si isLot) -->
-          <div *ngIf="isLot && lotProducts.length > 0" class="pb-6">
-            <h3 class="text-base font-semibold text-gray-900 mb-4">
-              Composition du lot
-            </h3>
-            <div class="grid grid-cols-2 gap-4">
-              <div
-                *ngFor="let item of lotProducts"
-                class="border border-gray-200 rounded overflow-hidden group hover:shadow-md transition-shadow"
-              >
-                <img
-                  [src]="item.image"
-                  [alt]="item.title"
-                  class="w-full h-40 object-cover"
-                />
-                <div class="p-3">
-                  <p class="text-sm text-gray-700 line-clamp-2">
-                    {{ item.title }}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
 
         <!-- Onglet Avis -->
