@@ -1,0 +1,85 @@
+<div class="min-h-screen bg-gray-50">
+  <!-- Main Content -->
+  <main class="container mx-auto px-4 py-6">
+    <!-- Breadcrumb -->
+    <nav class="flex items-center gap-2 text-sm text-gray-600 mb-6">
+      <a href="/" class="hover:text-primary-500">Accueil</a>
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+      </svg>
+      <span class="text-gray-900 font-medium">Dénomination de l'article</span>
+    </nav>
+
+    <!-- Bouton traduire (coin supérieur droit) -->
+    <div class="flex justify-end mb-4">
+      <button class="flex items-center gap-2 text-sm text-primary-500 hover:underline">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"/>
+        </svg>
+        <span>Traduire dans ma langue</span>
+      </button>
+    </div>
+
+    <!-- Grille principale: Gauche sticky + Droite scrollable -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+      <!-- COLONNE GAUCHE STICKY (Desktop) -->
+      <div class="lg:sticky lg:top-6 lg:self-start">
+        <!-- Galerie -->
+        <app-product-gallery [images]="productImages"></app-product-gallery>
+
+        <!-- Espacement entre galerie et tabs -->
+        <div class="mt-8 hidden lg:block">
+          <!-- Onglets + Contenu (sous la galerie sur desktop uniquement) -->
+          <app-product-details-section
+            [isLot]="product.isLot"
+            [lotProducts]="lotProducts"
+            [reviews]="reviews"
+          ></app-product-details-section>
+        </div>
+      </div>
+
+      <!-- COLONNE DROITE SCROLLABLE (Desktop) / Après galerie (Mobile) -->
+      <div class="space-y-6">
+        <!-- Informations produit -->
+        <app-product-info [product]="product"></app-product-info>
+      </div>
+    </div>
+
+    <!-- Onglets + Contenu (visible sur mobile après product-info) -->
+    <div class="lg:hidden mb-12">
+      <app-product-details-section
+        [isLot]="product.isLot"
+        [lotProducts]="lotProducts"
+        [reviews]="reviews"
+      ></app-product-details-section>
+    </div>
+
+    <!-- Autres produits du vendeur -->
+    <app-products-list
+      title="Autres produits du vendeur"
+      viewAllLink="/seller/products"
+    >
+      <app-product-card
+        *ngFor="let item of sellerProducts"
+        [product]="item"
+        [showFavoriteButton]="true"
+        [isFavorite]="item.isFavorite || false"
+        (favoriteToggle)="onFavoriteToggled($event)"
+      ></app-product-card>
+    </app-products-list>
+
+    <!-- Produits similaires -->
+    <app-products-list
+      title="Produits similaires"
+      viewAllLink="/products/similar"
+    >
+      <app-product-card
+        *ngFor="let item of similarProducts"
+        [product]="item"
+        [showFavoriteButton]="true"
+        [isFavorite]="item.isFavorite || false"
+        (favoriteToggle)="onFavoriteToggled($event)"
+      ></app-product-card>
+    </app-products-list>
+  </main>
+</div>

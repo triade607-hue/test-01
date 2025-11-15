@@ -4,6 +4,7 @@ import { PublicLayoutComponent } from '../../layouts/public-layout/public-layout
 import { HomeComponent } from './pages/home/home.component';
 import { SearchResultsComponent } from './pages/search-results/search-results.component';
 import { ComponentShowcaseComponent } from './pages/component-showcase/component-showcase.component';
+import { ProductDetailComponent } from './pages/product-detail/product-detail.component';
 
 const routes: Routes = [
   {
@@ -13,6 +14,10 @@ const routes: Routes = [
       { path: '', component: HomeComponent },
       { path: 'search', component: SearchResultsComponent },
       { path: 'component-showcase', component: ComponentShowcaseComponent },
+      {
+        path: 'product/:id',
+        component: ProductDetailComponent,
+      },
     ],
   },
 ];

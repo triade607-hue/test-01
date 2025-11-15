@@ -1,0 +1,20 @@
+// Styles spécifiques pour la page Product Detail
+// Utilise principalement Tailwind CSS
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+// Animation smooth pour les transitions
+.transition-shadow {
+  transition: box-shadow 0.2s ease;
+}
+
+// État hover pour les cards
+.group:hover {
+  .group-hover\:opacity-100 {
+    opacity: 1;
+  }
+}
