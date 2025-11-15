@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { DonationRequestModalComponent } from '../donation-request-modal/donation-request-modal.component';
 
 interface Seller {
   name: string;
@@ -31,7 +32,7 @@ interface Product {
 @Component({
   selector: 'app-product-info',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, DonationRequestModalComponent],
   template: `
     <div class="space-y-6">
       <!-- Catégorie -->
@@ -243,6 +244,7 @@ interface Product {
       <!-- Bouton Demander le don (mode donation) -->
       <div *ngIf="product.isDonation">
         <button
+          (click)="openDonationModal()"
           class="w-full bg-primary-500 text-white px-6 py-3 rounded font-medium hover:bg-primary-600 transition-colors"
         >
           Demander le don
@@ -383,6 +385,13 @@ interface Product {
         </div>
       </div>
     </div>
+
+    <!-- Modal de demande de don -->
+    <app-donation-request-modal
+      *ngIf="showDonationModal"
+      (close)="closeDonationModal()"
+      (submit)="onDonationSubmit($event)"
+    ></app-donation-request-modal>
   `,
   styles: [
     `
@@ -402,6 +411,7 @@ export class ProductInfoComponent {
   selectedColor: { name: string; value: string } | null = null;
   selectedSize = '';
   quantity = 1;
+  showDonationModal = false;
 
   ngOnInit() {
     if (this.product.colors && this.product.colors.length > 0) {
@@ -419,5 +429,20 @@ export class ProductInfoComponent {
     if (this.quantity > 1) {
       this.quantity--;
     }
+  }
+
+  openDonationModal(): void {
+    this.showDonationModal = true;
+  }
+
+  closeDonationModal(): void {
+    this.showDonationModal = false;
+  }
+
+  onDonationSubmit(reason: string): void {
+    console.log('Demande de don soumise:', reason);
+    // TODO: Envoyer la demande au backend
+    this.closeDonationModal();
+    // Afficher un message de confirmation
   }
 }
