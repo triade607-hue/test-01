@@ -1,1 +1,149 @@
-<p>search-results works!</p>
+<div class="min-h-screen bg-gray-50">
+  <!-- Main Content -->
+  <main class="container mx-auto px-4 py-6">
+    <!-- Breadcrumb -->
+    <nav class="flex items-center gap-2 text-sm text-gray-600 mb-6">
+      <a href="/" class="hover:text-primary-500">Accueil</a>
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+      </svg>
+      <span class="text-primary-500 font-medium">Rechercher</span>
+    </nav>
+
+    <!-- Grille principale: Sidebar + Résultats -->
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+
+      <!-- SIDEBAR FILTRES (Gauche) -->
+      <aside class="lg:col-span-1">
+        <div class="bg-white rounded border border-gray-200 p-6 sticky top-6">
+          <h2 class="text-lg font-bold text-gray-900 mb-6">Filtrer par</h2>
+
+          <!-- Liste des filtres -->
+          <div class="space-y-3">
+            <div *ngFor="let filter of filters" class="border-b border-gray-200 last:border-0 pb-3 last:pb-0">
+              <!-- En-tête du filtre (accordéon) -->
+              <button
+                (click)="toggleFilter(filter.id)"
+                class="w-full flex items-center justify-between text-left py-2 hover:text-primary-500 transition-colors"
+              >
+                <span class="font-medium text-gray-900">{{ filter.label }}</span>
+                <svg
+                  class="w-5 h-5 text-gray-400 transition-transform"
+                  [class.rotate-180]="filter.isOpen"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                </svg>
+              </button>
+
+              <!-- Options du filtre (collapsible) -->
+              <div *ngIf="filter.isOpen && filter.options" class="mt-3 space-y-2 pl-2">
+                <label
+                  *ngFor="let option of filter.options"
+                  class="flex items-center gap-2 text-sm text-gray-700 hover:text-primary-500 cursor-pointer"
+                >
+                  <input
+                    type="checkbox"
+                    [(ngModel)]="option.checked"
+                    class="w-4 h-4 text-primary-500 border-gray-300 rounded focus:ring-primary-500"
+                  />
+                  <span>{{ option.label }}</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- ZONE PRINCIPALE (Droite) -->
+      <div class="lg:col-span-3">
+
+        <!-- ÉTAT AVEC RÉSULTATS -->
+        <div *ngIf="hasResults">
+
+          <!-- Filtres actifs (badges) -->
+          <div *ngIf="activeFilters.length > 0" class="mb-6 flex flex-wrap items-center gap-2">
+            <button
+              *ngFor="let filter of activeFilters"
+              (click)="removeFilter(filter.filterId, filter.id)"
+              class="inline-flex items-center gap-2 px-3 py-1.5 bg-primary-500 text-white text-sm font-medium rounded hover:bg-primary-600 transition-colors"
+            >
+              <span>{{ filter.label }}</span>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Articles proposés -->
+          <section class="mb-12">
+            <div class="flex items-center justify-between mb-6">
+              <h2 class="text-xl font-bold text-gray-900">Articles proposés</h2>
+              <a href="#" class="flex items-center gap-1 text-sm text-primary-500 font-medium hover:underline">
+                TOUT VOIR
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                </svg>
+              </a>
+            </div>
+
+            <!-- Grille de produits (3 colonnes sur desktop) -->
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+              <app-product-card
+                *ngFor="let product of products"
+                [product]="product"
+                [showFavoriteButton]="true"
+                [isFavorite]="product.isFavorite || false"
+                (favoriteToggle)="onFavoriteToggled($event)"
+              ></app-product-card>
+            </div>
+          </section>
+        </div>
+
+        <!-- ÉTAT VIDE (Sans résultats) -->
+        <div *ngIf="!hasResults" class="bg-white rounded border border-gray-200 min-h-[600px] flex items-center justify-center">
+          <div class="flex flex-col items-center justify-center text-center max-w-md mx-auto p-12">
+            <!-- Illustration astronaute -->
+            <div class="mb-8">
+              <svg class="w-48 h-48 text-primary-200" viewBox="0 0 200 200" fill="none">
+                <!-- Astronaute simplifié -->
+                <circle cx="100" cy="80" r="30" fill="currentColor"/>
+                <rect x="75" y="110" width="50" height="60" rx="10" fill="currentColor"/>
+                <circle cx="85" cy="130" r="8" fill="#0077B6"/>
+                <circle cx="115" cy="130" r="8" fill="#0077B6"/>
+                <ellipse cx="70" cy="100" rx="15" ry="25" fill="currentColor" opacity="0.7"/>
+                <ellipse cx="130" cy="100" rx="15" ry="25" fill="currentColor" opacity="0.7"/>
+              </svg>
+            </div>
+
+            <!-- Message -->
+            <h3 class="text-xl font-bold text-gray-900 mb-3">
+              Aucun article associé à votre recherche
+            </h3>
+
+            <!-- Bouton -->
+            <button
+              (click)="onScheduleSearch()"
+              class="flex items-center gap-2 bg-primary-500 text-white px-6 py-3 rounded font-medium hover:bg-primary-600 transition-colors"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+              </svg>
+              <span>Programmer une recherche</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal de programmation de recherche -->
+  <app-schedule-search-modal
+    *ngIf="showScheduleModal"
+    (closed)="closeScheduleModal()"
+    (submitted)="onScheduleSubmit($event)"
+  ></app-schedule-search-modal>
+</div>

@@ -5,6 +5,7 @@ import { HomeComponent } from './pages/home/home.component';
 import { SearchResultsComponent } from './pages/search-results/search-results.component';
 import { ComponentShowcaseComponent } from './pages/component-showcase/component-showcase.component';
 import { ProductDetailComponent } from './pages/product-detail/product-detail.component';
+import { SellerProfileComponent } from './pages/seller-profile/seller-profile.component';
 
 const routes: Routes = [
   {
@@ -13,6 +14,7 @@ const routes: Routes = [
     children: [
       { path: '', component: HomeComponent },
       { path: 'search', component: SearchResultsComponent },
+      { path: 'seller/:id', component: SellerProfileComponent },
       { path: 'component-showcase', component: ComponentShowcaseComponent },
       {
         path: 'product/:id',

@@ -34,7 +34,7 @@ export class ProductDetailComponent implements OnInit {
     priceCAD: 25.99,
     priceFCFA: 162500,
     stock: 35,
-    isDonation: true,
+    isDonation: false,
     isLot: false,
     seller: {
       name: 'Djibril Abeg',
