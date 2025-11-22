@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { ProfileEmailSectionComponent } from '../../components/profile-email-section/profile-email-section.component';
 import { ProfilePasswordSectionComponent } from '../../components/profile-password-section/profile-password-section.component';
 import { ProfilePhotoSectionComponent } from '../../components/profile-photo-section/profile-photo-section.component';
@@ -24,7 +25,13 @@ export class ProfileComponent {
   phone = '010 000 0000';
   profilePhoto = 'https://i.pravatar.cc/160?img=25';
 
-  onEmailPhoneSave(data: { email: string; phone: string }): void {
+  constructor(private router: Router) {}
+
+  onEmailPhoneSave(data: {
+    email: string;
+    phone: string;
+    fullPhone: string;
+  }): void {
     console.log('Sauvegarde email/téléphone:', data);
     this.email = data.email;
     this.phone = data.phone;
@@ -45,14 +52,7 @@ export class ProfileComponent {
   }
 
   onDeactivateAccount(): void {
-    if (
-      confirm(
-        'Êtes-vous sûr de vouloir désactiver votre compte ? Cette action est irréversible.'
-      )
-    ) {
-      console.log('Désactivation du compte...');
-      // TODO: Logique de désactivation
-      alert('Compte désactivé.');
-    }
+    // Redirection vers la page de désactivation
+    this.router.navigate(['/buyer/deactivate-account']);
   }
 }
