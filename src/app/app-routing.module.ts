@@ -24,7 +24,7 @@ const routes: Routes = [
     path: 'buyer',
     loadChildren: () =>
       import('./features/buyer/buyer.module').then((m) => m.BuyerModule),
-    canActivate: [authGuard, buyerGuard],
+    // canActivate: [authGuard, buyerGuard],
   },
 
   // Seller routes (protected)

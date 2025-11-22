@@ -1,0 +1,37 @@
+<div class="max-w-6xl">
+  <!-- Titre de la page -->
+  <h1 class="text-2xl font-bold text-primary-500 mb-6">Mon profil</h1>
+
+  <!-- Première ligne: Email+Phone | Photo -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
+    <!-- Section Adresse mail et contact -->
+    <app-profile-email-section
+      [email]="email"
+      [phone]="phone"
+      (save)="onEmailPhoneSave($event)"
+    ></app-profile-email-section>
+
+    <!-- Section Photo de profil -->
+    <app-profile-photo-section
+      [profilePhoto]="profilePhoto"
+      (photoChange)="onPhotoChange($event)"
+    ></app-profile-photo-section>
+  </div>
+
+  <!-- Deuxième ligne: Mot de passe (pleine largeur) -->
+  <div class="mb-4">
+    <app-profile-password-section
+      (save)="onPasswordSave($event)"
+    ></app-profile-password-section>
+  </div>
+
+  <!-- Bouton Désactiver compte (pleine largeur) -->
+  <div class="mt-6">
+    <button
+      (click)="onDeactivateAccount()"
+      class="w-full px-6 py-3 bg-white text-error border border-error text-sm font-medium rounded-lg hover:bg-red-50 transition-colors"
+    >
+      Désactiver mon compte
+    </button>
+  </div>
+</div>

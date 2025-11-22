@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from '../components/header/header.component';
 import { BuyerSidebarComponent } from '../components/buyer-sidebar/buyer-sidebar.component';
+import { InfoBannerComponent } from '../components/info-banner/info-banner.component';
+import { FooterCopyrightComponent } from '../components/footer/footer-copyright/footer-copyright.component';
 
 @Component({
   selector: 'app-buyer-layout',
@@ -11,9 +13,17 @@ import { BuyerSidebarComponent } from '../components/buyer-sidebar/buyer-sidebar
     CommonModule,
     RouterOutlet,
     HeaderComponent,
-    BuyerSidebarComponent
+    BuyerSidebarComponent,
+    InfoBannerComponent,
+    FooterCopyrightComponent,
   ],
   templateUrl: './buyer-layout.component.html',
-  styleUrls: ['./buyer-layout.component.scss']
+  styleUrls: ['./buyer-layout.component.scss'],
 })
-export class BuyerLayoutComponent {}
+export class BuyerLayoutComponent {
+  isSidebarOpen = false;
+
+  toggleSidebar(): void {
+    this.isSidebarOpen = !this.isSidebarOpen;
+  }
+}
