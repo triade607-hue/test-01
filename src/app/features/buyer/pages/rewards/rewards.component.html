@@ -1,0 +1,129 @@
+<div class="max-w-6xl">
+  <!-- Titre -->
+  <h1 class="text-2xl font-bold text-primary-500 mb-6">Mes Récompenses</h1>
+
+  <!-- Card Félicitations - Responsive -->
+  <div class="bg-gradient-to-r from-primary-500 to-primary-600 rounded-md p-6 md:p-8 mb-8">
+    <div class="flex flex-col md:flex-row items-center gap-6">
+      <!-- Médaille -->
+      <div class="flex-shrink-0">
+        <div class="relative w-24 h-24">
+          <!-- Circle doré -->
+          <div class="w-24 h-24 rounded-full bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center border-4 border-yellow-300 shadow-xl">
+            <!-- Étoile rouge -->
+            <svg class="w-12 h-12 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+            </svg>
+          </div>
+          <!-- Rubans -->
+          <div class="absolute -bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
+            <div class="w-4 h-8 bg-red-600 rounded-b"></div>
+            <div class="w-4 h-8 bg-red-700 rounded-b"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contenu + Bouton Stack sur mobile -->
+      <div class="flex-1 text-center md:text-left">
+        <h2 class="text-xl md:text-2xl font-bold text-white mb-2">Félicitations</h2>
+        <p class="text-white text-base md:text-lg mb-4 md:mb-0">
+          Vous totalisez un score de
+          <span class="font-bold text-yellow-300">{{ currentScore }}/{{ maxScore }} points</span>.
+          Encore quelques achats pour décrocher votre récompense.
+        </p>
+      </div>
+
+      <!-- Bouton - Full width sur mobile -->
+      <div class="w-full md:w-auto md:flex-shrink-0">
+        <button
+          (click)="onClaimReward()"
+          class="w-full md:w-auto px-6 py-3 bg-primary-500 text-white font-medium rounded-md hover:bg-primary-600 transition-colors shadow-md"
+        >
+          Réclamer votre récompense
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Liste des récompenses -->
+  <div>
+    <h2 class="text-lg font-semibold text-gray-900 mb-4">Liste des récompenses</h2>
+
+    <div class="space-y-4">
+      <div
+        *ngFor="let reward of rewards"
+        class="flex items-start md:items-center gap-3 md:gap-4 p-4 bg-white rounded-md border border-gray-200 hover:shadow-sm transition-shadow"
+      >
+        <!-- Icon médaille -->
+        <div class="flex-shrink-0">
+          <div class="w-10 h-10 md:w-12 md:h-12 rounded-lg bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center">
+            <svg class="w-6 h-6 md:w-7 md:h-7 text-yellow-300" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Contenu -->
+        <div class="flex-1 min-w-0">
+          <div class="flex flex-wrap items-center gap-2 mb-1">
+            <h3 class="text-xs md:text-sm font-medium text-gray-900 truncate">{{ reward.title }}</h3>
+            <span
+              class="px-2 py-0.5 rounded text-xs font-medium whitespace-nowrap"
+              [ngClass]="getStatusColor(reward.status)"
+            >
+              {{ getStatusLabel(reward.status) }}
+            </span>
+          </div>
+          <p class="text-base md:text-lg font-semibold text-primary-500">
+            {{ reward.currentAmount }}${{ reward.currency }} / {{ reward.targetAmount }}${{ reward.currency }}
+          </p>
+        </div>
+
+        <!-- Menu 3 dots -->
+        <div class="relative flex-shrink-0">
+          <button
+            (click)="toggleMenu(reward.id)"
+            class="p-2 text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-100"
+          >
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"/>
+            </svg>
+          </button>
+
+          <!-- Dropdown menu -->
+          <div
+            *ngIf="showMenu === reward.id"
+            class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-10"
+          >
+            <button
+              (click)="onRewardAction(reward, 'details')"
+              class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+            >
+              Voir les détails
+            </button>
+            <button
+              (click)="onRewardAction(reward, 'history')"
+              class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+            >
+              Historique
+            </button>
+            <button
+              *ngIf="reward.status === 'en-cours'"
+              (click)="onRewardAction(reward, 'cancel')"
+              class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
+            >
+              Annuler
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Overlay pour fermer le menu -->
+<div
+  *ngIf="showMenu"
+  (click)="showMenu = null"
+  class="fixed inset-0 z-0"
+></div>

@@ -5,6 +5,7 @@ import { ProfileComponent } from './pages/profile/profile.component';
 import { DesactivateAccountComponent } from './pages/desactivate-account/desactivate-account.component';
 import { InterestsComponent } from './pages/interests/interests.component';
 import { PaymentMethodsComponent } from './pages/payment-methods/payment-methods.component';
+import { RewardsComponent } from './pages/rewards/rewards.component';
 
 const routes: Routes = [
   {
@@ -16,6 +17,7 @@ const routes: Routes = [
       { path: 'deactivate-account', component: DesactivateAccountComponent },
       { path: 'interests', component: InterestsComponent },
       { path: 'payment-methods', component: PaymentMethodsComponent },
+      { path: 'rewards', component: RewardsComponent },
     ],
   },
 ];
