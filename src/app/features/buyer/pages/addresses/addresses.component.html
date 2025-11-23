@@ -1,0 +1,167 @@
+<div class="max-w-6xl">
+  <!-- Header avec titre et bouton + -->
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-2xl font-bold text-primary-500">Adresses</h1>
+    <button
+      (click)="openAddModal()"
+      class="w-10 h-10 bg-primary-500 text-white rounded-full flex items-center justify-center hover:bg-primary-600 transition-colors shadow-sm"
+      title="Ajouter une adresse"
+    >
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Adresse principale -->
+  <div *ngIf="primaryAddress" class="mb-6">
+    <div
+      (click)="selectAddress(primaryAddress.id)"
+      class="p-4 bg-gray-50 rounded-md border border-gray-200 hover:shadow-sm transition-shadow cursor-pointer relative"
+      [class.ring-2]="selectedAddressId === primaryAddress.id"
+      [class.ring-primary-500]="selectedAddressId === primaryAddress.id"
+    >
+      <!-- Contenu -->
+      <div class="pr-16">
+        <p class="text-sm font-medium text-gray-900 mb-1">
+          {{ primaryAddress.address }}
+        </p>
+        <p class="text-sm text-gray-600">
+          {{ primaryAddress.fullPhone }}
+        </p>
+      </div>
+
+      <!-- Actions à droite (menu + check) -->
+      <div class="absolute top-4 right-4 flex items-center gap-3">
+        <!-- Menu 3 dots -->
+        <div class="relative">
+          <button
+            (click)="toggleMenu(primaryAddress.id, $event)"
+            class="p-1 text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-100"
+          >
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"/>
+            </svg>
+          </button>
+
+          <!-- Dropdown menu -->
+          <div
+            *ngIf="showMenu === primaryAddress.id"
+            class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-sm border border-gray-200 py-1 z-10"
+          >
+            <button
+              (click)="onMenuAction(primaryAddress, 'edit', $event)"
+              class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+            >
+              Modifier
+            </button>
+            <button
+              (click)="onMenuAction(primaryAddress, 'delete', $event)"
+              class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
+            >
+              Retirer
+            </button>
+          </div>
+        </div>
+
+        <!-- Check (uniquement sur principale) -->
+        <div class="w-5 h-5 rounded-full bg-primary-500 flex items-center justify-center flex-shrink-0">
+          <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Autres secondaires -->
+  <div *ngIf="secondaryAddresses.length > 0">
+    <h2 class="text-base font-semibold text-gray-900 mb-4">Autres secondaires</h2>
+
+    <div class="space-y-4">
+      <div
+        *ngFor="let address of secondaryAddresses"
+        (click)="selectAddress(address.id)"
+        class="p-4 bg-gray-50 rounded-md border border-gray-200 hover:shadow-sm transition-shadow cursor-pointer relative"
+        [class.ring-2]="selectedAddressId === address.id"
+        [class.ring-primary-500]="selectedAddressId === address.id"
+      >
+        <!-- Contenu -->
+        <div class="pr-16">
+          <p class="text-sm font-medium text-gray-900 mb-1">
+            {{ address.address }}
+          </p>
+          <p class="text-sm text-gray-600">
+            {{ address.fullPhone }}
+          </p>
+        </div>
+
+        <!-- Actions à droite (menu seulement, pas de check) -->
+        <div class="absolute top-4 right-4">
+          <!-- Menu 3 dots -->
+          <div class="relative">
+            <button
+              (click)="toggleMenu(address.id, $event)"
+              class="p-1 text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-100"
+            >
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"/>
+              </svg>
+            </button>
+
+            <!-- Dropdown menu -->
+            <div
+              *ngIf="showMenu === address.id"
+              class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-sm border border-gray-200 py-1 z-10"
+            >
+              <button
+                (click)="onMenuAction(address, 'set-primary', $event)"
+                class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              >
+                Définir comme principal
+              </button>
+              <button
+                (click)="onMenuAction(address, 'edit', $event)"
+                class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              >
+                Modifier
+              </button>
+              <button
+                (click)="onMenuAction(address, 'delete', $event)"
+                class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
+              >
+                Retirer
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bouton Enregistrer -->
+  <div class="flex justify-end mt-6">
+    <button
+      (click)="onSave()"
+      [disabled]="!selectedAddressId"
+      class="px-8 py-3 bg-primary-500 text-white text-sm font-medium rounded-md hover:bg-primary-600 transition-colors shadow-sm disabled:bg-gray-300 disabled:cursor-not-allowed"
+    >
+      Enregistrer
+    </button>
+  </div>
+</div>
+
+<!-- Modal Ajout/Modification -->
+<app-add-address-modal
+  *ngIf="showAddModal"
+  [addressToEdit]="addressToEdit"
+  (closed)="closeAddModal()"
+  (addressSaved)="onAddressSaved($event)"
+></app-add-address-modal>
+
+<!-- Overlay pour fermer le menu -->
+<div
+  *ngIf="showMenu"
+  (click)="showMenu = null"
+  class="fixed inset-0 z-0"
+></div>
