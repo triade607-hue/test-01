@@ -19,3 +19,31 @@ body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   @apply text-gray-900 bg-gray-50;
 }
+
+/* Scrollbar personnalisée */
+*::-webkit-scrollbar {
+  width: 5px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 0px;
+  transition: background 0.3s;
+}
+
+*:hover::-webkit-scrollbar-thumb {
+  background: #0284C7;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+
+*:hover {
+  scrollbar-color: #0284C7 transparent;
+}
