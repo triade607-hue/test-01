@@ -1,0 +1,170 @@
+<div class="max-w-6xl">
+  <!-- Header avec titre et bouton + -->
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-2xl font-bold text-primary-500">Méthodes de paiement</h1>
+    <button
+      (click)="openAddModal()"
+      class="w-10 h-10 bg-primary-500 text-white rounded-full flex items-center justify-center hover:bg-primary-600 transition-colors shadow-sm"
+      title="Ajouter une méthode"
+    >
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Carrousel des méthodes de paiement -->
+  <div class="mb-6">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+      <div
+        *ngFor="let method of visibleMethods"
+        (click)="setPrimary(method)"
+        class="relative bg-gray-50 rounded-lg p-6 cursor-pointer transition-all hover:shadow-md"
+        [class.ring-2]="method.isPrimary"
+        [class.ring-primary-500]="method.isPrimary"
+      >
+        <!-- Radio button (sélection principale) -->
+        <div class="absolute top-3 left-3">
+          <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center"
+               [class.border-primary-500]="method.isPrimary"
+               [class.border-gray-300]="!method.isPrimary">
+            <div *ngIf="method.isPrimary" class="w-3 h-3 rounded-full bg-primary-500"></div>
+          </div>
+        </div>
+
+        <!-- Bouton supprimer -->
+        <button
+          (click)="deleteMethod(method.id, $event)"
+          class="absolute top-3 right-3 text-error hover:text-error/80"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+          </svg>
+        </button>
+
+        <!-- Logo centré -->
+        <div class="flex items-center justify-center h-20">
+          <img [src]="method.logo" [alt]="method.type" class="h-12 object-contain" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation dots -->
+    <div *ngIf="totalSlides > 1" class="flex items-center justify-center gap-2">
+      <button
+        *ngFor="let slide of [].constructor(totalSlides); let i = index"
+        (click)="goToSlide(i)"
+        class="w-2 h-2 rounded-full transition-all"
+        [class.bg-primary-500]="i === currentSlide"
+        [class.w-6]="i === currentSlide"
+        [class.bg-gray-300]="i !== currentSlide"
+      ></button>
+    </div>
+  </div>
+
+  <!-- Section données de la méthode principale (collapsible) -->
+  <div *ngIf="primaryMethod" class="bg-gray-50 rounded border border-gray-200 mb-6">
+    <button
+      (click)="toggleCollapse()"
+      class="w-full flex items-center justify-between p-4 text-left hover:bg-gray-100 transition-colors rounded-t"
+    >
+      <h3 class="text-base font-semibold text-gray-900">
+        Données de la méthode de paiement principale
+      </h3>
+      <svg
+        class="w-5 h-5 text-gray-500 transition-transform"
+        [class.rotate-180]="!isCollapsed"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+      </svg>
+    </button>
+
+    <div *ngIf="!isCollapsed" class="p-6 pt-0 space-y-4 bg-white rounded-b">
+      <!-- PayPal -->
+      <ng-container *ngIf="primaryMethod.type === 'paypal'">
+        <div>
+          <label class="block text-sm font-medium text-gray-900 mb-2">
+            Nom du compte <span class="text-red-500">*</span>
+          </label>
+          <input
+            type="text"
+            [value]="primaryMethod.accountName"
+            readonly
+            class="w-full px-4 py-3 bg-gray-100 border-0 rounded-lg text-gray-600"
+          />
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-900 mb-2">
+            Adresse mail <span class="text-red-500">*</span>
+          </label>
+          <input
+            type="email"
+            [value]="primaryMethod.email"
+            readonly
+            class="w-full px-4 py-3 bg-gray-100 border-0 rounded-lg text-gray-600"
+          />
+        </div>
+      </ng-container>
+
+      <!-- Stripe -->
+      <ng-container *ngIf="primaryMethod.type === 'stripe'">
+        <div>
+          <label class="block text-sm font-medium text-gray-900 mb-2">
+            Nom du titulaire <span class="text-red-500">*</span>
+          </label>
+          <input
+            type="text"
+            [value]="primaryMethod.cardholderName"
+            readonly
+            class="w-full px-4 py-3 bg-gray-100 border-0 rounded-lg text-gray-600"
+          />
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-900 mb-2">
+            Numéro de carte <span class="text-red-500">*</span>
+          </label>
+          <input
+            type="text"
+            [value]="primaryMethod.cardNumber"
+            readonly
+            class="w-full px-4 py-3 bg-gray-100 border-0 rounded-lg text-gray-600"
+          />
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-900 mb-2">
+            Date d'expiration <span class="text-red-500">*</span>
+          </label>
+          <input
+            type="text"
+            [value]="primaryMethod.expiryDate"
+            readonly
+            class="w-full px-4 py-3 bg-gray-100 border-0 rounded-lg text-gray-600"
+          />
+        </div>
+      </ng-container>
+    </div>
+  </div>
+
+  <!-- Bouton Enregistrer -->
+  <div class="flex justify-end">
+    <button
+      (click)="onSave()"
+      class="px-8 py-3 bg-primary-500 text-white text-sm font-medium rounded-lg hover:bg-primary-600 transition-colors shadow-sm"
+    >
+      Enregistrer
+    </button>
+  </div>
+</div>
+
+<!-- Modal Ajout -->
+<app-add-payment-method-modal
+  *ngIf="showAddModal"
+  (closed)="closeAddModal()"
+  (paymentMethodAdded)="onPaymentMethodAdded($event)"
+></app-add-payment-method-modal>

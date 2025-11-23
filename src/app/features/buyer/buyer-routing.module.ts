@@ -4,6 +4,7 @@ import { BuyerLayoutComponent } from '../../layouts/buyer-layout/buyer-layout.co
 import { ProfileComponent } from './pages/profile/profile.component';
 import { DesactivateAccountComponent } from './pages/desactivate-account/desactivate-account.component';
 import { InterestsComponent } from './pages/interests/interests.component';
+import { PaymentMethodsComponent } from './pages/payment-methods/payment-methods.component';
 
 const routes: Routes = [
   {
@@ -14,6 +15,7 @@ const routes: Routes = [
       { path: 'profile', component: ProfileComponent },
       { path: 'deactivate-account', component: DesactivateAccountComponent },
       { path: 'interests', component: InterestsComponent },
+      { path: 'payment-methods', component: PaymentMethodsComponent },
     ],
   },
 ];
