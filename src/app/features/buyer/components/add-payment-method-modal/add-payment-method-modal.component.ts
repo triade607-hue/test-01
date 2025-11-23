@@ -17,7 +17,7 @@ interface PaymentMethodType {
       class="fixed inset-0 z-50 overflow-y-auto bg-black/50 flex items-center justify-center p-4"
     >
       <div
-        class="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] flex flex-col relative"
+        class="bg-white rounded-md max-w-xl w-full max-h-[90vh] flex flex-col relative"
       >
         <!-- Close Button -->
         <button
@@ -41,14 +41,17 @@ interface PaymentMethodType {
 
         <!-- Header - Fixed -->
         <div class="flex-shrink-0 p-8 pb-4">
-          <h2 class="text-2xl font-bold text-primary-500 mb-6">
+          <h2 class="text-2xl font-bold text-primary-500 mb-2">
             Nouvelle méthode de paiement
           </h2>
+          <p class="text-gray-500 mb-6">
+            Ajoutez une nouvelle méthode de paiement pour vos achats
+          </p>
         </div>
 
-        <!-- Form - Scrollable -->
+        <!-- Content - Scrollable -->
         <div class="flex-1 overflow-y-auto px-8">
-          <form (ngSubmit)="onSubmit()" class="space-y-4 pb-4">
+          <form class="space-y-4 pb-4">
             <!-- Méthode de Paiement -->
             <div>
               <label class="block text-sm font-medium text-gray-900 mb-2">
@@ -230,10 +233,8 @@ export class AddPaymentMethodModalComponent {
   selectedMethod = '';
 
   formData = {
-    // PayPal
     accountName: '',
     email: '',
-    // Stripe
     cardholderName: '',
     cardNumber: '',
     expiryDate: '',
@@ -259,7 +260,6 @@ export class AddPaymentMethodModalComponent {
   }
 
   onMethodChange(): void {
-    // Reset form data when method changes
     this.formData = {
       accountName: '',
       email: '',
@@ -279,14 +279,12 @@ export class AddPaymentMethodModalComponent {
   }
 
   formatCardNumber(): void {
-    // Format: 1234 5678 9012 3456
     let value = this.formData.cardNumber.replace(/\s/g, '');
     let formatted = value.match(/.{1,4}/g)?.join(' ') || value;
     this.formData.cardNumber = formatted;
   }
 
   formatExpiryDate(): void {
-    // Format: MM/AA
     let value = this.formData.expiryDate.replace(/\D/g, '');
     if (value.length >= 2) {
       value = value.slice(0, 2) + '/' + value.slice(2, 4);
@@ -303,7 +301,6 @@ export class AddPaymentMethodModalComponent {
     const paymentMethodData: any = {
       type: this.selectedMethod,
       isPrimary: false,
-      isVerified: false,
     };
 
     if (this.selectedMethod === 'paypal') {
