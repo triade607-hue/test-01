@@ -359,7 +359,7 @@ export class BuyerSidebarComponent {
 
   supportMenuItems: MenuItem[] = [
     { label: 'Paramètres', route: '/settings', icon: 'settings' },
-    { label: 'F.A.Q.', route: '/support/faq', icon: 'help-circle' },
+    { label: 'F.A.Q.', route: '/buyer/faq', icon: 'help-circle' },
     {
       label: 'Chat et Assistance',
       route: '/support/chat',

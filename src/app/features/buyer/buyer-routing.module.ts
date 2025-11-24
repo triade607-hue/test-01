@@ -7,6 +7,7 @@ import { InterestsComponent } from './pages/interests/interests.component';
 import { PaymentMethodsComponent } from './pages/payment-methods/payment-methods.component';
 import { RewardsComponent } from './pages/rewards/rewards.component';
 import { AddressesComponent } from './pages/addresses/addresses.component';
+import { FaqComponent } from './pages/faq/faq.component';
 
 const routes: Routes = [
   {
@@ -20,6 +21,7 @@ const routes: Routes = [
       { path: 'payment-methods', component: PaymentMethodsComponent },
       { path: 'rewards', component: RewardsComponent },
       { path: 'addresses', component: AddressesComponent },
+      { path: 'faq', component: FaqComponent },
     ],
   },
 ];
