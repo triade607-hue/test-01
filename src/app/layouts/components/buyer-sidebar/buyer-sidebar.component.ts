@@ -323,7 +323,7 @@ export class BuyerSidebarComponent {
   userAvatar = 'https://i.pravatar.cc/150?img=12';
 
   mainMenuItems: MenuItem[] = [
-    { label: 'Mon Profil', route: '/buyer/profile', icon: 'user', exact: true },
+    { label: 'Mon Profil', route: '/buyer/profile', icon: 'user' },
     {
       label: 'Mes Réservations',
       route: '/buyer/reservations',
@@ -339,7 +339,7 @@ export class BuyerSidebarComponent {
     { label: 'Mes Récompenses', route: '/buyer/rewards', icon: 'award' },
     {
       label: 'Recherche Programmée',
-      route: '/buyer/saved-searches',
+      route: '/buyer/scheduled-searches',
       icon: 'search',
     },
     { label: 'Mes Adresses', route: '/buyer/addresses', icon: 'map-pin' },
@@ -349,7 +349,6 @@ export class BuyerSidebarComponent {
       icon: 'credit-card',
     },
     { label: "Centres d'intérêts", route: '/buyer/interests', icon: 'heart' },
-    { label: 'Notes et avis', route: '/buyer/reviews', icon: 'star' },
     {
       label: 'Mes réclamations',
       route: '/buyer/complaints',

@@ -88,7 +88,7 @@ interface Country {
         <div class="pt-2">
           <button
             (click)="onSave()"
-            class="w-full px-6 py-3 bg-primary-500 text-white text-sm font-medium rounded-lg hover:bg-primary-600 transition-colors shadow-sm"
+            class="w-full px-6 py-3 bg-primary-500 text-white text-sm font-medium rounded-md hover:bg-primary-600 transition-colors shadow-sm"
           >
             Enregistrer
           </button>

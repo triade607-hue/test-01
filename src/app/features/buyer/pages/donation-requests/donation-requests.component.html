@@ -1,0 +1,68 @@
+<div class="space-y-6">
+  <!-- Titre -->
+  <h1 class="text-2xl font-bold text-primary-500">Mes demandes de dons</h1>
+
+  <!-- Liste des demandes -->
+  <div class="space-y-3">
+    <div
+      *ngFor="let request of requests"
+      (click)="onRequestClick(request)"
+      class="bg-white rounded-md border border-gray-200 p-4 flex items-center gap-4 hover:shadow-sm transition-shadow cursor-pointer"
+    >
+      <!-- Indicateur non lu -->
+      <div class="flex-shrink-0 w-2">
+        <span
+          *ngIf="!request.isRead"
+          class="block w-2 h-2 rounded-full bg-primary-500"
+        ></span>
+      </div>
+
+      <!-- Image article -->
+      <img
+        [src]="request.article.image"
+        [alt]="request.article.name"
+        class="w-12 h-12 rounded-md object-cover flex-shrink-0"
+      />
+
+      <!-- Contenu -->
+      <div class="flex-1 min-w-0">
+        <p class="text-sm text-gray-700">
+          <span class="font-semibold text-gray-900">{{'@'}}{{ request.vendor.name }}</span>
+          <span> a publié </span>
+          <span class="font-semibold text-gray-900">{{'@'}}{{ request.article.name }}</span>
+          <span> qui correspond à l'une de vos recherches.</span>
+        </p>
+        <p class="text-xs text-gray-500 mt-1">
+          {{ request.date }} à {{ request.time }}
+        </p>
+      </div>
+
+      <!-- Statut / Action -->
+      <div class="flex-shrink-0">
+        <button
+          *ngIf="getStatusLabel(request.status)"
+          (click)="onRecover(request); $event.stopPropagation()"
+          [class]="getStatusClass(request.status)"
+          class="text-sm font-medium"
+          [disabled]="request.status === 'refused'"
+        >
+          {{ getStatusLabel(request.status) }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- État vide -->
+  <div
+    *ngIf="requests.length === 0"
+    class="bg-white rounded-md border border-gray-200 p-12 text-center"
+  >
+    <svg class="w-16 h-16 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/>
+    </svg>
+    <h3 class="text-lg font-medium text-gray-900 mb-1">Aucune demande de don</h3>
+    <p class="text-sm text-gray-500">
+      Vous n'avez pas encore fait de demande de don.
+    </p>
+  </div>
+</div>

@@ -83,7 +83,7 @@ interface Country {
                   name="phone"
                   placeholder="+1 000 000 0000"
                   [maxlength]="selectedCountry.phoneLength + 2"
-                  class="flex-1 px-4 py-3 bg-gray-100 border-0 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  class="flex-1 px-4 py-3 bg-gray-100 border-0 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
                 />
               </div>
             </div>

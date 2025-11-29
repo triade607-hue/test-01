@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
     <div
       class="fixed inset-0 z-50 overflow-y-auto bg-black/50 flex items-center justify-center p-4"
     >
-      <div class="bg-white rounded-lg max-w-md w-full p-8 relative">
+      <div class="bg-white rounded-md max-w-md w-full p-8 relative">
         <!-- Close Button -->
         <button
           (click)="close()"
@@ -52,7 +52,7 @@ import { Router } from '@angular/router';
                 [(ngModel)]="password"
                 name="password"
                 placeholder="••••••••••••••••••••"
-                class="w-full px-4 py-3 bg-gray-100 border-0 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 pr-12"
+                class="w-full px-4 py-3 bg-gray-100 border-0 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 pr-12"
               />
               <button
                 type="button"
@@ -102,13 +102,13 @@ import { Router } from '@angular/router';
             <button
               type="button"
               (click)="close()"
-              class="flex-1 px-6 py-3 bg-white text-gray-700 border border-gray-300 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors"
+              class="flex-1 px-6 py-3 bg-white text-gray-700 border border-gray-300 text-sm font-medium rounded-md hover:bg-gray-50 transition-colors"
             >
               Annuler
             </button>
             <button
               type="submit"
-              class="flex-1 px-6 py-3 bg-primary-500 text-white text-sm font-medium rounded-lg hover:bg-primary-600 transition-colors shadow-sm"
+              class="flex-1 px-6 py-3 bg-primary-500 text-white text-sm font-medium rounded-md hover:bg-primary-600 transition-colors shadow-sm"
             >
               Vérifier
             </button>

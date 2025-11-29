@@ -62,7 +62,7 @@ interface PaymentMethodType {
                   [(ngModel)]="selectedMethod"
                   name="paymentMethod"
                   (change)="onMethodChange()"
-                  class="w-full px-4 py-3 bg-gray-100 border-0 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 appearance-none pr-12"
+                  class="w-full px-4 py-3 bg-gray-100 border-0 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 appearance-none pr-12"
                 >
                   <option value="" disabled>Sélectionner une méthode</option>
                   <option
@@ -111,7 +111,7 @@ interface PaymentMethodType {
                   [(ngModel)]="formData.accountName"
                   name="accountName"
                   placeholder="monadresse@gmail.com"
-                  class="w-full px-4 py-3 bg-gray-100 border-0 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  class="w-full px-4 py-3 bg-gray-100 border-0 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
                 />
               </div>
 
@@ -125,7 +125,7 @@ interface PaymentMethodType {
                   [(ngModel)]="formData.email"
                   name="email"
                   placeholder="monadresse@gmail.com"
-                  class="w-full px-4 py-3 bg-gray-100 border-0 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  class="w-full px-4 py-3 bg-gray-100 border-0 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
                 />
               </div>
             </ng-container>
@@ -142,7 +142,7 @@ interface PaymentMethodType {
                   [(ngModel)]="formData.cardholderName"
                   name="cardholderName"
                   placeholder="Adrien RABIOT"
-                  class="w-full px-4 py-3 bg-gray-100 border-0 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  class="w-full px-4 py-3 bg-gray-100 border-0 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
                 />
               </div>
 
@@ -158,7 +158,7 @@ interface PaymentMethodType {
                   placeholder="1234 5678 9012 3456"
                   maxlength="19"
                   (input)="formatCardNumber()"
-                  class="w-full px-4 py-3 bg-gray-100 border-0 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  class="w-full px-4 py-3 bg-gray-100 border-0 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
                 />
               </div>
 
@@ -175,7 +175,7 @@ interface PaymentMethodType {
                     placeholder="MM/AA"
                     maxlength="5"
                     (input)="formatExpiryDate()"
-                    class="w-full px-4 py-3 bg-gray-100 border-0 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    class="w-full px-4 py-3 bg-gray-100 border-0 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
                   />
                 </div>
 
@@ -190,7 +190,7 @@ interface PaymentMethodType {
                     name="cvv"
                     placeholder="123"
                     maxlength="4"
-                    class="w-full px-4 py-3 bg-gray-100 border-0 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    class="w-full px-4 py-3 bg-gray-100 border-0 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
                   />
                 </div>
               </div>
@@ -205,7 +205,7 @@ interface PaymentMethodType {
                   [(ngModel)]="formData.billingAddress"
                   name="billingAddress"
                   placeholder="123 Rue Example, Ville, Pays"
-                  class="w-full px-4 py-3 bg-gray-100 border-0 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  class="w-full px-4 py-3 bg-gray-100 border-0 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
                 />
               </div>
             </ng-container>
@@ -216,7 +216,7 @@ interface PaymentMethodType {
         <div class="flex-shrink-0 p-8 pt-4 border-t border-gray-200">
           <button
             (click)="onSubmit()"
-            class="w-full px-6 py-3 bg-primary-500 text-white text-sm font-medium rounded-lg hover:bg-primary-600 transition-colors shadow-sm"
+            class="w-full px-6 py-3 bg-primary-500 text-white text-sm font-medium rounded-md hover:bg-primary-600 transition-colors shadow-sm"
           >
             Enregistrer
           </button>

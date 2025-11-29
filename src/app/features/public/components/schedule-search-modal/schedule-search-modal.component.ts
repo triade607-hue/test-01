@@ -14,7 +14,7 @@ import { FormsModule } from '@angular/forms';
     >
       <!-- Modal -->
       <div
-        class="bg-white rounded-lg max-w-md w-full max-h-[90vh] flex flex-col relative"
+        class="bg-white rounded-md max-w-md w-full max-h-[90vh] flex flex-col relative"
         (click)="$event.stopPropagation()"
       >
         <!-- Bouton fermer (X) -->
@@ -51,7 +51,7 @@ import { FormsModule } from '@angular/forms';
             <div class="mb-6">
               <label
                 for="file-upload"
-                class="block bg-gray-50 rounded-lg p-8 border-2 border-dashed border-gray-300 text-center cursor-pointer hover:border-primary-500 transition-colors"
+                class="block bg-gray-50 rounded-md p-8 border-2 border-dashed border-gray-300 text-center cursor-pointer hover:border-primary-500 transition-colors"
               >
                 <input
                   id="file-upload"
@@ -110,7 +110,7 @@ import { FormsModule } from '@angular/forms';
                 (blur)="validateSearchQuery()"
                 placeholder="Entrez le nom de l'article recherché"
                 maxlength="100"
-                class="w-full px-4 py-3 bg-gray-100 border-0 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                class="w-full px-4 py-3 bg-gray-100 border-0 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
               />
               <p *ngIf="searchQueryError" class="text-xs text-red-500 mt-1">
                 {{ searchQueryError }}
@@ -125,7 +125,7 @@ import { FormsModule } from '@angular/forms';
               <select
                 [(ngModel)]="brand"
                 name="brand"
-                class="w-full px-4 py-3 bg-gray-100 border-0 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 cursor-pointer"
+                class="w-full px-4 py-3 bg-gray-100 border-0 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 cursor-pointer"
               >
                 <option value="" disabled selected>Marque de l'article</option>
                 <option value="Apple">Apple</option>
@@ -146,7 +146,7 @@ import { FormsModule } from '@angular/forms';
               <select
                 [(ngModel)]="model"
                 name="model"
-                class="w-full px-4 py-3 bg-gray-100 border-0 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 cursor-pointer"
+                class="w-full px-4 py-3 bg-gray-100 border-0 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 cursor-pointer"
               >
                 <option value="" disabled selected>Modèle de l'article</option>
                 <option value="iPhone 15">iPhone 15</option>
@@ -166,7 +166,7 @@ import { FormsModule } from '@angular/forms';
               <select
                 [(ngModel)]="state"
                 name="state"
-                class="w-full px-4 py-3 bg-gray-100 border-0 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 cursor-pointer"
+                class="w-full px-4 py-3 bg-gray-100 border-0 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 cursor-pointer"
               >
                 <option value="" disabled selected>Etat de l'article</option>
                 <option value="Neuf">Neuf</option>
@@ -185,7 +185,7 @@ import { FormsModule } from '@angular/forms';
                   [(ngModel)]="minPrice"
                   name="minPrice"
                   placeholder="Prix minimum"
-                  class="w-full px-4 py-3 bg-gray-100 border-0 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  class="w-full px-4 py-3 bg-gray-100 border-0 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
                 />
               </div>
               <div>
@@ -194,7 +194,7 @@ import { FormsModule } from '@angular/forms';
                   [(ngModel)]="maxPrice"
                   name="maxPrice"
                   placeholder="Prix maximum"
-                  class="w-full px-4 py-3 bg-gray-100 border-0 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  class="w-full px-4 py-3 bg-gray-100 border-0 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
                 />
               </div>
             </div>
@@ -212,7 +212,7 @@ import { FormsModule } from '@angular/forms';
                   (blur)="validateDeadline()"
                   [min]="minDate"
                   [max]="maxDate"
-                  class="w-full px-4 py-3 bg-gray-100 border-0 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 cursor-pointer"
+                  class="w-full px-4 py-3 bg-gray-100 border-0 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 cursor-pointer"
                 />
               </div>
               <p *ngIf="deadlineError" class="text-xs text-red-500 mt-1">
@@ -228,7 +228,7 @@ import { FormsModule } from '@angular/forms';
             type="submit"
             (click)="submit()"
             [disabled]="!isFormValid()"
-            class="w-full py-3 bg-primary-500 text-white rounded-lg font-semibold hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            class="w-full py-3 bg-primary-500 text-white rounded-md font-semibold hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             Soumettre
           </button>

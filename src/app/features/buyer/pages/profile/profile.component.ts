@@ -53,6 +53,6 @@ export class ProfileComponent {
 
   onDeactivateAccount(): void {
     // Redirection vers la page de désactivation
-    this.router.navigate(['/buyer/deactivate-account']);
+    this.router.navigate(['/buyer/profile/deactivate-account']);
   }
 }

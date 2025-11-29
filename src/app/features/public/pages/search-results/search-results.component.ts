@@ -35,7 +35,7 @@ interface FilterOption {
 })
 export class SearchResultsComponent implements OnInit {
   searchQuery = '';
-  hasResults = true; // Toggle pour tester les deux états
+  hasResults = false; // Toggle pour tester les deux états
   showScheduleModal = false;
 
   filters: Filter[] = [

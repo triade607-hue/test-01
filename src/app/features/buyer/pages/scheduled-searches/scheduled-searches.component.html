@@ -1,0 +1,88 @@
+<div class="space-y-6">
+  <!-- Header avec titre et bouton ajouter -->
+  <div class="flex items-center justify-between">
+    <h1 class="text-2xl font-bold text-primary-500">Recherches programmées</h1>
+
+    <!-- Bouton Ajouter -->
+    <button
+      (click)="openAddModal()"
+      class="w-10 h-10 flex items-center justify-center bg-primary-500 text-white rounded-full hover:bg-primary-600 transition-colors shadow-sm"
+    >
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Liste des recherches -->
+  <div class="space-y-3">
+    <div
+      *ngFor="let search of searches"
+      class="bg-white rounded-lg border border-gray-200 p-4 flex items-center gap-4 hover:shadow-sm transition-shadow"
+      [class.opacity-60]="search.isRead"
+    >
+      <!-- Indicateur non lu -->
+      <div class="flex-shrink-0 w-2">
+        <span
+          *ngIf="!search.isRead"
+          class="block w-2 h-2 rounded-full bg-primary-500"
+        ></span>
+      </div>
+
+      <!-- Image article -->
+      <img
+        [src]="search.article.image"
+        [alt]="search.article.name"
+        class="w-12 h-12 rounded-lg object-cover flex-shrink-0"
+      />
+
+      <!-- Contenu -->
+      <div class="flex-1 min-w-0">
+        <p class="text-sm text-gray-700">
+          <span class="font-semibold text-gray-900">{{'@'}}{{ search.vendor.name }}</span>
+          <span> a publié </span>
+          <span class="font-semibold text-gray-900">{{'@'}}{{ search.article.name }}</span>
+          <span> qui correspond à l'une de vos recherches.</span>
+        </p>
+        <p class="text-xs text-gray-500 mt-1">
+          {{ search.date }} à {{ search.time }}
+        </p>
+      </div>
+
+      <!-- Action -->
+      <button
+        (click)="viewProduct(search)"
+        class="text-sm font-medium text-primary-500 hover:text-primary-600 whitespace-nowrap flex-shrink-0"
+      >
+        voir le produit
+      </button>
+    </div>
+  </div>
+
+  <!-- État vide -->
+  <div
+    *ngIf="searches.length === 0"
+    class="bg-white rounded-lg border border-gray-200 p-12 text-center"
+  >
+    <svg class="w-16 h-16 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+    </svg>
+    <h3 class="text-lg font-medium text-gray-900 mb-1">Aucune recherche programmée</h3>
+    <p class="text-sm text-gray-500 mb-4">
+      Vous n'avez pas encore créé de recherche programmée.
+    </p>
+    <button
+      (click)="openAddModal()"
+      class="px-4 py-2 bg-primary-500 text-white text-sm font-medium rounded-lg hover:bg-primary-600 transition-colors"
+    >
+      Créer une recherche
+    </button>
+  </div>
+</div>
+
+<!-- Modal Ajouter une recherche programmée -->
+<app-schedule-search-modal
+  *ngIf="showAddModal"
+  (closed)="closeAddModal()"
+  (submitted)="onSearchAdded($event)"
+></app-schedule-search-modal>
