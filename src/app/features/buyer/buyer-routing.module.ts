@@ -8,6 +8,7 @@ import { PaymentMethodsComponent } from './pages/payment-methods/payment-methods
 import { RewardsComponent } from './pages/rewards/rewards.component';
 import { AddressesComponent } from './pages/addresses/addresses.component';
 import { FaqComponent } from './pages/faq/faq.component';
+import { SettingsComponent } from './pages/settings/settings.component';
 
 const routes: Routes = [
   {
@@ -22,6 +23,7 @@ const routes: Routes = [
       { path: 'rewards', component: RewardsComponent },
       { path: 'addresses', component: AddressesComponent },
       { path: 'faq', component: FaqComponent },
+      { path: 'settings', component: SettingsComponent },
     ],
   },
 ];

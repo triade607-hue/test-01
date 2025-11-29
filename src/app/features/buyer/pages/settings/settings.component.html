@@ -1,0 +1,206 @@
+<div class="space-y-6">
+  <!-- Titre -->
+  <h1 class="text-2xl font-bold text-primary-500">Paramètres</h1>
+
+  <!-- Section Pays ou Région -->
+  <!-- <section class="bg-white rounded-md border border-gray-200 p-6">
+    <h2 class="text-lg font-semibold text-gray-900 mb-2">Pays ou Région</h2>
+    <p class="text-sm text-gray-600 mb-4">
+      Sélectionnez votre pays ou région pour personnaliser votre expérience et afficher les options de livraison disponibles.
+    </p>
+
+    <select
+      [(ngModel)]="selectedCountry"
+      class="w-full max-w-md px-4 py-3 bg-gray-100 border-0 rounded-md text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
+    >
+      <option *ngFor="let country of countries" [value]="country.code">
+        {{ country.label }}
+      </option>
+    </select>
+
+    <div class="mt-4">
+      <button
+        (click)="saveCountry()"
+        class="px-6 py-2.5 bg-primary-500 text-white text-sm font-semibold rounded-md hover:bg-primary-600 transition-colors"
+      >
+        Enregistrer
+      </button>
+    </div>
+  </section> -->
+
+  <!-- Section Devise -->
+  <section class="bg-white rounded-md border border-gray-200 p-6">
+    <h2 class="text-lg font-semibold text-gray-900 mb-2">Devise</h2>
+    <p class="text-sm text-gray-600 mb-4">
+      Sélectionnez la devise que vous souhaitez utiliser pour afficher les prix. Cela garantit que toutes les transactions et annonces sont présentées dans une unité monétaire qui vous convient.
+    </p>
+
+    <select
+      [(ngModel)]="selectedCurrency"
+      class="w-full max-w-md px-4 py-3 bg-gray-100 border-0 rounded-md text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
+    >
+      <option *ngFor="let currency of currencies" [value]="currency">
+        {{ currency }}
+      </option>
+    </select>
+
+    <div class="mt-4">
+      <button
+        (click)="saveCurrency()"
+        class="px-6 py-2.5 bg-primary-500 text-white text-sm font-semibold rounded-md hover:bg-primary-600 transition-colors"
+      >
+        Enregistrer
+      </button>
+    </div>
+  </section>
+
+  <!-- Section Langue -->
+  <section class="bg-white rounded-md border border-gray-200 p-6">
+    <h2 class="text-lg font-semibold text-gray-900 mb-2">Langue</h2>
+    <p class="text-sm text-gray-600 mb-4">
+      Indiquez votre langue préférée pour l'affichage des textes, menus et notifications. Vous pouvez modifier ce paramètre à tout moment pour une expérience utilisateur personnalisée.
+    </p>
+
+    <select
+      [(ngModel)]="selectedLanguage"
+      class="w-full max-w-md px-4 py-3 bg-gray-100 border-0 rounded-md text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
+    >
+      <option *ngFor="let lang of languages" [value]="lang.code">
+        {{ lang.label }}
+      </option>
+    </select>
+
+    <div class="mt-4">
+      <button
+        (click)="saveLanguage()"
+        class="px-6 py-2.5 bg-primary-500 text-white text-sm font-semibold rounded-md hover:bg-primary-600 transition-colors"
+      >
+        Enregistrer
+      </button>
+    </div>
+  </section>
+
+  <!-- Section Notifications -->
+  <section class="bg-white rounded-md border border-gray-200 p-6">
+    <h2 class="text-lg font-semibold text-gray-900 mb-4">Notifications</h2>
+
+    <!-- Toggle Notifications générales -->
+    <div class="flex items-center justify-between py-3 border-b border-gray-100">
+      <div>
+        <h3 class="text-base font-medium text-gray-900">Autoriser les notifications</h3>
+        <p class="text-sm text-gray-600">
+          Activez ou désactivez les alertes pour rester informé des dernières activités, offres, messages ou rappels importants.
+        </p>
+      </div>
+      <button
+        (click)="notificationsEnabled = !notificationsEnabled"
+        [class]="notificationsEnabled ? 'bg-primary-500' : 'bg-gray-300'"
+        class="relative w-12 h-6 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+      >
+        <span
+          [class]="notificationsEnabled ? 'translate-x-6' : 'translate-x-1'"
+          class="absolute top-1 left-0 w-4 h-4 bg-white rounded-full shadow transition-transform"
+        ></span>
+      </button>
+    </div>
+
+    <!-- Toggle Notifications par email -->
+    <div class="flex items-center justify-between py-3 border-b border-gray-100">
+      <div>
+        <h3 class="text-base font-medium text-gray-900">Autoriser les notifications par mails</h3>
+        <p class="text-sm text-gray-600">
+          Activez ou désactivez les alertes par mail pour rester informé des dernières activités, offres, messages ou rappels importants.
+        </p>
+      </div>
+      <button
+        (click)="emailNotificationsEnabled = !emailNotificationsEnabled"
+        [class]="emailNotificationsEnabled ? 'bg-primary-500' : 'bg-gray-300'"
+        class="relative w-12 h-6 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+      >
+        <span
+          [class]="emailNotificationsEnabled ? 'translate-x-6' : 'translate-x-1'"
+          class="absolute top-1 left-0 w-4 h-4 bg-white rounded-full shadow transition-transform"
+        ></span>
+      </button>
+    </div>
+
+    <!-- Options de notifications -->
+    <div class="pt-4">
+      <h3 class="text-base font-medium text-gray-900 mb-3">Recevoir les notifications quand ...</h3>
+      <div class="space-y-3">
+        <label
+          *ngFor="let option of notificationOptions"
+          class="flex items-center gap-3 cursor-pointer"
+        >
+          <input
+            type="checkbox"
+            [(ngModel)]="option.checked"
+            class="w-5 h-5 rounded border-gray-300 text-primary-500 focus:ring-primary-500"
+          />
+          <span class="text-sm text-gray-700">{{ option.label }}</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="mt-6">
+      <button
+        (click)="saveNotifications()"
+        class="px-6 py-2.5 bg-primary-500 text-white text-sm font-semibold rounded-md hover:bg-primary-600 transition-colors"
+      >
+        Enregistrer
+      </button>
+    </div>
+  </section>
+
+  <!-- Section À propos d'Occaverse -->
+  <section class="bg-white rounded-md border border-gray-200 p-6">
+    <h2 class="text-lg font-semibold text-gray-900 mb-4">À Propos d'Occaverse</h2>
+    <div class="text-sm text-gray-600 leading-relaxed whitespace-pre-line">
+      {{ aboutText }}
+    </div>
+  </section>
+
+  <!-- Section Suppression de compte -->
+  <section class="bg-white rounded-md border border-gray-200 p-6">
+    <h2 class="text-lg font-semibold text-red-600 mb-2">Suppression de compte</h2>
+    <p class="text-sm text-gray-600 mb-4">
+      Veuillez indiquer la raison de cette suppression ? Cela nous aidera à améliorer nos services.
+    </p>
+
+    <div class="space-y-3">
+      <label
+        *ngFor="let reason of deleteReasons"
+        class="flex items-start gap-3 cursor-pointer"
+      >
+        <input
+          type="radio"
+          name="deleteReason"
+          [value]="reason.id"
+          [(ngModel)]="selectedDeleteReason"
+          class="mt-1 w-5 h-5 border-gray-300 text-red-600 focus:ring-red-500"
+        />
+        <span class="text-sm text-gray-700">{{ reason.label }}</span>
+      </label>
+    </div>
+
+    <!-- Textarea pour "Autres raisons" -->
+    <div *ngIf="selectedDeleteReason === 'other'" class="mt-4">
+      <textarea
+        [(ngModel)]="otherReason"
+        placeholder="Entrez vos raisons..."
+        rows="4"
+        class="w-full px-4 py-3 bg-gray-100 border-0 rounded-md text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 resize-none"
+      ></textarea>
+    </div>
+
+    <div class="mt-6">
+      <button
+        (click)="submitDeleteRequest()"
+        [disabled]="!selectedDeleteReason"
+        class="px-6 py-2.5 bg-red-600 text-white text-sm font-semibold rounded-md hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        Envoyer
+      </button>
+    </div>
+  </section>
+</div>

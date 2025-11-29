@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
-import { buyerGuard } from './core/guards/buyer.guard';
+// import { buyerGuard } from './core/guards/buyer.guard';
 import { sellerGuard } from './core/guards/seller.guard';
 
 const routes: Routes = [
@@ -68,23 +68,6 @@ const routes: Routes = [
     path: 'cart',
     loadChildren: () =>
       import('./features/cart/cart.module').then((m) => m.CartModule),
-  },
-
-  // Settings (protected)
-  {
-    path: 'settings',
-    loadChildren: () =>
-      import('./features/settings/settings.module').then(
-        (m) => m.SettingsModule
-      ),
-    canActivate: [authGuard],
-  },
-
-  // Support
-  {
-    path: 'support',
-    loadChildren: () =>
-      import('./features/support/support.module').then((m) => m.SupportModule),
   },
 
   // Wildcard route
