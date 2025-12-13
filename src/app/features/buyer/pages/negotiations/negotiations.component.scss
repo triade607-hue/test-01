@@ -1,0 +1,82 @@
+// Styles pour les négociations - Uniforme avec Messagerie
+
+// Custom slider thumb pour l'offre
+.slider-thumb {
+  &::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #0077B6;
+    cursor: pointer;
+    border: 3px solid white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+
+  &::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #0077B6;
+    cursor: pointer;
+    border: 3px solid white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+}
+
+// Scrollbar personnalisée pour les listes
+.conversations-list::-webkit-scrollbar,
+.messages-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.conversations-list::-webkit-scrollbar-track,
+.messages-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.conversations-list::-webkit-scrollbar-thumb,
+.messages-container::-webkit-scrollbar-thumb {
+  background: #cbd5e0;
+  border-radius: 3px;
+}
+
+.conversations-list::-webkit-scrollbar-thumb:hover,
+.messages-container::-webkit-scrollbar-thumb:hover {
+  background: #a0aec0;
+}
+
+// Animation smooth pour le scroll des messages
+:host ::ng-deep .messages-container {
+  scroll-behavior: smooth;
+}
+
+// Animation d'apparition des messages
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.message-bubble {
+  animation: slideIn 0.2s ease;
+}
+
+// Transition douce pour les conversations
+.conversation-item {
+  transition: all 0.2s ease;
+}
+
+// Fix pour éviter le scroll sur mobile quand le clavier est ouvert
+@media (max-width: 768px) {
+  .negotiations-container {
+    position: relative;
+    height: calc(100vh - 180px);
+  }
+}

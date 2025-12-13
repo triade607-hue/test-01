@@ -17,6 +17,8 @@ import { PurchaseDetailComponent } from './pages/purchases/purchase-detail/purch
 import { PurchaseTrackingComponent } from './pages/purchases/purchase-tracking/purchase-tracking.component';
 import { PurchasesComponent } from './pages/purchases/purchases.component';
 import { VendorRatingComponent } from './pages/purchases/vendor-rating/vendor-rating.component';
+import { ReservationsComponent } from './pages/reservations/reservations.component';
+import { NegotiationsComponent } from './pages/negotiations/negotiations.component';
 
 const routes: Routes = [
   {
@@ -52,6 +54,8 @@ const routes: Routes = [
       { path: 'payment-methods', component: PaymentMethodsComponent },
       { path: 'rewards', component: RewardsComponent },
       { path: 'addresses', component: AddressesComponent },
+      { path: 'reservations', component: ReservationsComponent },
+      { path: 'negotiations', component: NegotiationsComponent },
       { path: 'faq', component: FaqComponent },
       { path: 'settings', component: SettingsComponent },
       { path: 'donations', component: DonationRequestsComponent },
