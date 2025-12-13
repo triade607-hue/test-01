@@ -14,7 +14,7 @@ const routes: Routes = [
     children: [
       { path: '', component: HomeComponent },
       { path: 'search', component: SearchResultsComponent },
-      { path: 'seller/:id', component: SellerProfileComponent },
+      { path: 'seller/:id/profile', component: SellerProfileComponent },
       { path: 'component-showcase', component: ComponentShowcaseComponent },
       {
         path: 'product/:id',

@@ -1,0 +1,119 @@
+<div class="min-h-screen bg-gray-50">
+  <div class="max-w-4xl mx-auto py-6 px-4">
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-6">
+      <div class="flex items-center gap-2 text-sm">
+        <a routerLink="/seller/products" class="text-gray-500 hover:text-gray-700">Mes produits</a>
+        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
+        <span class="text-gray-500">{{ productName }}</span>
+        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
+        <span class="text-primary-500 font-medium">Ajout de variantes</span>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="bg-white rounded-lg border border-gray-200 p-6">
+      <!-- Title -->
+      <div class="flex items-center justify-between mb-6">
+        <div>
+          <h2 class="text-xl font-bold text-primary-500">Variantes</h2>
+          <p class="text-sm text-gray-500 mt-1">
+            Votre produit possède des variantes ? Veuillez les renseigner afin de finaliser la création du produit
+          </p>
+        </div>
+        <button
+          (click)="addVariant()"
+          class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-primary-500 rounded-lg hover:bg-primary-600 transition-colors"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+          </svg>
+          Ajouter des variantes
+        </button>
+      </div>
+
+      <!-- Loading -->
+      <div *ngIf="isLoading" class="py-12 text-center">
+        <div class="inline-flex items-center gap-2 text-gray-500">
+          <svg class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+          </svg>
+          Chargement...
+        </div>
+      </div>
+
+      <!-- Variants List -->
+      <div *ngIf="!isLoading" class="space-y-3">
+        <div
+          *ngFor="let variant of variants"
+          class="flex items-center justify-between p-4 bg-gray-50 rounded-lg"
+        >
+          <div class="flex items-center gap-4">
+            <!-- Image -->
+            <div class="w-12 h-12 rounded-lg overflow-hidden bg-gray-200">
+              <img
+                *ngIf="variant.image"
+                [src]="variant.image"
+                alt=""
+                class="w-full h-full object-cover"
+              />
+            </div>
+
+            <!-- Info -->
+            <div>
+              <h3 class="font-semibold text-gray-900">{{ productName }}</h3>
+              <div class="flex items-center gap-4 text-sm text-gray-500 mt-1">
+                <span class="text-primary-500 font-medium">{{ variant.price | number:'1.2-2' }}$CAD</span>
+                <span>Quantité de la variante : <strong class="text-gray-700">{{ variant.quantity | number:'2.0' }}</strong></span>
+                <span>Taille : <strong class="text-gray-700">{{ variant.size }}</strong></span>
+                <span class="flex items-center gap-1">
+                  Couleur :
+                  <span
+                    class="w-4 h-4 rounded-full border border-gray-300"
+                    [style.backgroundColor]="variant.colorHex"
+                  ></span>
+                  <strong class="text-gray-700">{{ variant.color }}</strong>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Remove Button -->
+          <button
+            (click)="removeVariant(variant.id)"
+            class="flex items-center gap-1 text-sm text-error hover:text-red-700 font-medium"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+            </svg>
+            Retirer
+          </button>
+        </div>
+
+        <!-- Empty State -->
+        <div *ngIf="variants.length === 0" class="py-12 text-center">
+          <svg class="w-16 h-16 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+          </svg>
+          <h3 class="text-lg font-medium text-gray-900 mb-1">Aucune variante</h3>
+          <p class="text-sm text-gray-500">Ajoutez des variantes pour votre produit</p>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="flex justify-end mt-8 pt-6 border-t border-gray-200">
+        <button
+          (click)="save()"
+          class="px-6 py-3 text-sm font-medium text-white bg-primary-500 rounded-lg hover:bg-primary-600 transition-colors"
+        >
+          Enregistrer
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

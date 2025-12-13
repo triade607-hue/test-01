@@ -32,7 +32,7 @@ const routes: Routes = [
     path: 'seller',
     loadChildren: () =>
       import('./features/seller/seller.module').then((m) => m.SellerModule),
-    canActivate: [authGuard, sellerGuard],
+    // canActivate: [authGuard, sellerGuard],
   },
 
   // Messaging (protected)

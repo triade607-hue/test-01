@@ -1,0 +1,137 @@
+<div class="min-h-screen bg-gray-50">
+  <div class="max-w-4xl mx-auto py-6 px-4">
+    <!-- Header -->
+    <div class="flex items-center gap-2 text-sm mb-6">
+      <a routerLink="/seller/products" class="text-gray-500 hover:text-gray-700">Mes produits</a>
+      <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+      </svg>
+      <span class="text-gray-500">Dénomination de l'article</span>
+      <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+      </svg>
+      <span class="text-primary-500 font-medium">Ajout de variantes</span>
+    </div>
+
+    <!-- Content -->
+    <div class="bg-white rounded-lg border border-gray-200 p-6">
+      <h2 class="text-lg font-semibold text-gray-900 mb-2">
+        Veuillez ajouter l'une des variantes de l'article
+      </h2>
+
+      <div class="space-y-6 mt-6">
+        <!-- Image Upload -->
+        <app-image-uploader
+          [images]="images"
+          [forVariant]="true"
+          [maxImages]="1"
+          (imagesChange)="onImagesChange($event)"
+        ></app-image-uploader>
+
+        <!-- Color -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">
+            Définissez la couleur de la variante
+          </label>
+          <div class="flex items-center gap-3 px-4 py-3 border border-gray-200 rounded-lg bg-gray-50">
+            <span
+              class="w-8 h-8 rounded-full border border-gray-300"
+              [style.backgroundColor]="formData.colorHex"
+            ></span>
+            <input
+              type="text"
+              [(ngModel)]="formData.color"
+              class="flex-1 bg-transparent border-none focus:outline-none text-sm"
+              placeholder="Couleur Noire"
+            />
+            <input
+              type="color"
+              [(ngModel)]="formData.colorHex"
+              class="w-8 h-8 rounded cursor-pointer"
+            />
+          </div>
+        </div>
+
+        <!-- Size -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">
+            Définissez la taille de la variante
+          </label>
+          <div class="flex items-center justify-between px-4 py-3 border border-gray-200 rounded-lg bg-gray-50">
+            <span class="text-sm text-gray-600">Taille</span>
+            <select
+              [(ngModel)]="formData.size"
+              class="text-sm text-primary-500 font-medium bg-transparent border-none focus:outline-none cursor-pointer"
+            >
+              <option value="XS">XS</option>
+              <option value="S">S</option>
+              <option value="M">M</option>
+              <option value="L">L</option>
+              <option value="XL">XL</option>
+              <option value="XXL">XXL</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Other Variant -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">
+            Définissez (autre variante) de la variante
+          </label>
+          <div class="flex items-center justify-between px-4 py-3 border border-gray-200 rounded-lg bg-gray-50">
+            <span class="text-sm text-gray-600">Autre Variante</span>
+            <input
+              type="text"
+              [(ngModel)]="formData.otherVariant"
+              class="text-sm text-primary-500 font-medium bg-transparent border-none focus:outline-none text-right"
+              placeholder="Valeur de la variante"
+            />
+          </div>
+        </div>
+
+        <!-- Price -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">
+            Prix de la variante
+          </label>
+          <div class="flex items-center justify-between px-4 py-3 border border-gray-200 rounded-lg bg-gray-50">
+            <span class="text-sm text-gray-600">Prix</span>
+            <input
+              type="number"
+              [(ngModel)]="formData.price"
+              class="text-sm text-primary-500 font-medium bg-transparent border-none focus:outline-none text-right w-32"
+              placeholder="Valeur du Prix"
+            />
+          </div>
+        </div>
+
+        <!-- Quantity -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">
+            Quantité de la variante
+          </label>
+          <div class="flex items-center justify-between px-4 py-3 border border-gray-200 rounded-lg bg-gray-50">
+            <span class="text-sm text-gray-600">Quantité</span>
+            <input
+              type="number"
+              [(ngModel)]="formData.quantity"
+              min="1"
+              class="text-sm text-primary-500 font-medium bg-transparent border-none focus:outline-none text-right w-32"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="flex justify-end mt-8 pt-6 border-t border-gray-200">
+        <button
+          (click)="submit()"
+          [disabled]="isSaving"
+          class="px-6 py-3 text-sm font-medium text-white bg-primary-500 rounded-lg hover:bg-primary-600 transition-colors disabled:opacity-50"
+        >
+          {{ isSaving ? 'Ajout...' : 'Ajouter' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
