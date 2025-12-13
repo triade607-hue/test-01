@@ -89,7 +89,7 @@
           <label class="block text-sm font-medium text-gray-900 mb-2">
             Nom du compte
           </label>
-          <div class="w-full px-4 py-3 bg-gray-200 border-0 rounded-lg text-gray-700 cursor-not-allowed">
+          <div class="w-full px-4 py-3 bg-gray-200 border-0 rounded-md text-gray-700 cursor-not-allowed">
             {{ selectedMethod.accountName }}
           </div>
         </div>
@@ -98,7 +98,7 @@
           <label class="block text-sm font-medium text-gray-900 mb-2">
             Adresse mail
           </label>
-          <div class="w-full px-4 py-3 bg-gray-200 border-0 rounded-lg text-gray-700 cursor-not-allowed">
+          <div class="w-full px-4 py-3 bg-gray-200 border-0 rounded-md text-gray-700 cursor-not-allowed">
             {{ selectedMethod.email }}
           </div>
         </div>
@@ -110,7 +110,7 @@
           <label class="block text-sm font-medium text-gray-900 mb-2">
             Nom du titulaire
           </label>
-          <div class="w-full px-4 py-3 bg-gray-200 border-0 rounded-lg text-gray-700 cursor-not-allowed">
+          <div class="w-full px-4 py-3 bg-gray-200 border-0 rounded-md text-gray-700 cursor-not-allowed">
             {{ selectedMethod.cardholderName }}
           </div>
         </div>
@@ -119,7 +119,7 @@
           <label class="block text-sm font-medium text-gray-900 mb-2">
             Numéro de carte
           </label>
-          <div class="w-full px-4 py-3 bg-gray-200 border-0 rounded-lg text-gray-700 cursor-not-allowed">
+          <div class="w-full px-4 py-3 bg-gray-200 border-0 rounded-md text-gray-700 cursor-not-allowed">
             {{ selectedMethod.cardNumber }}
           </div>
         </div>
@@ -128,7 +128,7 @@
           <label class="block text-sm font-medium text-gray-900 mb-2">
             Date d'expiration
           </label>
-          <div class="w-full px-4 py-3 bg-gray-200 border-0 rounded-lg text-gray-700 cursor-not-allowed">
+          <div class="w-full px-4 py-3 bg-gray-200 border-0 rounded-md text-gray-700 cursor-not-allowed">
             {{ selectedMethod.expiryDate }}
           </div>
         </div>
@@ -141,7 +141,7 @@
     <button
       (click)="onValidate()"
       [disabled]="!selectedMethod"
-      class="px-8 py-3 bg-primary-500 text-white text-sm font-medium rounded-lg hover:bg-primary-600 transition-colors shadow-sm disabled:bg-gray-300 disabled:cursor-not-allowed"
+      class="px-8 py-3 bg-primary-500 text-white text-sm font-medium rounded-md hover:bg-primary-600 transition-colors shadow-sm disabled:bg-gray-300 disabled:cursor-not-allowed"
     >
       {{ actionButtonText }}
     </button>

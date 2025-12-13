@@ -12,6 +12,11 @@ import { SettingsComponent } from './pages/settings/settings.component';
 import { DonationRequestsComponent } from './pages/donation-requests/donation-requests.component';
 import { ComplaintsComponent } from './pages/complaints/complaints.component';
 import { ScheduledSearchesComponent } from './pages/scheduled-searches/scheduled-searches.component';
+import { ComplianceReportComponent } from './pages/purchases/compliance-report/compliance-report.component';
+import { PurchaseDetailComponent } from './pages/purchases/purchase-detail/purchase-detail.component';
+import { PurchaseTrackingComponent } from './pages/purchases/purchase-tracking/purchase-tracking.component';
+import { PurchasesComponent } from './pages/purchases/purchases.component';
+import { VendorRatingComponent } from './pages/purchases/vendor-rating/vendor-rating.component';
 
 const routes: Routes = [
   {
@@ -27,6 +32,19 @@ const routes: Routes = [
             path: 'deactivate-account',
             component: DesactivateAccountComponent,
           },
+        ],
+      },
+      {
+        path: 'purchases',
+        children: [
+          { path: '', component: PurchasesComponent },
+          { path: ':id', component: PurchaseDetailComponent },
+          { path: ':id/tracking', component: PurchaseTrackingComponent },
+          {
+            path: ':id/tracking/compliance',
+            component: ComplianceReportComponent,
+          },
+          { path: ':id/tracking/rating', component: VendorRatingComponent },
         ],
       },
       { path: 'deactivate-account', component: DesactivateAccountComponent },
@@ -45,6 +63,6 @@ const routes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class BuyerRoutingModule { }
+export class BuyerRoutingModule {}

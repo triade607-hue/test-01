@@ -1,0 +1,179 @@
+<div class="space-y-4 sm:space-y-6" (click)="closeDropdown()">
+  <!-- Header avec tabs -->
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <h1 class="text-xl sm:text-2xl font-bold text-primary-500">Mes achats</h1>
+
+    <!-- Tabs -->
+    <div class="flex items-center gap-2">
+      <button
+        (click)="activeTab = 'in_progress'"
+        class="flex-1 sm:flex-none px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-md transition-colors"
+        [ngClass]="activeTab === 'in_progress'
+          ? 'bg-gray-900 text-white'
+          : 'text-gray-600 hover:bg-gray-100'"
+      >
+        En Cours
+      </button>
+      <button
+        (click)="activeTab = 'completed'"
+        class="flex-1 sm:flex-none px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-md transition-colors"
+        [ngClass]="activeTab === 'completed'
+          ? 'bg-gray-900 text-white'
+          : 'text-gray-600 hover:bg-gray-100'"
+      >
+        Terminés
+      </button>
+    </div>
+  </div>
+
+  <!-- Orders List -->
+  <div class="space-y-4">
+    <div
+      *ngFor="let order of filteredOrders"
+      class="bg-white rounded-md border border-gray-200 overflow-hidden"
+    >
+      <!-- Order Header -->
+      <div class="p-3 sm:p-4 border-b border-gray-100">
+        <div class="flex items-start sm:items-center justify-between gap-2">
+          <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+            <div>
+              <span class="text-xs sm:text-sm font-semibold text-gray-900">Commande n°</span>
+              <span class="text-xs sm:text-sm font-bold text-gray-900 break-all">{{ order.orderNumber }}</span>
+            </div>
+            <span
+              class="inline-flex px-2 sm:px-3 py-1 text-xs font-medium rounded-full w-fit"
+              [ngClass]="getStatusClass(order.status)"
+            >
+              Statut :{{ getStatusLabel(order.status) }}
+            </span>
+          </div>
+
+          <!-- Dropdown Menu -->
+          <div class="relative flex-shrink-0">
+            <button
+              (click)="toggleDropdown(order.id, $event)"
+              class="p-2 hover:bg-gray-100 rounded-full transition-colors"
+            >
+              <svg class="w-5 h-5 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"/>
+              </svg>
+            </button>
+
+            <!-- Dropdown Content -->
+            <div
+              *ngIf="activeDropdownId === order.id"
+              class="absolute right-0 top-full mt-1 w-48 sm:w-56 bg-white rounded-md shadow-lg border border-gray-200 py-2 z-10"
+            >
+              <button
+                (click)="onOrderDetail(order.id)"
+                class="w-full px-4 py-2.5 text-left text-xs sm:text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                [routerLink]="['/buyer/purchases', order.id]"
+              >
+                Détail Commande
+              </button>
+              <button
+                (click)="onOrderTracking(order.id)"
+                class="w-full px-4 py-2.5 text-left text-xs sm:text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                [routerLink]="['/buyer/purchases', order.id, 'tracking']"
+              >
+                Suivi de la commande
+              </button>
+              <button
+                (click)="onDeliverySlip(order.id)"
+                class="w-full px-4 py-2.5 text-left text-xs sm:text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+              >
+                Bordereau de livraison
+              </button>
+              <button
+                (click)="onContactVendor(order.id)"
+                class="w-full px-4 py-2.5 text-left text-xs sm:text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+              >
+                Contacter le vendeur
+              </button>
+            </div>
+          </div>
+        </div>
+        <p class="text-xs sm:text-sm text-gray-500 mt-1">{{ order.date }}</p>
+      </div>
+
+      <!-- Products -->
+      <div class="p-3 sm:p-4 space-y-3">
+        <!-- Afficher le premier produit ou tous si expanded -->
+        <ng-container *ngFor="let product of order.isExpanded ? order.products : [order.products[0]]; let i = index">
+          <div class="flex items-start sm:items-center gap-3 sm:gap-4">
+            <img
+              [src]="product.image"
+              [alt]="product.name"
+              class="w-12 h-12 sm:w-16 sm:h-16 rounded-md object-cover bg-primary-100 flex-shrink-0"
+            />
+            <div class="flex-1 min-w-0">
+              <h3 class="font-medium text-gray-900 text-sm sm:text-base truncate">{{ product.name }}</h3>
+              <p class="text-xs sm:text-sm text-gray-600">
+                Qté: {{ product.quantity }}
+                <span class="hidden sm:inline">
+                  &nbsp;&nbsp;{{ product.variant1.label }}: <span class="font-medium">{{ product.variant1.value }}</span>
+                  &nbsp;&nbsp;{{ product.variant2.label }}: <span class="font-medium">{{ product.variant2.value }}</span>
+                </span>
+              </p>
+              <p class="text-xs text-gray-600 sm:hidden">
+                {{ product.variant1.label }}: {{ product.variant1.value }}
+              </p>
+            </div>
+            <div class="text-right flex-shrink-0">
+              <span class="font-bold text-primary-500 text-sm sm:text-base">{{ product.price }}{{ product.currency }}</span>
+            </div>
+          </div>
+        </ng-container>
+
+        <!-- Toggle voir plus / réduire -->
+        <button
+          *ngIf="order.products.length > 1"
+          (click)="toggleExpand(order)"
+          class="text-xs sm:text-sm font-medium text-primary-500 hover:text-primary-600 flex items-center gap-1"
+        >
+          <span>{{ order.isExpanded ? 'réduire' : 'tout voir' }}</span>
+          <svg
+            class="w-4 h-4 transition-transform"
+            [class.rotate-180]="order.isExpanded"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Footer: Vendor + Total -->
+      <div class="px-3 sm:px-4 pb-3 sm:pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div class="flex items-center gap-2 sm:gap-3">
+          <img
+            [src]="order.vendor.avatar"
+            [alt]="order.vendor.name"
+            class="w-6 h-6 sm:w-8 sm:h-8 rounded-full object-cover"
+          />
+          <span class="text-xs sm:text-sm font-medium text-primary-500">{{ order.vendor.name }}</span>
+          <span class="text-xs sm:text-sm">{{ order.vendor.countryFlag }} ({{ order.vendor.country }})</span>
+        </div>
+        <div class="text-right">
+          <p class="text-xs text-primary-500">Total de commande</p>
+          <p class="text-base sm:text-lg font-bold text-primary-500">{{ order.total }}{{ order.currency }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div
+    *ngIf="filteredOrders.length === 0"
+    class="bg-white rounded-md border border-gray-200 p-12 text-center"
+  >
+    <svg class="w-16 h-16 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+    </svg>
+    <h3 class="text-lg font-medium text-gray-900 mb-1">Aucune commande</h3>
+    <p class="text-sm text-gray-500">
+      {{ activeTab === 'in_progress' ? 'Vous n\'avez pas de commandes en cours.' : 'Vous n\'avez pas de commandes terminées.' }}
+    </p>
+  </div>
+</div>
