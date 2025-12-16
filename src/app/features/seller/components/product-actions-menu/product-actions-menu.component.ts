@@ -16,7 +16,7 @@ import { CommonModule } from '@angular/common';
       <!-- Trigger Button -->
       <button
         (click)="toggleMenu($event)"
-        class="p-2 rounded-lg hover:bg-gray-100 transition-colors text-gray-500 hover:text-gray-700"
+        class="p-2 rounded-md hover:bg-gray-100 transition-colors text-gray-500 hover:text-gray-700"
       >
         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
           <path
@@ -28,7 +28,7 @@ import { CommonModule } from '@angular/common';
       <!-- Dropdown Menu -->
       <div
         *ngIf="isOpen"
-        class="absolute right-0 top-full mt-1 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50 animate-fade-in"
+        class="absolute right-0 top-full mt-1 w-48 bg-white rounded-md shadow-lg border border-gray-200 py-1 z-50 animate-fade-in"
       >
         <!-- Modifier -->
         <button
@@ -114,6 +114,27 @@ import { CommonModule } from '@angular/common';
           Modifier les images
         </button>
 
+        <!-- Gérer les variantes -->
+        <button
+          (click)="onAction('manageVariants')"
+          class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+        >
+          <svg
+            class="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"
+            />
+          </svg>
+          Gérer les variantes
+        </button>
+
         <!-- Divider -->
         <div class="border-t border-gray-100 my-1"></div>
 
@@ -163,6 +184,7 @@ export class ProductActionsMenuComponent {
   @Output() promote = new EventEmitter<void>();
   @Output() manageStock = new EventEmitter<void>();
   @Output() editImages = new EventEmitter<void>();
+  @Output() manageVariants = new EventEmitter<void>();
   @Output() delete = new EventEmitter<void>();
 
   isOpen = false;
@@ -182,7 +204,13 @@ export class ProductActionsMenuComponent {
   }
 
   onAction(
-    action: 'edit' | 'promote' | 'manageStock' | 'editImages' | 'delete'
+    action:
+      | 'edit'
+      | 'promote'
+      | 'manageStock'
+      | 'editImages'
+      | 'manageVariants'
+      | 'delete'
   ): void {
     this.isOpen = false;
 
@@ -198,6 +226,9 @@ export class ProductActionsMenuComponent {
         break;
       case 'editImages':
         this.editImages.emit();
+        break;
+      case 'manageVariants':
+        this.manageVariants.emit();
         break;
       case 'delete':
         this.delete.emit();

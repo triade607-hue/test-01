@@ -50,7 +50,7 @@ export class DashboardComponent implements OnInit {
   stats: StatCard[] = [
     {
       title: 'Ventes du mois',
-      value: '12 450,00 €',
+      value: '1450,00 €',
       change: '+12.5%',
       changeType: 'positive',
       icon: 'trending-up',

@@ -51,7 +51,7 @@ import { LotSource } from '../../../models/product.models';
         <div class="px-6 space-y-3">
           <!-- Nouveaux articles -->
           <label
-            class="flex items-center gap-3 p-3 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors"
+            class="flex items-center gap-3 p-3 rounded-md cursor-pointer hover:bg-gray-50 transition-colors"
             [class.bg-primary-50]="selectedSource === 'new'"
           >
             <input
@@ -68,7 +68,7 @@ import { LotSource } from '../../../models/product.models';
 
           <!-- Articles existants -->
           <label
-            class="flex items-center gap-3 p-3 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors"
+            class="flex items-center gap-3 p-3 rounded-md cursor-pointer hover:bg-gray-50 transition-colors"
             [class.bg-primary-50]="selectedSource === 'existing'"
           >
             <input
@@ -88,14 +88,14 @@ import { LotSource } from '../../../models/product.models';
         <div class="flex gap-3 p-6">
           <button
             (click)="goBack()"
-            class="flex-1 px-4 py-3 text-sm font-medium text-primary-500 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+            class="flex-1 px-4 py-3 text-sm font-medium text-primary-500 bg-white border border-gray-200 rounded-md hover:bg-gray-50 transition-colors"
           >
             Retour
           </button>
           <button
             (click)="confirm()"
             [disabled]="!selectedSource"
-            class="flex-1 px-4 py-3 text-sm font-medium text-white bg-primary-500 rounded-lg hover:bg-primary-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            class="flex-1 px-4 py-3 text-sm font-medium text-white bg-primary-500 rounded-md hover:bg-primary-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Continuer
           </button>

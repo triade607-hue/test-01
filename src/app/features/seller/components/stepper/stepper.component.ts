@@ -12,7 +12,17 @@ export interface StepConfig {
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="flex items-center justify-between">
+    <!-- Mobile: Simple step indicator -->
+    <div class="sm:hidden flex items-center justify-center gap-2">
+      <span class="text-sm font-medium text-primary-500">
+        Étape {{ currentStep }} / {{ steps.length }}
+      </span>
+      <span class="text-sm text-gray-500">-</span>
+      <span class="text-sm text-gray-700">{{ getCurrentStepLabel() }}</span>
+    </div>
+
+    <!-- Desktop: Full stepper -->
+    <div class="hidden sm:flex items-center justify-between">
       <ng-container *ngFor="let step of steps; let i = index; let last = last">
         <!-- Step -->
         <div class="flex flex-col items-center">
@@ -61,4 +71,12 @@ export interface StepConfig {
 export class StepperComponent {
   @Input() steps: StepConfig[] = [];
   @Input() currentStep = 1;
+
+  getCurrentStepLabel(): string {
+    const step = this.steps.find((s) => s.id === this.currentStep);
+    if (step) {
+      return step.sublabel ? `${step.label} ${step.sublabel}` : step.label;
+    }
+    return '';
+  }
 }

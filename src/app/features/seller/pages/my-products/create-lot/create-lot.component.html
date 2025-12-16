@@ -1,6 +1,6 @@
 <div class="space-y-6">
   <!-- Header -->
-  <div class="flex items-center justify-between">
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
     <div class="flex items-center gap-2 text-sm">
       <a routerLink="/seller/products" class="text-gray-500 hover:text-gray-700">Mes produits</a>
       <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -10,7 +10,7 @@
     </div>
     <button
       (click)="cancel()"
-      class="flex items-center gap-1 text-sm text-error hover:text-red-700 font-medium"
+      class="flex items-center gap-1 text-sm text-error hover:text-red-700 font-medium self-end sm:self-auto"
     >
       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
@@ -20,14 +20,14 @@
   </div>
 
   <!-- Stepper -->
-  <div class="bg-white rounded-lg border border-gray-200 p-6">
+  <div class="bg-white rounded-md border border-gray-200 p-4 sm:p-6 overflow-x-auto">
     <app-stepper [steps]="steps" [currentStep]="currentStep"></app-stepper>
   </div>
 
   <!-- Step Content -->
-  <div class="bg-white rounded-lg border border-gray-200 p-6">
+  <div class="bg-white rounded-md border border-gray-200 p-4 sm:p-6">
 
-    <!-- Step 1: Lot Info -->
+    <!-- ==================== STEP 1 ==================== -->
     <div *ngIf="currentStep === 1" class="space-y-6">
       <app-image-uploader
         [images]="lotImages"
@@ -36,42 +36,42 @@
       ></app-image-uploader>
 
       <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1">
+        <label class="block text-sm font-medium text-gray-700 mb-2">
           Que vendez-vous ? *
         </label>
         <input
           type="text"
           [(ngModel)]="lotName"
           placeholder="Nom de votre lot d'articles"
-          class="w-full px-4 py-3 border border-gray-200 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+          class="w-full px-4 py-3 border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
         />
       </div>
 
       <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1">
+        <label class="block text-sm font-medium text-gray-700 mb-2">
           Description
         </label>
         <textarea
           [(ngModel)]="lotDescription"
           rows="4"
           placeholder="Décrivez votre lot d'articles"
-          class="w-full px-4 py-3 border border-gray-200 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none"
+          class="w-full px-4 py-3 border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none"
         ></textarea>
       </div>
     </div>
 
-    <!-- Step 2: Composition du lot -->
+    <!-- ==================== STEP 2 ==================== -->
     <div *ngIf="currentStep === 2" class="space-y-6">
-      <div class="flex items-center justify-between">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h3 class="text-lg font-semibold text-primary-500">Article contenu dans le lot</h3>
           <p class="text-sm text-gray-500 mt-1">
-            {{ lotItems.length }} article(s) ajouté(s) · {{ totalItemsInLot }} unité(s) au total
+            {{ lotItems.length }} article(s) · {{ totalItemsInLot }} unité(s) au total
           </p>
         </div>
         <button
           (click)="openAddItemForm()"
-          class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-primary-500 rounded-lg hover:bg-primary-600 transition-colors"
+          class="flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-white bg-primary-500 rounded-md hover:bg-primary-600 transition-colors"
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
@@ -81,24 +81,24 @@
       </div>
 
       <!-- Liste des articles existants (si source=existing) -->
-      <div *ngIf="lotSource === 'existing' && !showAddItemForm" class="space-y-3">
+      <div *ngIf="lotSource === 'existing' && !showAddItemForm && existingProducts.length > 0" class="space-y-3">
         <p class="text-sm font-medium text-gray-700">Sélectionnez parmi vos articles existants :</p>
-        <div class="max-h-64 overflow-y-auto border border-gray-200 rounded-lg divide-y divide-gray-100">
+        <div class="max-h-64 overflow-y-auto border border-gray-200 rounded-md divide-y divide-gray-100">
           <div
             *ngFor="let product of existingProducts"
             class="flex items-center gap-4 p-3 hover:bg-gray-50 cursor-pointer"
             [class.opacity-50]="isProductInLot(product.id)"
             (click)="!isProductInLot(product.id) && addExistingProduct(product)"
           >
-            <div class="w-12 h-12 rounded-lg overflow-hidden bg-gray-100">
-              <img [src]="product.image" [alt]="product.name" class="w-full h-full object-cover"/>
+            <div class="w-12 h-12 rounded-md overflow-hidden bg-gray-100 flex-shrink-0">
+              <img [src]="product.images?.[0]?.url" [alt]="product.name" class="w-full h-full object-cover"/>
             </div>
-            <div class="flex-1">
-              <p class="text-sm font-medium text-gray-900">{{ product.name }}</p>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-medium text-gray-900 truncate">{{ product.name }}</p>
               <p class="text-xs text-gray-500">{{ product.quantity }} en stock</p>
             </div>
             <span *ngIf="isProductInLot(product.id)" class="text-xs text-green-600 font-medium">Ajouté</span>
-            <svg *ngIf="!isProductInLot(product.id)" class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg *ngIf="!isProductInLot(product.id)" class="w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
             </svg>
           </div>
@@ -106,7 +106,7 @@
       </div>
 
       <!-- Formulaire d'ajout d'article -->
-      <div *ngIf="showAddItemForm" class="border border-gray-200 rounded-lg p-6 space-y-4 bg-gray-50">
+      <div *ngIf="showAddItemForm" class="border border-gray-200 rounded-md p-4 sm:p-6 space-y-4 bg-gray-50">
         <div class="flex items-center justify-between mb-4">
           <h4 class="font-medium text-gray-900">Nouvel article dans le lot</h4>
           <button (click)="closeAddItemForm()" class="text-gray-400 hover:text-gray-600">
@@ -126,33 +126,30 @@
 
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">Nom de l'article *</label>
-          <input
-            type="text"
-            [(ngModel)]="currentItem.name"
+          <app-autocomplete-input
+            [value]="currentItem.name"
+            [suggestions]="productSuggestions"
             placeholder="Nom de l'article composant le lot"
-            class="w-full px-4 py-3 border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary-500"
-          />
+            (valueChange)="currentItem.name = $event"
+          ></app-autocomplete-input>
         </div>
 
-        <div class="grid grid-cols-2 gap-4">
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Marque</label>
-            <input
-              type="text"
-              [(ngModel)]="currentItem.brand"
-              placeholder="Marque de l'article"
-              class="w-full px-4 py-3 border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary-500"
-            />
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Modèle</label>
-            <input
-              type="text"
-              [(ngModel)]="currentItem.model"
-              placeholder="Modèle de l'article"
-              class="w-full px-4 py-3 border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary-500"
-            />
-          </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <app-searchable-select
+            label="Marque"
+            placeholder="Sélectionner"
+            [options]="brandOptions"
+            [value]="currentItem.brand"
+            (valueChange)="currentItem.brand = $event"
+          ></app-searchable-select>
+
+          <app-searchable-select
+            label="Modèle"
+            placeholder="Sélectionner"
+            [options]="modelOptions"
+            [value]="currentItem.model"
+            (valueChange)="currentItem.model = $event"
+          ></app-searchable-select>
         </div>
 
         <div>
@@ -161,18 +158,18 @@
             [(ngModel)]="currentItem.description"
             rows="2"
             placeholder="Décrivez l'article"
-            class="w-full px-4 py-3 border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary-500 resize-none"
+            class="w-full px-4 py-3 border border-gray-200 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-primary-500 resize-none"
           ></textarea>
         </div>
 
-        <div class="grid grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Quantité de l'article</label>
             <input
               type="number"
               [(ngModel)]="currentItem.quantity"
               min="1"
-              class="w-full px-4 py-3 border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary-500"
+              class="w-full px-4 py-3 border border-gray-200 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-primary-500"
             />
             <p class="text-xs text-gray-500 mt-1">Stock total disponible</p>
           </div>
@@ -183,34 +180,32 @@
               [(ngModel)]="currentItem.quantityInLot"
               min="1"
               [max]="currentItem.quantity"
-              class="w-full px-4 py-3 border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary-500"
+              class="w-full px-4 py-3 border border-gray-200 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-primary-500"
             />
             <p class="text-xs text-gray-500 mt-1">Quantité à inclure dans ce lot</p>
           </div>
         </div>
 
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">État de l'article</label>
-          <select
-            [(ngModel)]="currentItem.state"
-            class="w-full px-4 py-3 border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary-500"
-          >
-            <option value="">Sélectionner l'état</option>
-            <option *ngFor="let state of productStates" [value]="state">{{ state }}</option>
-          </select>
-        </div>
+        <app-searchable-select
+          label="État de l'article"
+          placeholder="Sélectionner"
+          [options]="stateOptions"
+          [value]="currentItem.state"
+          [searchable]="false"
+          (valueChange)="currentItem.state = $event"
+        ></app-searchable-select>
 
-        <div class="flex justify-end gap-3 pt-4">
+        <div class="flex flex-col-reverse sm:flex-row justify-end gap-3 pt-4">
           <button
             (click)="closeAddItemForm()"
-            class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50"
+            class="w-full sm:w-auto px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-md hover:bg-gray-50"
           >
             Retour
           </button>
           <button
             (click)="addItemToLot()"
             [disabled]="!currentItem.name || currentItem.quantityInLot < 1"
-            class="px-4 py-2 text-sm font-medium text-white bg-primary-500 rounded-lg hover:bg-primary-600 disabled:opacity-50"
+            class="w-full sm:w-auto px-4 py-2 text-sm font-medium text-white bg-primary-500 rounded-md hover:bg-primary-600 disabled:opacity-50"
           >
             Ajouter
           </button>
@@ -222,32 +217,28 @@
         <p class="text-sm font-medium text-gray-700">Articles dans le lot :</p>
         <div
           *ngFor="let item of lotItems"
-          class="flex items-center justify-between p-4 bg-gray-50 rounded-lg"
+          class="flex items-center justify-between p-4 bg-gray-50 rounded-md"
         >
-          <div class="flex items-center gap-4">
-            <div class="w-12 h-12 rounded-lg overflow-hidden bg-gray-200">
+          <div class="flex items-center gap-4 flex-1 min-w-0">
+            <div class="w-12 h-12 rounded-md overflow-hidden bg-gray-200 flex-shrink-0 flex items-center justify-center">
               <img *ngIf="item.image" [src]="item.image" alt="" class="w-full h-full object-cover"/>
-              <div *ngIf="!item.image" class="w-full h-full flex items-center justify-center">
-                <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                </svg>
-              </div>
+              <svg *ngIf="!item.image" class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+              </svg>
             </div>
-            <div>
-              <p class="font-medium text-gray-900">{{ item.name }}</p>
-              <p class="text-sm text-gray-500">
-                {{ item.quantityInLot }} unité(s) · {{ item.state || 'État non précisé' }}
-              </p>
+            <div class="min-w-0">
+              <p class="font-medium text-gray-900 truncate">{{ item.name }}</p>
+              <p class="text-sm text-gray-500">{{ item.quantityInLot }} unité(s)</p>
             </div>
           </div>
           <button
             (click)="removeItemFromLot(item.id)"
-            class="flex items-center gap-1 text-sm text-error hover:text-red-700 font-medium"
+            class="flex items-center gap-1 text-sm text-error hover:text-red-700 font-medium flex-shrink-0 ml-4"
           >
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
             </svg>
-            Retirer
+            <span class="hidden sm:inline">Retirer</span>
           </button>
         </div>
       </div>
@@ -262,84 +253,74 @@
       </div>
     </div>
 
-    <!-- Step 3: Options -->
+    <!-- ==================== STEP 3 ==================== -->
     <div *ngIf="currentStep === 3" class="space-y-4">
       <!-- Négociation -->
-      <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
-        <div>
+      <div class="flex items-start sm:items-center justify-between gap-4 p-4 border border-gray-200 rounded-md">
+        <div class="flex-1">
           <h4 class="text-sm font-semibold text-gray-900">Négociation</h4>
-          <p class="text-sm text-gray-500">
-            Permettez aux potentiels acheteurs de négocier le prix de votre article pour une meilleure offre.
-          </p>
+          <p class="text-sm text-gray-500 mt-1">Permettez aux acheteurs de négocier le prix.</p>
         </div>
-        <label class="relative inline-flex items-center cursor-pointer">
+        <label class="relative inline-flex items-center cursor-pointer flex-shrink-0">
           <input type="checkbox" [(ngModel)]="allowNegotiation" class="sr-only peer"/>
           <div class="w-11 h-6 bg-gray-200 peer-focus:ring-2 peer-focus:ring-primary-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-500"></div>
         </label>
       </div>
 
       <!-- Réservation -->
-      <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
-        <div>
+      <div class="flex items-start sm:items-center justify-between gap-4 p-4 border border-gray-200 rounded-md">
+        <div class="flex-1">
           <h4 class="text-sm font-semibold text-gray-900">Réservation</h4>
-          <p class="text-sm text-gray-500">
-            Offrez la possibilité aux potentiels acheteurs d'effectuer des réservations sur une ou tout votre stock de cet article.
-          </p>
+          <p class="text-sm text-gray-500 mt-1">Offrez la possibilité d'effectuer des réservations.</p>
         </div>
-        <label class="relative inline-flex items-center cursor-pointer">
+        <label class="relative inline-flex items-center cursor-pointer flex-shrink-0">
           <input type="checkbox" [(ngModel)]="allowReservation" class="sr-only peer"/>
           <div class="w-11 h-6 bg-gray-200 peer-focus:ring-2 peer-focus:ring-primary-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-500"></div>
         </label>
       </div>
 
       <!-- Zone géographique -->
-      <div>
-        <p class="text-sm font-medium text-gray-700 mb-3">
-          Définissez les pays où vous souhaitez vendre *
-        </p>
-        <div class="flex items-center justify-between px-4 py-3 border border-gray-200 rounded-lg bg-gray-50">
-          <span class="text-sm text-gray-600">Zone Géographique</span>
-          <span class="text-sm text-primary-500 font-medium">{{ geoZones.join(', ') }}</span>
-        </div>
-      </div>
+      <app-multi-select
+        label="Zone géographique de publication"
+        placeholder="Sélectionner les pays"
+        [options]="countryOptions"
+        [values]="geoZones"
+        (valuesChange)="geoZones = $event"
+      ></app-multi-select>
 
       <!-- Prix du lot -->
-      <div>
-        <p class="text-sm font-medium text-gray-700 mb-3">Prix du lot *</p>
-        <div class="flex items-center justify-between px-4 py-3 border border-gray-200 rounded-lg bg-gray-50">
-          <span class="text-sm text-gray-600">Prix</span>
+      <div class="flex items-center justify-between px-4 py-3 border border-gray-200 rounded-md bg-gray-50">
+        <span class="text-sm text-gray-600">Prix du lot</span>
+        <div class="flex items-center gap-2">
           <input
             type="number"
             [(ngModel)]="lotPrice"
             min="0"
-            class="text-sm text-primary-500 font-medium bg-transparent border-none focus:outline-none text-right w-32"
-            placeholder="Valeur du Prix"
+            step="0.01"
+            placeholder="0.00"
+            class="w-32 text-right text-sm text-primary-500 font-medium bg-transparent border-none focus:outline-none"
           />
+          <span class="text-sm text-gray-500">€</span>
         </div>
       </div>
 
       <!-- Status -->
-      <div>
-        <p class="text-sm font-medium text-gray-700 mb-3">Statut de publication de l'article *</p>
-        <div class="flex items-center justify-between px-4 py-3 border border-gray-200 rounded-lg bg-gray-50">
-          <span class="text-sm text-gray-600">Statut de publication</span>
-          <select
-            [(ngModel)]="status"
-            class="text-sm text-primary-500 font-medium bg-transparent border-none focus:outline-none cursor-pointer"
-          >
-            <option value="published">Publié</option>
-            <option value="draft">Brouillon</option>
-          </select>
-        </div>
-      </div>
+      <app-searchable-select
+        label="Statut de publication"
+        placeholder="Sélectionner"
+        [options]="statusOptions"
+        [value]="status"
+        [searchable]="false"
+        (valueChange)="status = $event"
+      ></app-searchable-select>
     </div>
 
-    <!-- Actions -->
-    <div class="flex justify-end gap-3 mt-8 pt-6 border-t border-gray-200">
+    <!-- ==================== ACTIONS ==================== -->
+    <div class="flex flex-col-reverse sm:flex-row justify-end gap-3 mt-8 pt-6 border-t border-gray-200">
       <button
         *ngIf="currentStep > 1"
         (click)="prevStep()"
-        class="px-6 py-3 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+        class="w-full sm:w-auto px-6 py-3 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-md hover:bg-gray-50 transition-colors"
       >
         Retour
       </button>
@@ -348,7 +329,7 @@
         *ngIf="currentStep < 3"
         (click)="nextStep()"
         [disabled]="(currentStep === 1 && !isStep1Valid) || (currentStep === 2 && !isStep2Valid)"
-        class="px-6 py-3 text-sm font-medium text-white bg-primary-500 rounded-lg hover:bg-primary-600 transition-colors disabled:opacity-50"
+        class="w-full sm:w-auto px-6 py-3 text-sm font-medium text-white bg-primary-500 rounded-md hover:bg-primary-600 transition-colors disabled:opacity-50"
       >
         Continuer
       </button>
@@ -356,8 +337,8 @@
       <button
         *ngIf="currentStep === 3"
         (click)="submit()"
-        [disabled]="isSaving || lotPrice <= 0"
-        class="px-6 py-3 text-sm font-medium text-white bg-primary-500 rounded-lg hover:bg-primary-600 transition-colors disabled:opacity-50"
+        [disabled]="isSaving || !lotPrice || lotPrice <= 0 || geoZones.length === 0"
+        class="w-full sm:w-auto px-6 py-3 text-sm font-medium text-white bg-primary-500 rounded-md hover:bg-primary-600 transition-colors disabled:opacity-50"
       >
         {{ isSaving ? 'Création...' : 'Créer' }}
       </button>

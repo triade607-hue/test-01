@@ -1,325 +1,398 @@
-<div class="min-h-screen bg-gray-50">
-  <div class="max-w-4xl mx-auto py-6 px-4">
-    <!-- Header -->
-    <div class="flex items-center justify-between mb-6">
-      <div class="flex items-center gap-2 text-sm">
-        <a routerLink="/seller/products" class="text-gray-500 hover:text-gray-700">Mes produits</a>
-        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-        </svg>
-        <span class="text-primary-500 font-medium">Nouvel Article</span>
+<div class="space-y-6">
+  <!-- Header -->
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div class="flex items-center gap-2 text-sm">
+      <a routerLink="/seller/products" class="text-gray-500 hover:text-gray-700">Mes produits</a>
+      <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+      </svg>
+      <span class="text-primary-500 font-medium">Nouvel Article</span>
+    </div>
+    <button
+      (click)="cancel()"
+      class="flex items-center gap-1 text-sm text-error hover:text-red-700 font-medium self-end sm:self-auto"
+    >
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+      </svg>
+      Annuler
+    </button>
+  </div>
+
+  <!-- Stepper -->
+  <div class="bg-white rounded-lg border border-gray-200 p-4 sm:p-6 overflow-x-auto">
+    <app-stepper [steps]="steps" [currentStep]="currentStep"></app-stepper>
+  </div>
+
+  <!-- Step Content -->
+  <div class="bg-white rounded-lg border border-gray-200 p-4 sm:p-6">
+
+    <!-- ==================== STEP 1 ==================== -->
+    <div *ngIf="currentStep === 1" class="space-y-6">
+      <app-image-uploader
+        [images]="images"
+        [minImages]="4"
+        (imagesChange)="onImagesChange($event)"
+      ></app-image-uploader>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">
+          Que vendez-vous ? *
+        </label>
+        <app-autocomplete-input
+          [value]="name"
+          [suggestions]="productSuggestions"
+          [minChars]="2"
+          placeholder="Entrez le nom de votre article"
+          (valueChange)="onNameChange($event)"
+          (suggestionSelected)="onSuggestionSelected($event)"
+        ></app-autocomplete-input>
       </div>
-      <button
-        (click)="cancel()"
-        class="flex items-center gap-1 text-sm text-error hover:text-red-700 font-medium"
-      >
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-        </svg>
-        Annuler
-      </button>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">
+          Description *
+        </label>
+        <textarea
+          [(ngModel)]="description"
+          rows="4"
+          placeholder="Décrivez votre article en détail..."
+          class="w-full px-4 py-3 border border-gray-200 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none"
+        ></textarea>
+      </div>
     </div>
 
-    <!-- Stepper -->
-    <div class="bg-white rounded-lg border border-gray-200 p-6 mb-6">
-      <app-stepper [steps]="steps" [currentStep]="currentStep"></app-stepper>
-    </div>
+    <!-- ==================== STEP 2 ==================== -->
+    <div *ngIf="currentStep === 2" class="space-y-6">
 
-    <!-- Step Content -->
-    <div class="bg-white rounded-lg border border-gray-200 p-6">
-      <!-- Step 1: Photos & Basic Info -->
-      <div *ngIf="currentStep === 1" class="space-y-6">
-        <app-image-uploader
-          [images]="images"
-          (imagesChange)="onImagesChange($event)"
-        ></app-image-uploader>
-
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">
-            Que vendez-vous ? *
-          </label>
-          <input
-            type="text"
-            [(ngModel)]="formData.name"
-            placeholder="entrez le nom de votre article"
-            class="w-full px-4 py-3 border border-gray-200 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-          />
-        </div>
-
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">
-            Description
-          </label>
-          <textarea
-            [(ngModel)]="formData.description"
-            rows="4"
-            placeholder="décrivez votre article"
-            class="w-full px-4 py-3 border border-gray-200 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none"
-          ></textarea>
-        </div>
-      </div>
-
-      <!-- Step 2: Category & Characteristics -->
-      <div *ngIf="currentStep === 2" class="space-y-6">
-        <!-- Suggested Categories -->
-        <div *ngIf="suggestedCategories.length > 0 && !useManualCategory">
-          <p class="text-sm font-medium text-gray-700 mb-3">
-            Choisissez l'une des catégories suggérées *
-          </p>
-          <div class="space-y-2">
-            <label
-              *ngFor="let suggestion of suggestedCategories"
-              class="flex items-center gap-3 p-3 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors"
-              [class.bg-primary-50]="selectedSuggestion === suggestion.fullPath"
-            >
-              <input
-                type="radio"
-                name="category"
-                [value]="suggestion.fullPath"
-                [(ngModel)]="selectedSuggestion"
-                class="w-4 h-4 text-primary-500"
-              />
-              <span class="text-sm text-gray-700">{{ suggestion.fullPath }}</span>
-            </label>
-          </div>
-          <p class="mt-4 text-sm text-gray-600">
-            Cela ne vous convient absolument pas ?
-            <button
-              type="button"
-              (click)="useManualCategory = true"
-              class="text-primary-500 font-medium hover:underline"
-            >
-              Faites-le manuellement
-            </button>
-          </p>
-        </div>
-
-        <!-- Manual Category Selection -->
-        <div *ngIf="useManualCategory || suggestedCategories.length === 0" class="space-y-4">
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
-            <select
-              [(ngModel)]="formData.category"
-              (ngModelChange)="onCategoryChange($event)"
-              class="w-full px-4 py-3 border border-gray-200 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-500"
-            >
-              <option value="">Valeur 1</option>
-              <option *ngFor="let cat of categories" [value]="cat.id">{{ cat.name }}</option>
-            </select>
-          </div>
-
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Sous-Catégorie</label>
-            <select
-              [(ngModel)]="formData.subCategory"
-              class="w-full px-4 py-3 border border-gray-200 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-500"
-            >
-              <option value="">Valeur 1</option>
-              <option *ngFor="let sub of subCategories" [value]="sub.id">{{ sub.name }}</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- Geographic Zone -->
-        <div>
-          <p class="text-sm font-medium text-gray-700 mb-3">
-            Définissez les pays où vous souhaitez vendre *
-          </p>
-          <div class="flex items-center justify-between px-4 py-3 border border-gray-200 rounded-lg bg-gray-50">
-            <span class="text-sm text-gray-600">Zone Géographique</span>
-            <span class="text-sm text-primary-500 font-medium">France, Canada, Bénin</span>
-          </div>
-        </div>
-
-        <!-- Characteristics -->
-        <div>
-          <p class="text-sm font-medium text-gray-700 mb-3">Caractéristiques *</p>
-          <div class="space-y-3">
-            <div
-              *ngFor="let char of characteristics; let i = index"
-              class="flex items-center justify-between px-4 py-3 border border-gray-200 rounded-lg bg-gray-50"
-            >
-              <span class="text-sm text-gray-600">{{ char.label }}</span>
-              <select
-                [(ngModel)]="char.value"
-                class="text-sm text-primary-500 font-medium bg-transparent border-none focus:outline-none cursor-pointer"
-              >
-                <option value="">Valeur {{ i + 1 }}</option>
-                <option value="option1">Option 1</option>
-                <option value="option2">Option 2</option>
-              </select>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Step 3: Details -->
-      <div *ngIf="currentStep === 3" class="space-y-4">
-        <p class="text-sm font-medium text-gray-700">Dites-en plus sur votre article *</p>
-
-        <div class="flex items-center justify-between px-4 py-3 border border-gray-200 rounded-lg bg-gray-50">
-          <span class="text-sm text-gray-600">Marque de l'article</span>
-          <span class="text-sm text-primary-500 font-medium">Valeur de la Marque</span>
-        </div>
-
-        <div class="flex items-center justify-between px-4 py-3 border border-gray-200 rounded-lg bg-gray-50">
-          <span class="text-sm text-gray-600">Modèle de l'article</span>
-          <span class="text-sm text-primary-500 font-medium">Valeur du Modèle</span>
-        </div>
-
-        <div class="flex items-center justify-between px-4 py-3 border border-gray-200 rounded-lg bg-gray-50">
-          <span class="text-sm text-gray-600">Etat de l'article</span>
-          <select
-            [(ngModel)]="formData.state"
-            class="text-sm text-primary-500 font-medium bg-transparent border-none focus:outline-none cursor-pointer"
+      <!-- Suggested Categories -->
+      <div *ngIf="suggestedCategories.length > 0 && !useManualCategory">
+        <p class="text-sm font-medium text-gray-700 mb-3">Catégories suggérées</p>
+        <div class="space-y-2">
+          <label
+            *ngFor="let suggestion of suggestedCategories"
+            class="flex items-center gap-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors"
+            [class.border-primary-500]="category && suggestion.category === category"
+            [class.bg-primary-50]="category && suggestion.category === category"
           >
-            <option value="">Valeur de l'Etat</option>
-            <option *ngFor="let state of productStates" [value]="state">{{ state }}</option>
-          </select>
+            <input
+              type="radio"
+              name="suggestedCategory"
+              [value]="suggestion.fullPath"
+              (change)="selectSuggestedCategory(suggestion)"
+              class="w-4 h-4 text-primary-500"
+            />
+            <span class="text-sm text-gray-700">{{ suggestion.fullPath }}</span>
+          </label>
+        </div>
+        <button
+          (click)="useManualCategory = true"
+          class="mt-3 text-sm text-primary-500 font-medium hover:underline"
+        >
+          Faites-le manuellement
+        </button>
+      </div>
+
+      <!-- Manual Category Selection -->
+      <div *ngIf="useManualCategory || suggestedCategories.length === 0" class="space-y-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <app-searchable-select
+            label="Catégorie"
+            placeholder="Sélectionner"
+            [options]="categoryOptions"
+            [value]="category"
+            (valueChange)="onCategoryChange($event)"
+          ></app-searchable-select>
+
+          <app-searchable-select
+            label="Sous-Catégorie"
+            placeholder="Sélectionner"
+            [options]="subCategoryOptions"
+            [value]="subCategory"
+            (valueChange)="onSubCategoryChange($event)"
+          ></app-searchable-select>
         </div>
 
-        <div class="flex items-center justify-between px-4 py-3 border border-gray-200 rounded-lg bg-gray-50">
-          <div>
-            <span class="text-sm text-gray-600">Prix</span>
-          </div>
+        <button
+          *ngIf="suggestedCategories.length > 0"
+          (click)="useManualCategory = false"
+          class="text-sm text-primary-500 font-medium hover:underline"
+        >
+          ← Voir les suggestions
+        </button>
+      </div>
+
+      <!-- Geographic Zones -->
+      <app-multi-select
+        label="Zone géographique de publication"
+        placeholder="Sélectionner les pays"
+        [options]="countryOptions"
+        [values]="geoZones"
+        (valuesChange)="geoZones = $event"
+      ></app-multi-select>
+
+      <!-- Characteristics -->
+      <div *ngIf="characteristics.length > 0" class="space-y-4">
+        <p class="text-sm font-medium text-gray-700">Caractéristiques de l'article</p>
+
+        <app-searchable-select
+          *ngFor="let char of characteristics"
+          [label]="char.label"
+          [placeholder]="'Sélectionner ' + char.label.toLowerCase()"
+          [options]="char.options"
+          [value]="char.value"
+          [searchable]="false"
+          (valueChange)="char.value = $event"
+        ></app-searchable-select>
+      </div>
+    </div>
+
+    <!-- ==================== STEP 3 ==================== -->
+    <div *ngIf="currentStep === 3" class="space-y-4">
+      <p class="text-sm font-medium text-gray-700 mb-2">Dites-en plus sur votre article *</p>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <app-searchable-select
+          label="Marque de l'article"
+          placeholder="Sélectionner"
+          [options]="brandOptions"
+          [value]="brand"
+          (valueChange)="brand = $event"
+        ></app-searchable-select>
+
+        <app-searchable-select
+          label="Modèle de l'article"
+          placeholder="Sélectionner"
+          [options]="modelOptions"
+          [value]="model"
+          (valueChange)="model = $event"
+        ></app-searchable-select>
+      </div>
+
+      <app-searchable-select
+        label="État de l'article"
+        placeholder="Sélectionner"
+        [options]="stateOptions"
+        [value]="state"
+        [searchable]="false"
+        (valueChange)="state = $event"
+      ></app-searchable-select>
+
+      <!-- Prix -->
+      <div class="flex items-center justify-between px-4 py-3 border border-gray-200 rounded-lg bg-gray-50">
+        <span class="text-sm text-gray-600">Prix</span>
+        <div class="flex items-center gap-2">
           <input
             type="number"
-            [(ngModel)]="formData.price"
-            class="text-sm text-primary-500 font-medium bg-transparent border-none focus:outline-none text-right w-32"
-            placeholder="Valeur du Prix"
+            [(ngModel)]="price"
+            min="0"
+            step="0.01"
+            placeholder="0.00"
+            class="w-32 text-right text-sm text-primary-500 font-medium bg-transparent border-none focus:outline-none"
           />
-        </div>
-
-        <!-- Warning for high value -->
-        <p class="text-xs text-error">
-          Pour créer un article de 1000 € ou plus, une vérification d'identité est requise. Cela renforce la sécurité et la confiance sur OCCAVERSE.
-          <br/>
-          Merci de vous y conformer une fois l'article créer !
-        </p>
-
-        <div class="flex items-center justify-between px-4 py-3 border border-gray-200 rounded-lg bg-gray-50">
-          <span class="text-sm text-gray-600">Quantité</span>
-          <input
-            type="number"
-            [(ngModel)]="formData.quantity"
-            min="1"
-            class="text-sm text-primary-500 font-medium bg-transparent border-none focus:outline-none text-right w-32"
-          />
-        </div>
-
-        <div class="flex items-center justify-between px-4 py-3 border border-gray-200 rounded-lg bg-gray-50">
-          <span class="text-sm text-gray-600">Défauts de l'article</span>
-          <span class="text-sm text-primary-500 font-medium">Les défauts...</span>
-        </div>
-
-        <div class="flex items-center justify-between px-4 py-3 border border-gray-200 rounded-lg bg-gray-50">
-          <span class="text-sm text-gray-600">Informations de colisage</span>
-          <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-          </svg>
+          <span class="text-sm text-gray-500">€</span>
         </div>
       </div>
 
-      <!-- Step 4: Options -->
-      <div *ngIf="currentStep === 4" class="space-y-4">
-        <!-- Négociation -->
-        <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
-          <div>
-            <h4 class="text-sm font-semibold text-gray-900">Négociation</h4>
-            <p class="text-sm text-gray-500">
-              Permettez aux potentiels acheteurs de négocier le prix de votre article pour une meilleure offre.
-            </p>
-          </div>
-          <label class="relative inline-flex items-center cursor-pointer">
-            <input type="checkbox" [(ngModel)]="formData.allowNegotiation" class="sr-only peer"/>
-            <div class="w-11 h-6 bg-gray-200 peer-focus:ring-2 peer-focus:ring-primary-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-500"></div>
-          </label>
-        </div>
+      <!-- Price Warning -->
+      <p *ngIf="price && price >= 1000" class="text-xs text-error px-1">
+        Pour créer un article de 1000 € ou plus, une vérification d'identité est requise. Cela renforce la sécurité et la confiance sur OCCAVERSE. Merci de vous y conformer une fois l'article créé !
+      </p>
 
-        <!-- Réservation -->
-        <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
-          <div>
-            <h4 class="text-sm font-semibold text-gray-900">Réservation</h4>
-            <p class="text-sm text-gray-500">
-              Offrez la possibilité aux potentiels acheteurs d'effectuer des réservations sur une ou tout votre stock de cet article.
-            </p>
-          </div>
-          <label class="relative inline-flex items-center cursor-pointer">
-            <input type="checkbox" [(ngModel)]="formData.allowReservation" class="sr-only peer"/>
-            <div class="w-11 h-6 bg-gray-200 peer-focus:ring-2 peer-focus:ring-primary-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-500"></div>
-          </label>
-        </div>
+      <!-- Quantité -->
+      <div class="flex items-center justify-between px-4 py-3 border border-gray-200 rounded-lg bg-gray-50">
+        <span class="text-sm text-gray-600">Quantité</span>
+        <input
+          type="number"
+          [(ngModel)]="quantity"
+          min="1"
+          class="w-24 text-right text-sm text-primary-500 font-medium bg-transparent border-none focus:outline-none"
+        />
+      </div>
 
-        <!-- Confirmation -->
-        <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
-          <div>
-            <h4 class="text-sm font-semibold text-gray-900">Confirmation lors de l'achat</h4>
-            <p class="text-sm text-gray-500">
-              Confirmez la disponibilité de vos articles avant tout achat.
-            </p>
-            <p class="text-sm text-primary-500 font-medium mt-1">
-              Je m'engage à expédier cet article une fois qu'un acheteur aura effectué un paiement.
-            </p>
-          </div>
-          <label class="relative inline-flex items-center cursor-pointer">
-            <input type="checkbox" [(ngModel)]="formData.requireConfirmation" class="sr-only peer"/>
-            <div class="w-11 h-6 bg-gray-200 peer-focus:ring-2 peer-focus:ring-primary-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-500"></div>
-          </label>
-        </div>
+      <!-- Défauts -->
+      <app-searchable-select
+        label="Défauts de l'article"
+        placeholder="Sélectionner"
+        [options]="defectOptions"
+        [value]="defects"
+        [searchable]="false"
+        (valueChange)="defects = $event"
+      ></app-searchable-select>
 
-        <!-- Promotion -->
-        <div class="flex items-center gap-4 p-4 border border-gray-200 rounded-lg">
-          <input type="checkbox" [(ngModel)]="formData.isPromoted" class="w-5 h-5 text-primary-500 rounded"/>
-          <div>
-            <h4 class="text-sm font-semibold text-gray-900">Promotion</h4>
-            <p class="text-sm text-gray-500">
-              Donnez plus de visibilité à votre article et maximisez vos chances de le vendre plus rapidement.
-            </p>
-          </div>
-        </div>
+      <!-- Informations de colisage -->
+      <div class="border border-gray-200 rounded-lg">
+        <button
+          type="button"
+          (click)="showPackaging = !showPackaging"
+          class="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-gray-100 transition-colors rounded-t-lg"
+          [class.rounded-b-lg]="!showPackaging"
+        >
+          <span class="text-sm text-gray-600">Informations de colisage</span>
+          <svg
+            class="w-4 h-4 text-gray-400 transition-transform"
+            [class.rotate-180]="showPackaging"
+            fill="none" stroke="currentColor" viewBox="0 0 24 24"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </button>
 
-        <!-- Status -->
-        <div>
-          <p class="text-sm font-medium text-gray-700 mb-3">Statut de publication de l'article *</p>
-          <div class="flex items-center justify-between px-4 py-3 border border-gray-200 rounded-lg bg-gray-50">
-            <span class="text-sm text-gray-600">Statut de publication</span>
-            <div class="flex items-center gap-2">
-              <span class="text-sm text-primary-500 font-medium">Valeur du statut</span>
-              <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-              </svg>
+        <div *ngIf="showPackaging" class="p-4 space-y-4 border-t border-gray-200">
+          <p class="text-xs text-gray-500 mb-3">Dimensions en centimètres (cm)</p>
+
+          <div class="grid grid-cols-3 gap-3">
+            <div>
+              <label class="block text-xs text-gray-500 mb-1">Longueur</label>
+              <input
+                type="number"
+                [(ngModel)]="packagingLength"
+                min="0"
+                placeholder="cm"
+                class="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary-500"
+              />
+            </div>
+            <div>
+              <label class="block text-xs text-gray-500 mb-1">Largeur</label>
+              <input
+                type="number"
+                [(ngModel)]="packagingWidth"
+                min="0"
+                placeholder="cm"
+                class="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary-500"
+              />
+            </div>
+            <div>
+              <label class="block text-xs text-gray-500 mb-1">Hauteur</label>
+              <input
+                type="number"
+                [(ngModel)]="packagingHeight"
+                min="0"
+                placeholder="cm"
+                class="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary-500"
+              />
             </div>
           </div>
+
+          <!-- Poids - Select simple sans SearchableSelect pour éviter problème overflow -->
+          <div class="flex items-center justify-between px-4 py-3 border border-gray-200 rounded-lg bg-gray-50">
+            <span class="text-sm text-gray-600">Poids estimé</span>
+            <select
+              [(ngModel)]="packagingWeight"
+              class="text-sm text-primary-500 font-medium bg-transparent border-none focus:outline-none cursor-pointer"
+            >
+              <option value="" disabled>Sélectionner</option>
+              <option value="0-0.5">0 - 500g</option>
+              <option value="0.5-1">500g - 1kg</option>
+              <option value="1-2">1kg - 2kg</option>
+              <option value="2-5">2kg - 5kg</option>
+              <option value="5-10">5kg - 10kg</option>
+              <option value="10-20">10kg - 20kg</option>
+              <option value="20-30">20kg - 30kg</option>
+              <option value="30+">Plus de 30kg</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== STEP 4 ==================== -->
+    <div *ngIf="currentStep === 4" class="space-y-4">
+      <!-- Négociation Toggle -->
+      <div class="flex items-start sm:items-center justify-between gap-4 p-4 border border-gray-200 rounded-lg">
+        <div class="flex-1">
+          <h4 class="text-sm font-semibold text-gray-900">Négociation</h4>
+          <p class="text-sm text-gray-500 mt-1">
+            Permettez aux potentiels acheteurs de négocier le prix de votre article pour une meilleure offre.
+          </p>
+        </div>
+        <label class="relative inline-flex items-center cursor-pointer flex-shrink-0">
+          <input type="checkbox" [(ngModel)]="allowNegotiation" class="sr-only peer"/>
+          <div class="w-11 h-6 bg-gray-200 peer-focus:ring-2 peer-focus:ring-primary-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-500"></div>
+        </label>
+      </div>
+
+      <!-- Réservation Toggle -->
+      <div class="flex items-start sm:items-center justify-between gap-4 p-4 border border-gray-200 rounded-lg">
+        <div class="flex-1">
+          <h4 class="text-sm font-semibold text-gray-900">Réservation</h4>
+          <p class="text-sm text-gray-500 mt-1">
+            Offrez la possibilité aux potentiels acheteurs d'effectuer des réservations sur une ou tout votre stock de cet article.
+          </p>
+        </div>
+        <label class="relative inline-flex items-center cursor-pointer flex-shrink-0">
+          <input type="checkbox" [(ngModel)]="allowReservation" class="sr-only peer"/>
+          <div class="w-11 h-6 bg-gray-200 peer-focus:ring-2 peer-focus:ring-primary-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-500"></div>
+        </label>
+      </div>
+
+      <!-- Confirmation Toggle -->
+      <div class="flex items-start sm:items-center justify-between gap-4 p-4 border border-gray-200 rounded-lg">
+        <div class="flex-1">
+          <h4 class="text-sm font-semibold text-gray-900">Confirmation lors du paiement</h4>
+          <p class="text-sm text-primary-500 font-medium mt-1">
+            Je m'engage à expédier cet article une fois qu'un acheteur aura effectué un paiement.
+          </p>
+        </div>
+        <label class="relative inline-flex items-center cursor-pointer flex-shrink-0">
+          <input type="checkbox" [(ngModel)]="requireConfirmation" class="sr-only peer"/>
+          <div class="w-11 h-6 bg-gray-200 peer-focus:ring-2 peer-focus:ring-primary-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-500"></div>
+        </label>
+      </div>
+
+      <!-- Promotion -->
+      <div class="flex items-start gap-3 p-4 border border-gray-200 rounded-lg">
+        <input
+          type="checkbox"
+          [(ngModel)]="isPromoted"
+          class="w-5 h-5 text-primary-500 border-gray-300 rounded focus:ring-primary-500 mt-0.5"
+        />
+        <div>
+          <h4 class="text-sm font-semibold text-gray-900">Donnez plus de visibilité à votre article</h4>
+          <p class="text-sm text-gray-500 mt-1">
+            Boostez votre article pour qu'il apparaisse en tête des résultats de recherche.
+          </p>
         </div>
       </div>
 
-      <!-- Actions -->
-      <div class="flex justify-end gap-3 mt-8 pt-6 border-t border-gray-200">
-        <button
-          *ngIf="currentStep > 1"
-          (click)="prevStep()"
-          class="px-6 py-3 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-        >
-          Retour
-        </button>
+      <!-- Status -->
+      <app-searchable-select
+        label="Statut de publication de l'article"
+        placeholder="Sélectionner"
+        [options]="statusOptions"
+        [value]="status"
+        [searchable]="false"
+        (valueChange)="status = $event"
+      ></app-searchable-select>
+    </div>
 
-        <button
-          *ngIf="currentStep < 4"
-          (click)="nextStep()"
-          class="px-6 py-3 text-sm font-medium text-white bg-primary-500 rounded-lg hover:bg-primary-600 transition-colors"
-        >
-          Continuer
-        </button>
+    <!-- ==================== ACTIONS ==================== -->
+    <div class="flex flex-col-reverse sm:flex-row justify-end gap-3 mt-8 pt-6 border-t border-gray-200">
+      <button
+        *ngIf="currentStep > 1"
+        (click)="prevStep()"
+        class="w-full sm:w-auto px-6 py-3 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+      >
+        Retour
+      </button>
 
-        <button
-          *ngIf="currentStep === 4"
-          (click)="submit()"
-          [disabled]="isSaving"
-          class="px-6 py-3 text-sm font-medium text-white bg-primary-500 rounded-lg hover:bg-primary-600 transition-colors disabled:opacity-50"
-        >
-          {{ isSaving ? 'Création...' : 'Créer' }}
-        </button>
-      </div>
+      <button
+        *ngIf="currentStep < 4"
+        (click)="nextStep()"
+        [disabled]="(currentStep === 1 && !isStep1Valid) || (currentStep === 2 && !isStep2Valid) || (currentStep === 3 && !isStep3Valid)"
+        class="w-full sm:w-auto px-6 py-3 text-sm font-medium text-white bg-primary-500 rounded-lg hover:bg-primary-600 transition-colors disabled:opacity-50"
+      >
+        Continuer
+      </button>
+
+      <button
+        *ngIf="currentStep === 4"
+        (click)="submit()"
+        [disabled]="isSaving"
+        class="w-full sm:w-auto px-6 py-3 text-sm font-medium text-white bg-primary-500 rounded-lg hover:bg-primary-600 transition-colors disabled:opacity-50"
+      >
+        {{ isSaving ? 'Création...' : 'Créer' }}
+      </button>
     </div>
   </div>
 </div>

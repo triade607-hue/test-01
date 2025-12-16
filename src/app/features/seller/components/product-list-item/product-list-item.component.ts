@@ -24,10 +24,10 @@ import { ProductActionsMenuComponent } from '../product-actions-menu/product-act
 
       <!-- Image -->
       <div
-        class="w-14 h-14 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0"
+        class="w-14 h-14 rounded-md overflow-hidden bg-gray-100 flex-shrink-0"
       >
         <img
-          [src]="product.images[0]?.url || 'assets/placeholder.png'"
+          [src]="product.images[0].url || 'assets/placeholder.png'"
           [alt]="product.name"
           class="w-full h-full object-cover"
         />
@@ -171,6 +171,7 @@ import { ProductActionsMenuComponent } from '../product-actions-menu/product-act
           (promote)="onPromote()"
           (manageStock)="onManageStock()"
           (editImages)="onEditImages()"
+          (manageVariants)="onManageVariants()"
           (delete)="onDelete()"
         ></app-product-actions-menu>
       </div>
@@ -194,6 +195,7 @@ export class ProductListItemComponent {
   @Output() promote = new EventEmitter<void>();
   @Output() manageStock = new EventEmitter<void>();
   @Output() editImages = new EventEmitter<void>();
+  @Output() manageVariants = new EventEmitter<void>();
   @Output() delete = new EventEmitter<void>();
 
   getStatusClasses(): Record<string, boolean> {
@@ -247,6 +249,10 @@ export class ProductListItemComponent {
 
   onEditImages(): void {
     this.editImages.emit();
+  }
+
+  onManageVariants(): void {
+    this.manageVariants.emit();
   }
 
   onDelete(): void {

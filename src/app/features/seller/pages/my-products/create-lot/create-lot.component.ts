@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import {
   StepperComponent,
   StepConfig,
@@ -10,7 +10,11 @@ import {
   ImageUploaderComponent,
   UploadedImage,
 } from '../../../components/image-uploader/image-uploader.component';
+
 import { ProductService } from '../../../services/product.service';
+import { AutocompleteInputComponent, AutocompleteSuggestion } from '../../../components/autocomplete-input/autocomplete-input.component';
+import { MultiSelectComponent, MultiSelectOption } from '../../../components/multi-select/multi-select.component';
+import { SearchableSelectComponent, SelectOption } from '../../../components/searchable-select/searchable-select.component';
 
 interface LotItem {
   id: string;
@@ -30,8 +34,12 @@ interface LotItem {
   imports: [
     CommonModule,
     FormsModule,
+    RouterModule,
     StepperComponent,
     ImageUploaderComponent,
+    SearchableSelectComponent,
+    MultiSelectComponent,
+    AutocompleteInputComponent,
   ],
   templateUrl: './create-lot.component.html',
   styleUrls: ['./create-lot.component.scss'],
@@ -46,26 +54,31 @@ export class CreateLotComponent implements OnInit {
     { id: 3, label: 'Options', sublabel: 'et publications' },
   ];
 
-  // Step 1 - Lot info
+  // Step 1
   lotImages: UploadedImage[] = [];
   lotName = '';
   lotDescription = '';
 
-  // Step 2 - Lot items
+  // Step 2
   lotItems: LotItem[] = [];
   showAddItemForm = false;
   currentItem: LotItem = this.getEmptyItem();
   currentItemImages: UploadedImage[] = [];
 
-  // Step 3 - Options
+  // Step 3
   allowNegotiation = false;
   allowReservation = false;
-  geoZones: string[] = ['France', 'Canada', 'Bénin'];
-  lotPrice = 0;
+  geoZones: string[] = [];
+  lotPrice: number | null = null;
   status = 'published';
 
-  // Data
-  productStates: string[] = [];
+  // Data Options
+  productSuggestions: AutocompleteSuggestion[] = [];
+  countryOptions: MultiSelectOption[] = [];
+  brandOptions: SelectOption[] = [];
+  modelOptions: SelectOption[] = [];
+  stateOptions: SelectOption[] = [];
+  statusOptions: SelectOption[] = [];
   existingProducts: any[] = [];
 
   // Loading
@@ -83,11 +96,56 @@ export class CreateLotComponent implements OnInit {
         this.lotSource = params['source'];
       }
     });
-    this.productStates = this.productService.productStates;
-
+    this.loadOptions();
     if (this.lotSource === 'existing') {
       this.loadExistingProducts();
     }
+  }
+
+  loadOptions(): void {
+    this.productSuggestions = [
+      {
+        id: '1',
+        name: 'iPhone 14 Pro Max',
+        category: 'Électronique > Smartphones',
+      },
+      {
+        id: '2',
+        name: 'MacBook Pro 14"',
+        category: 'Électronique > Ordinateurs',
+      },
+      { id: '3', name: 'AirPods Pro', category: 'Électronique > Audio' },
+    ];
+
+    this.countryOptions = [
+      { value: 'FR', label: 'France', flag: '🇫🇷' },
+      { value: 'CA', label: 'Canada', flag: '🇨🇦' },
+      { value: 'BE', label: 'Belgique', flag: '🇧🇪' },
+      { value: 'CH', label: 'Suisse', flag: '🇨🇭' },
+      { value: 'BJ', label: 'Bénin', flag: '🇧🇯' },
+    ];
+
+    this.brandOptions = [
+      { value: 'apple', label: 'Apple' },
+      { value: 'samsung', label: 'Samsung' },
+      { value: 'sony', label: 'Sony' },
+      { value: 'other', label: 'Autre' },
+    ];
+
+    this.modelOptions = [
+      { value: 'model1', label: 'Modèle 1' },
+      { value: 'model2', label: 'Modèle 2' },
+    ];
+
+    this.stateOptions = this.productService.productStates.map((s) => ({
+      value: s.toLowerCase().replace(/\s+/g, '_'),
+      label: s,
+    }));
+
+    this.statusOptions = [
+      { value: 'published', label: 'Publié' },
+      { value: 'draft', label: 'Brouillon' },
+    ];
   }
 
   loadExistingProducts(): void {
@@ -150,7 +208,7 @@ export class CreateLotComponent implements OnInit {
   addExistingProduct(product: any): void {
     const item: LotItem = {
       id: product.id,
-      image: product.image,
+      image: product.images?.[0]?.url || product.image,
       name: product.name,
       brand: product.brand || '',
       model: product.model || '',
@@ -185,19 +243,6 @@ export class CreateLotComponent implements OnInit {
 
   submit(): void {
     this.isSaving = true;
-
-    const lotData = {
-      images: this.lotImages.map((img) => img.file),
-      name: this.lotName,
-      description: this.lotDescription,
-      items: this.lotItems,
-      price: this.lotPrice,
-      allowNegotiation: this.allowNegotiation,
-      allowReservation: this.allowReservation,
-      geoZones: this.geoZones,
-      status: this.status,
-    };
-
     setTimeout(() => {
       this.isSaving = false;
       this.router.navigate(['/seller/products']);

@@ -11,10 +11,10 @@ import {
   ArticleType,
   LotSource,
 } from '../../models/product.models';
+import { ProductListItemComponent } from '../../components/product-list-item/product-list-item.component';
 import { SellOrDonateModalComponent } from '../../components/modals/sell-or-donate-modal/sell-or-donate-modal.component';
 import { ArticleTypeModalComponent } from '../../components/modals/article-type-modal/article-type-modal.component';
 import { LotSourceModalComponent } from '../../components/modals/lot-source-modal/lot-source-modal.component';
-import { ProductListItemComponent } from '../../components/product-list-item/product-list-item.component';
 
 @Component({
   selector: 'app-my-products',
@@ -208,28 +208,57 @@ export class MyProductsComponent implements OnInit {
   // ============================================
 
   onViewProduct(product: Product): void {
-    console.log('View product:', product.id);
-    // TODO: Navigate to product detail
+    // Rediriger vers la page détail du produit (buyer side) ou modal preview
+    window.open(`/product/${product.id}`, '_blank');
   }
 
   onEditProduct(product: Product): void {
-    console.log('Edit product:', product.id);
-    // TODO: Navigate to edit page
+    // Rediriger vers la page d'édition selon le type
+    if (product.saleType === 'donation') {
+      this.router.navigate(['/seller/products/create/donation'], {
+        queryParams: { edit: product.id, type: product.articleType },
+      });
+    } else if (product.articleType === 'lot') {
+      this.router.navigate(['/seller/products/create/lot'], {
+        queryParams: { edit: product.id },
+      });
+    } else {
+      this.router.navigate(['/seller/products/create/article'], {
+        queryParams: { edit: product.id },
+      });
+    }
   }
 
   onPromoteProduct(product: Product): void {
-    console.log('Promote product:', product.id);
-    // TODO: Open promotion modal
+    // Rediriger vers la page de promotion/publicité
+    this.router.navigate(['/seller/discounts'], {
+      queryParams: { productId: product.id, action: 'promote' },
+    });
   }
 
   onManageStock(product: Product): void {
-    console.log('Manage stock:', product.id);
-    // TODO: Open stock management
+    // Rediriger vers la gestion du stock avec le produit sélectionné
+    this.router.navigate(['/seller/stock'], {
+      queryParams: { productId: product.id },
+    });
   }
 
   onEditImages(product: Product): void {
-    console.log('Edit images:', product.id);
-    // TODO: Navigate to image editor
+    // Rediriger vers la page d'édition des images
+    if (product.articleType === 'lot') {
+      this.router.navigate(['/seller/products/create/lot'], {
+        queryParams: { edit: product.id, step: 1 },
+      });
+    } else {
+      this.router.navigate(['/seller/products/create/article'], {
+        queryParams: { edit: product.id, step: 1 },
+      });
+    }
+  }
+
+  onManageVariants(product: Product): void {
+    // Rediriger vers la gestion des variantes
+    this.router.navigate(['/seller/products', product.id, 'variants']);
   }
 
   onDeleteProduct(product: Product): void {

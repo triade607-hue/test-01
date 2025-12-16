@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import {
   StepperComponent,
   StepConfig,
@@ -10,7 +10,12 @@ import {
   ImageUploaderComponent,
   UploadedImage,
 } from '../../../components/image-uploader/image-uploader.component';
+
 import { ProductService } from '../../../services/product.service';
+import { AutocompleteInputComponent, AutocompleteSuggestion } from '../../../components/autocomplete-input/autocomplete-input.component';
+import { MultiSelectComponent, MultiSelectOption } from '../../../components/multi-select/multi-select.component';
+import { SearchableSelectComponent, SelectOption } from '../../../components/searchable-select/searchable-select.component';
+
 
 @Component({
   selector: 'app-create-donation',
@@ -18,8 +23,12 @@ import { ProductService } from '../../../services/product.service';
   imports: [
     CommonModule,
     FormsModule,
+    RouterModule,
     StepperComponent,
     ImageUploaderComponent,
+    SearchableSelectComponent,
+    MultiSelectComponent,
+    AutocompleteInputComponent,
   ],
   templateUrl: './create-donation.component.html',
   styleUrls: ['./create-donation.component.scss'],
@@ -28,7 +37,6 @@ export class CreateDonationComponent implements OnInit {
   currentStep = 1;
   donationType: 'article' | 'lot' = 'article';
 
-  // Steps dynamiques selon le type
   get steps(): StepConfig[] {
     if (this.donationType === 'article') {
       return [
@@ -44,37 +52,43 @@ export class CreateDonationComponent implements OnInit {
     ];
   }
 
-  // Step 1 - Basic info
+  // Step 1
   images: UploadedImage[] = [];
   name = '';
   description = '';
 
-  // Step 2 - Caractéristiques (article) ou composition (lot)
+  // Step 2 (article)
   category = '';
   subCategory = '';
-  geoZones: string[] = ['France', 'Canada', 'Bénin'];
+  geoZones: string[] = [];
   state = '';
   brand = '';
   model = '';
   quantity = 1;
   defects = '';
 
-  // Lot specific
+  // Step 2 (lot)
   lotItems: any[] = [];
   showAddItemForm = false;
-  currentItem = this.getEmptyItem();
+  currentItem: any = this.getEmptyItem();
   currentItemImages: UploadedImage[] = [];
 
-  // Step 3 - Options
+  // Step 3
   coverShippingCosts = false;
   coverServiceFees = false;
   requireConfirmation = false;
   status = 'published';
 
-  // Data
-  productStates: string[] = [];
-  categories: { id: string; name: string }[] = [];
-  subCategories: { id: string; name: string }[] = [];
+  // Data Options
+  productSuggestions: AutocompleteSuggestion[] = [];
+  categoryOptions: SelectOption[] = [];
+  subCategoryOptions: SelectOption[] = [];
+  countryOptions: MultiSelectOption[] = [];
+  brandOptions: SelectOption[] = [];
+  modelOptions: SelectOption[] = [];
+  stateOptions: SelectOption[] = [];
+  defectOptions: SelectOption[] = [];
+  statusOptions: SelectOption[] = [];
 
   // Loading
   isSaving = false;
@@ -91,25 +105,73 @@ export class CreateDonationComponent implements OnInit {
         this.donationType = params['type'];
       }
     });
-    this.productStates = this.productService.productStates;
-    this.loadCategories();
+    this.loadOptions();
   }
 
-  loadCategories(): void {
-    this.categories = this.productService.categories.map((c) => ({
-      id: c.id,
-      name: c.name,
+  loadOptions(): void {
+    this.productSuggestions = [
+      {
+        id: '1',
+        name: 'iPhone 14 Pro Max',
+        category: 'Électronique > Smartphones',
+      },
+      { id: '2', name: 'Vêtements enfant', category: 'Mode > Enfant' },
+      { id: '3', name: 'Livres scolaires', category: 'Livres > Éducation' },
+    ];
+
+    this.categoryOptions = this.productService.categories.map((c) => ({
+      value: c.id,
+      label: c.name,
     }));
+
+    this.countryOptions = [
+      { value: 'FR', label: 'France', flag: '🇫🇷' },
+      { value: 'CA', label: 'Canada', flag: '🇨🇦' },
+      { value: 'BE', label: 'Belgique', flag: '🇧🇪' },
+      { value: 'CH', label: 'Suisse', flag: '🇨🇭' },
+      { value: 'BJ', label: 'Bénin', flag: '🇧🇯' },
+      { value: 'SN', label: 'Sénégal', flag: '🇸🇳' },
+    ];
+
+    this.brandOptions = [
+      { value: 'apple', label: 'Apple' },
+      { value: 'samsung', label: 'Samsung' },
+      { value: 'nike', label: 'Nike' },
+      { value: 'other', label: 'Autre' },
+    ];
+
+    this.modelOptions = [
+      { value: 'model1', label: 'Modèle 1' },
+      { value: 'model2', label: 'Modèle 2' },
+    ];
+
+    this.stateOptions = this.productService.productStates.map((s) => ({
+      value: s.toLowerCase().replace(/\s+/g, '_'),
+      label: s,
+    }));
+
+    this.defectOptions = [
+      { value: 'none', label: 'Aucun défaut' },
+      { value: 'scratch', label: 'Rayures légères' },
+      { value: 'dent', label: 'Petite bosse' },
+      { value: 'other', label: 'Autre' },
+    ];
+
+    this.statusOptions = [
+      { value: 'published', label: 'Publié' },
+      { value: 'draft', label: 'Brouillon' },
+    ];
   }
 
   onCategoryChange(categoryId: string): void {
+    this.category = categoryId;
     const category = this.productService.categories.find(
       (c) => c.id === categoryId
     );
-    this.subCategories =
+    this.subCategoryOptions =
       category?.subCategories.map((sc) => ({
-        id: sc.id,
-        name: sc.name,
+        value: sc.id,
+        label: sc.name,
       })) || [];
     this.subCategory = '';
   }
@@ -123,9 +185,6 @@ export class CreateDonationComponent implements OnInit {
     return {
       id: Date.now().toString(),
       name: '',
-      brand: '',
-      model: '',
-      description: '',
       quantity: 1,
       quantityInLot: 1,
       state: '',
@@ -159,7 +218,7 @@ export class CreateDonationComponent implements OnInit {
   }
 
   removeItemFromLot(itemId: string): void {
-    this.lotItems = this.lotItems.filter((item) => item.id !== itemId);
+    this.lotItems = this.lotItems.filter((item: any) => item.id !== itemId);
   }
 
   // Navigation
@@ -181,29 +240,6 @@ export class CreateDonationComponent implements OnInit {
 
   submit(): void {
     this.isSaving = true;
-
-    const donationData = {
-      type: this.donationType,
-      images: this.images.map((img) => img.file),
-      name: this.name,
-      description: this.description,
-      category: this.category,
-      subCategory: this.subCategory,
-      geoZones: this.geoZones,
-      state: this.state,
-      brand: this.brand,
-      model: this.model,
-      quantity: this.quantity,
-      defects: this.defects,
-      lotItems: this.lotItems,
-      coverShippingCosts: this.coverShippingCosts,
-      coverServiceFees: this.coverServiceFees,
-      requireConfirmation: this.requireConfirmation,
-      status: this.status,
-      isDonation: true,
-      price: 0,
-    };
-
     setTimeout(() => {
       this.isSaving = false;
       this.router.navigate(['/seller/products']);
@@ -217,7 +253,12 @@ export class CreateDonationComponent implements OnInit {
 
   get isStep2Valid(): boolean {
     if (this.donationType === 'article') {
-      return !!this.category && !!this.state && this.quantity > 0;
+      return (
+        !!this.category &&
+        !!this.state &&
+        this.quantity > 0 &&
+        this.geoZones.length > 0
+      );
     }
     return this.lotItems.length >= 2;
   }
