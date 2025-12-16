@@ -77,7 +77,7 @@ type OtpContextType = 'register' | 'forgot-password' | 'login';
             <!-- Vendre un bien -->
             <a
               *ngIf="isAuthenticated"
-              routerLink="/seller/products/new"
+              routerLink="/seller/dashboard"
               class="flex items-center gap-1.5 text-xs text-gray-700 hover:text-primary-500 font-medium transition-colors"
             >
               <svg
@@ -140,7 +140,7 @@ type OtpContextType = 'register' | 'forgot-password' | 'login';
                 class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded shadow-lg z-50"
               >
                 <a
-                  routerLink="/buyer/dashboard"
+                  routerLink="/buyer/"
                   class="block px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-50 first:rounded-t"
                   (click)="showUserMenu = false"
                 >

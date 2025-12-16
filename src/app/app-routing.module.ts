@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
 // import { buyerGuard } from './core/guards/buyer.guard';
 import { sellerGuard } from './core/guards/seller.guard';
+import { buyerGuard } from './core/guards/buyer.guard';
 
 const routes: Routes = [
   // Public routes

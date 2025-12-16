@@ -326,36 +326,34 @@ export class SellerSidebarComponent {
       icon: 'dashboard',
       exact: true,
     },
-    { label: 'Mes produits', route: '/seller/products', icon: 'products' },
-    { label: 'Gestion du stock', route: '/seller/stock', icon: 'stock' },
-    { label: 'Gestion des ventes', route: '/seller/sales', icon: 'sales' },
+    { label: 'Mes articles', route: '/seller/products', icon: 'products' },
     {
-      label: 'Gestion des réservations',
+      label: 'Réservations',
       route: '/seller/reservations',
       icon: 'reservations',
     },
     {
-      label: 'Gestion des négociations',
+      label: "Validation d'articles",
+      route: '/seller/validation',
+      icon: 'stock',
+    },
+    {
+      label: 'Négociations',
       route: '/seller/negotiations',
       icon: 'negotiations',
     },
     {
-      label: 'Gestion des dons',
+      label: 'Demandes de Dons',
       route: '/seller/donations',
       icon: 'donations',
     },
+    { label: 'Mes ventes', route: '/seller/sales', icon: 'sales' },
+    { label: 'Mes récompenses', route: '/seller/rewards', icon: 'rewards' },
     {
-      label: 'Gestion des réductions',
+      label: 'Demandes des réductions',
       route: '/seller/discounts',
       icon: 'discounts',
     },
-    {
-      label: 'Paniers en attente',
-      route: '/seller/pending-carts',
-      icon: 'pending-carts',
-    },
-    { label: 'Notes et avis', route: '/seller/reviews', icon: 'reviews' },
-    { label: 'Mes récompenses', route: '/seller/rewards', icon: 'rewards' },
   ];
 
   supportMenuItems: MenuItem[] = [
