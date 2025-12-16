@@ -1,14 +1,14 @@
 <div class="min-h-screen bg-gray-50">
-  <div class="max-w-6xl mx-auto py-6 px-4">
+  <div class="max-w-6xl mx-auto py-4 sm:py-6 px-4">
     <!-- Header -->
-    <div class="flex items-center justify-between mb-6">
-      <div class="flex items-center gap-4">
-        <h1 class="text-2xl font-bold text-primary-500">Mes articles</h1>
+    <div class="flex items-center justify-between mb-4 sm:mb-6">
+      <div class="flex items-center gap-3 sm:gap-4">
+        <h1 class="text-xl sm:text-2xl font-bold text-primary-500">Mes articles</h1>
         <button
           (click)="openCreateModal()"
-          class="w-10 h-10 flex items-center justify-center bg-primary-500 hover:bg-primary-600 text-white rounded-full shadow-md transition-colors"
+          class="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center bg-primary-500 hover:bg-primary-600 text-white rounded-full shadow-md transition-colors"
         >
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
           </svg>
         </button>
@@ -16,14 +16,15 @@
     </div>
 
     <!-- Tabs & Filters -->
-    <div class="bg-white rounded-md border border-gray-200 mb-4">
-      <div class="flex items-center justify-between border-b border-gray-200">
-        <!-- Tabs -->
-        <div class="flex items-center overflow-x-auto">
+    <div class="bg-white rounded-lg border border-gray-200 mb-4">
+      <!-- Tabs Row -->
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-gray-200">
+        <!-- Tabs (scrollable on mobile) -->
+        <div class="flex items-center overflow-x-auto scrollbar-hide -mb-px">
           <button
             *ngFor="let tab of tabs"
             (click)="onTabChange(tab.id)"
-            class="flex items-center gap-2 px-4 py-4 text-sm font-medium whitespace-nowrap border-b-2 transition-colors"
+            class="flex items-center gap-2 px-3 sm:px-4 py-3 sm:py-4 text-xs sm:text-sm font-medium whitespace-nowrap border-b-2 transition-colors flex-shrink-0"
             [ngClass]="{
               'border-primary-500 text-primary-500': activeTabId === tab.id,
               'border-transparent text-gray-500 hover:text-gray-700': activeTabId !== tab.id
@@ -31,7 +32,7 @@
           >
             {{ tab.label }}
             <span
-              class="px-2 py-0.5 text-xs rounded-full"
+              class="px-1.5 sm:px-2 py-0.5 text-xs rounded-full"
               [ngClass]="{
                 'bg-primary-500 text-white': activeTabId === tab.id,
                 'bg-gray-100 text-gray-600': activeTabId !== tab.id
@@ -43,10 +44,10 @@
         </div>
 
         <!-- Filters Button -->
-        <div class="px-4">
+        <div class="px-3 sm:px-4 py-2 sm:py-0 border-t sm:border-t-0 border-gray-100">
           <button
             (click)="toggleFilters()"
-            class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-md hover:bg-gray-50 transition-colors"
+            class="flex items-center gap-2 px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors w-full sm:w-auto justify-center"
           >
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
@@ -73,15 +74,15 @@
         </div>
 
         <!-- Empty State -->
-        <div *ngIf="!isLoading && products.length === 0" class="p-12 text-center">
-          <svg class="w-16 h-16 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div *ngIf="!isLoading && products.length === 0" class="p-8 sm:p-12 text-center">
+          <svg class="w-12 sm:w-16 h-12 sm:h-16 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
           </svg>
-          <h3 class="text-lg font-medium text-gray-900 mb-1">Aucun article</h3>
+          <h3 class="text-base sm:text-lg font-medium text-gray-900 mb-1">Aucun article</h3>
           <p class="text-sm text-gray-500 mb-4">Commencez par ajouter votre premier article</p>
           <button
             (click)="openCreateModal()"
-            class="inline-flex items-center gap-2 px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white text-sm font-medium rounded-md transition-colors"
+            class="inline-flex items-center gap-2 px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white text-sm font-medium rounded-lg transition-colors"
           >
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
@@ -107,14 +108,14 @@
       </div>
 
       <!-- Pagination -->
-      <div *ngIf="totalPages > 1" class="flex items-center justify-center gap-1 p-4 border-t border-gray-200">
+      <div *ngIf="totalPages > 1" class="flex items-center justify-center gap-1 p-3 sm:p-4 border-t border-gray-200">
         <!-- Previous -->
         <button
           (click)="goToPage(currentPage - 1)"
           [disabled]="currentPage === 1"
-          class="p-2 rounded-md hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          class="p-1.5 sm:p-2 rounded-lg hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
           </svg>
         </button>
@@ -123,7 +124,7 @@
         <button
           *ngFor="let page of pages"
           (click)="goToPage(page)"
-          class="w-10 h-10 flex items-center justify-center rounded-md text-sm font-medium transition-colors"
+          class="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-lg text-xs sm:text-sm font-medium transition-colors"
           [ngClass]="{
             'bg-primary-500 text-white': page === currentPage,
             'hover:bg-gray-100 text-gray-700': page !== currentPage
@@ -133,15 +134,15 @@
         </button>
 
         <!-- Ellipsis -->
-        <span *ngIf="totalPages > 5 && currentPage < totalPages - 2" class="px-2 text-gray-400">...</span>
+        <span *ngIf="totalPages > 5 && currentPage < totalPages - 2" class="px-1 sm:px-2 text-gray-400">...</span>
 
         <!-- Next -->
         <button
           (click)="goToPage(currentPage + 1)"
           [disabled]="currentPage === totalPages"
-          class="p-2 rounded-md hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          class="p-1.5 sm:p-2 rounded-lg hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
           </svg>
         </button>
