@@ -1,21 +1,33 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { ProductService } from '../../../services/product.service';
-import { Variant } from '../../../models/product.models';
+
+interface Variant {
+  id: string;
+  image?: string;
+  name: string;
+  price: number;
+  currency: string;
+  quantity: number;
+  size?: string;
+  color?: string;
+  colorCode?: string;
+  otherVariant?: string;
+}
 
 @Component({
   selector: 'app-product-variants',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './product-variants.component.html',
   styleUrls: ['./product-variants.component.scss'],
 })
 export class ProductVariantsComponent implements OnInit {
-  productId: string = '';
-  productName: string = "Dénomination de l'article";
+  productId = '';
+  productName = "Dénomination de l'article";
   variants: Variant[] = [];
-  isLoading = false;
+  isSaving = false;
 
   constructor(
     private router: Router,
@@ -24,21 +36,64 @@ export class ProductVariantsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.productId = this.route.snapshot.paramMap.get('id') || '';
-    this.loadVariants();
+    this.route.params.subscribe((params) => {
+      this.productId = params['id'];
+      this.loadVariants();
+    });
   }
 
   loadVariants(): void {
-    this.isLoading = true;
-    this.productService.getVariants(this.productId).subscribe({
-      next: (variants) => {
-        this.variants = variants;
-        this.isLoading = false;
+    // Mock data
+    this.variants = [
+      {
+        id: '1',
+        image:
+          'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=80&h=80&fit=crop',
+        name: 'Dénomination du produit',
+        price: 250.99,
+        currency: 'CAD',
+        quantity: 2,
+        size: 'XL',
+        color: 'Noire',
+        colorCode: '#000000',
       },
-      error: () => {
-        this.isLoading = false;
+      {
+        id: '2',
+        image:
+          'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=80&h=80&fit=crop',
+        name: 'Dénomination du produit',
+        price: 250.99,
+        currency: 'CAD',
+        quantity: 2,
+        size: 'XL',
+        color: 'Noire',
+        colorCode: '#000000',
       },
-    });
+      {
+        id: '3',
+        image:
+          'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=80&h=80&fit=crop',
+        name: 'Dénomination du produit',
+        price: 250.99,
+        currency: 'CAD',
+        quantity: 2,
+        size: 'XL',
+        color: 'Noire',
+        colorCode: '#000000',
+      },
+      {
+        id: '4',
+        image:
+          'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=80&h=80&fit=crop',
+        name: 'Dénomination du produit',
+        price: 250.99,
+        currency: 'CAD',
+        quantity: 2,
+        size: 'XL',
+        color: 'Noire',
+        colorCode: '#000000',
+      },
+    ];
   }
 
   addVariant(): void {
@@ -51,16 +106,18 @@ export class ProductVariantsComponent implements OnInit {
   }
 
   removeVariant(variantId: string): void {
-    if (confirm('Êtes-vous sûr de vouloir retirer cette variante ?')) {
-      this.productService
-        .removeVariant(this.productId, variantId)
-        .subscribe(() => {
-          this.loadVariants();
-        });
-    }
+    this.variants = this.variants.filter((v) => v.id !== variantId);
   }
 
   save(): void {
+    this.isSaving = true;
+    setTimeout(() => {
+      this.isSaving = false;
+      this.router.navigate(['/seller/products']);
+    }, 1000);
+  }
+
+  goBack(): void {
     this.router.navigate(['/seller/products']);
   }
 }

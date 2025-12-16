@@ -15,6 +15,7 @@ import { ProductListItemComponent } from '../../components/product-list-item/pro
 import { SellOrDonateModalComponent } from '../../components/modals/sell-or-donate-modal/sell-or-donate-modal.component';
 import { ArticleTypeModalComponent } from '../../components/modals/article-type-modal/article-type-modal.component';
 import { LotSourceModalComponent } from '../../components/modals/lot-source-modal/lot-source-modal.component';
+import { StockModalComponent } from '../../components/modals/stock-modal/stock-modal.component';
 
 @Component({
   selector: 'app-my-products',
@@ -26,6 +27,7 @@ import { LotSourceModalComponent } from '../../components/modals/lot-source-moda
     SellOrDonateModalComponent,
     ArticleTypeModalComponent,
     LotSourceModalComponent,
+    StockModalComponent,
   ],
   templateUrl: './my-products.component.html',
   styleUrls: ['./my-products.component.scss'],
@@ -55,6 +57,10 @@ export class MyProductsComponent implements OnInit {
   showSellOrDonateModal = false;
   showArticleTypeModal = false;
   showLotSourceModal = false;
+  showStockModal = false;
+
+  // Stock modal data
+  stockModalProduct: Product | null = null;
 
   // Creation flow state
   selectedAction: ActionType = 'sell';
@@ -230,17 +236,41 @@ export class MyProductsComponent implements OnInit {
   }
 
   onPromoteProduct(product: Product): void {
-    // Rediriger vers la page de promotion/publicité
-    this.router.navigate(['/seller/discounts'], {
-      queryParams: { productId: product.id, action: 'promote' },
+    // Rediriger vers la page de promotion
+    this.router.navigate(['/seller/promotion'], {
+      queryParams: { productId: product.id },
     });
   }
 
   onManageStock(product: Product): void {
-    // Rediriger vers la gestion du stock avec le produit sélectionné
-    this.router.navigate(['/seller/stock'], {
-      queryParams: { productId: product.id },
-    });
+    // Ouvrir le modal de gestion de stock
+    this.stockModalProduct = product;
+    this.showStockModal = true;
+  }
+
+  onStockModalClose(): void {
+    this.showStockModal = false;
+    this.stockModalProduct = null;
+  }
+
+  onStockSave(newQuantity: number): void {
+    if (this.stockModalProduct) {
+      // TODO: Call API to update stock
+      console.log(
+        'Updating stock for',
+        this.stockModalProduct.id,
+        'to',
+        newQuantity
+      );
+      // Update local data
+      const product = this.products.find(
+        (p) => p.id === this.stockModalProduct?.id
+      );
+      if (product) {
+        product.quantity = newQuantity;
+      }
+    }
+    this.onStockModalClose();
   }
 
   onEditImages(product: Product): void {

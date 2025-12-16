@@ -1,19 +1,31 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { SellerLayoutComponent } from '../../layouts/seller-layout/seller-layout.component';
-import { SettingsComponent } from '../buyer/pages/settings/settings.component';
-import { RewardsComponent } from '../buyer/pages/rewards/rewards.component';
-import { FaqComponent } from '../buyer/pages/faq/faq.component';
+
+// Pages
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { MyProductsComponent } from './pages/my-products/my-products.component';
 import { CreateArticleComponent } from './pages/my-products/create-article/create-article.component';
 import { CreateLotComponent } from './pages/my-products/create-lot/create-lot.component';
 import { CreateDonationComponent } from './pages/my-products/create-donation/create-donation.component';
-import { AddVariantComponent } from './pages/my-products/product-variants/add-variant/add-variant.component';
 import { ProductVariantsComponent } from './pages/my-products/product-variants/product-variants.component';
+import { AddVariantComponent } from './pages/my-products/product-variants/add-variant/add-variant.component';
 
-// Pages
+// import { SalesComponent } from './pages/sales/sales.component';
+// import { SaleDetailComponent } from './pages/sales/sale-detail/sale-detail.component';
+// import { ReservationsComponent } from './pages/reservations/reservations.component';
+// import { NegotiationsComponent } from './pages/negotiations/negotiations.component';
+// import { DonationsManagementComponent } from './pages/donations-management/donations-management.component';
+// import { DiscountsComponent } from './pages/discounts/discounts.component';
+// import { PendingCartsComponent } from './pages/pending-carts/pending-carts.component';
+// import { ReviewsComponent } from './pages/reviews/reviews.component';
+// import { RewardsComponent } from './pages/rewards/rewards.component';
+// import { SupportComponent } from './pages/support/support.component';
 
+// Shared pages (réutilisés depuis shared)
+import { PromotionComponent } from './pages/my-products/promotion/promotion.component';
+import { FaqComponent } from '../buyer/pages/faq/faq.component';
+import { SettingsComponent } from '../buyer/pages/settings/settings.component';
 
 const routes: Routes = [
   {
@@ -21,7 +33,11 @@ const routes: Routes = [
     component: SellerLayoutComponent,
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+
+      // Dashboard
       { path: 'dashboard', component: DashboardComponent },
+
+      // Mes produits (page principale + sous-pages)
       {
         path: 'products',
         children: [
@@ -34,10 +50,13 @@ const routes: Routes = [
         ],
       },
 
-      // // Gestion du stock
+      // Promotion
+      { path: 'promotion', component: PromotionComponent },
+
+      // Gestion du stock
       // { path: 'stock', component: StockComponent },
 
-      // // Gestion des ventes
+      // Gestion des ventes
       // {
       //   path: 'sales',
       //   children: [
@@ -46,30 +65,31 @@ const routes: Routes = [
       //   ],
       // },
 
-      // // Gestion des réservations
+      // Gestion des réservations
       // { path: 'reservations', component: ReservationsComponent },
 
-      // // Gestion des négociations
+      // Gestion des négociations
       // { path: 'negotiations', component: NegotiationsComponent },
 
-      // // Gestion des dons
+      // Gestion des dons
       // { path: 'donations', component: DonationsManagementComponent },
 
-      // // Gestion des réductions
+      // Gestion des réductions
       // { path: 'discounts', component: DiscountsComponent },
 
-      // // Paniers en attente
+      // Paniers en attente
       // { path: 'pending-carts', component: PendingCartsComponent },
 
-      // // Notes et avis
+      // Notes et avis
       // { path: 'reviews', component: ReviewsComponent },
 
       // Mes récompenses
-      { path: 'rewards', component: RewardsComponent },
+      // { path: 'rewards', component: RewardsComponent },
 
       // Supports (partagés)
       { path: 'settings', component: SettingsComponent },
       { path: 'faq', component: FaqComponent },
+      // { path: 'support', component: SupportComponent },
     ],
   },
 ];

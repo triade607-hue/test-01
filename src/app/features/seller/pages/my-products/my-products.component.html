@@ -169,4 +169,15 @@
     (back)="onLotSourceBack()"
     (selected)="onLotSourceSelected($event)"
   ></app-lot-source-modal>
+
+  <!-- Stock Modal -->
+  <app-stock-modal
+    *ngIf="showStockModal && stockModalProduct"
+    [productId]="stockModalProduct.id"
+    [productName]="stockModalProduct.name"
+    [productImage]="stockModalProduct.images[0].url || ''"
+    [currentStock]="stockModalProduct.quantity"
+    (close)="onStockModalClose()"
+    (save)="onStockSave($event)"
+  ></app-stock-modal>
 </div>

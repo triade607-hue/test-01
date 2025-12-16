@@ -17,7 +17,7 @@ import { LotSource } from '../../../models/product.models';
 
       <!-- Modal -->
       <div
-        class="relative bg-white rounded-xl shadow-xl w-full max-w-md animate-slide-up"
+        class="relative bg-white rounded-md shadow-xl w-full max-w-md animate-slide-up"
       >
         <!-- Header -->
         <div class="flex items-center justify-between p-6 pb-2">

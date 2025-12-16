@@ -16,7 +16,7 @@ import { ArticleType, ActionType } from '../../../models/product.models';
 
       <!-- Modal -->
       <div
-        class="relative bg-white rounded-xl shadow-xl w-full max-w-md animate-slide-up"
+        class="relative bg-white rounded-md shadow-xl w-full max-w-md animate-slide-up"
       >
         <!-- Header -->
         <div class="flex items-center justify-between p-6 pb-2">
@@ -54,7 +54,7 @@ import { ArticleType, ActionType } from '../../../models/product.models';
           <!-- Un Article -->
           <button
             (click)="select('article')"
-            class="w-full flex items-center gap-4 p-4 bg-gray-50 hover:bg-gray-100 rounded-xl transition-colors text-left"
+            class="w-full flex items-center gap-4 p-4 bg-gray-50 hover:bg-gray-100 rounded-md transition-colors text-left"
           >
             <div class="w-16 h-16 flex items-center justify-center">
               <svg
@@ -78,7 +78,7 @@ import { ArticleType, ActionType } from '../../../models/product.models';
           <!-- Lot d'Articles -->
           <button
             (click)="select('lot')"
-            class="w-full flex items-center gap-4 p-4 bg-gray-50 hover:bg-gray-100 rounded-xl transition-colors text-left"
+            class="w-full flex items-center gap-4 p-4 bg-gray-50 hover:bg-gray-100 rounded-md transition-colors text-left"
           >
             <div class="w-16 h-16 flex items-center justify-center">
               <svg
